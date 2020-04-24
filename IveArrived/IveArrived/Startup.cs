@@ -17,8 +17,11 @@ namespace IveArrived
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IWebHostEnvironment environment;
+
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
+            this.environment = environment;
             Configuration = configuration;
         }
 
@@ -32,6 +35,12 @@ namespace IveArrived
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            if (environment.IsProduction())
+            {
+                services.AddApplicationInsightsTelemetry();
+            }
+
             services.AddRazorPages();
         }
 
