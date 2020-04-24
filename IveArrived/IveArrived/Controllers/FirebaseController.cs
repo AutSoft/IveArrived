@@ -24,8 +24,7 @@ namespace IveArrived.Controllers
         }
         public async Task AddFirebaseTokenToUser([FromBody] FcmToken data)
         {
-            var user = await userManager.GetUserAsync(HttpContext.User);
-            await firebaseService.AddFirebaseToken(data, new Guid(user.Id));
+            await firebaseService.AddFirebaseToken(data);
 
         }
     }

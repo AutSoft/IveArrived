@@ -8,6 +8,6 @@ namespace IveArrived.Services.Firebase
 {
     public interface IFirebaseService
     {
-        Task AddFirebaseToken(FcmToken fcmToken, Guid userId);
+        Task AddFirebaseToken(FcmToken fcmToken);
     }
 }
