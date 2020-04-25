@@ -18,12 +18,12 @@
                  </div>
                  <div class="text-left mt-2">
                  <label class="mt-4 w-120 label-header">&nbsp;Email</label>
-                  <input type="text" class="form-control" style="width: 288px;" placeholder="joesmithbakery@gmail.com">
+                  <input (ngModel)="Email" type="text" class="form-control" style="width: 288px;" placeholder="joesmithbakery@gmail.com">
                   <label class="mt-4 w-120 label-header" style="color: #739ebb;">&nbsp;Password</label>
-                  <input type="password" class="form-control" style="width: 288px;" placeholder="******">
+                  <input (ngModel)="Password" type="password" class="form-control" style="width: 288px;" placeholder="******">
                    &nbsp;<a href=""><span style="font-size: 14px;color: #2ba4f6;">Forgot your password?</span></a>
                 </div>
-                <button class="mt-5" mat-raised-button
+                <button class="mt-5" mat-raised-button (click)="onSubmit()"
                     style="background-color:#0871b8;border-radius:40px !important ;width: 300px !important;height: 52px !important; color:white">Log in
                 </button>
             </div>
@@ -32,4 +32,5 @@
         </div>
     </div>
 </div>
+
 
