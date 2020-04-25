@@ -58,9 +58,20 @@ namespace IveArrived.Services.Firebase
 
         public async Task SendMultiCastNotification(IEnumerable<string> tokens, Dictionary<string, string> data)
         {
+            var tokenList = tokens.ToList();
+            if (tokenList.Count == 0)
+            {
+                return;
+            }
+
+            if (tokenList.Count == 1)
+            {
+                await SendNotification(tokenList[0], data);
+                return;
+            }
             var message = new MulticastMessage
             {
-                Tokens = tokens.ToList(),
+                Tokens = tokenList,
                 Data = data,
             };
             await FirebaseMessaging.DefaultInstance.SendMulticastAsync(message);
@@ -68,17 +79,25 @@ namespace IveArrived.Services.Firebase
 
         public async Task SendAll(Dictionary<string, string> data)
         {
-            var fcmTokens = dbContext.FcmToken.Select(t => t.Token).ToList();
+            var tokenList = dbContext.FcmToken.Select(t => t.Token).ToList();
 
-            if (fcmTokens.Count > 0)
+            if (tokenList.Count == 0)
             {
-                var message = new MulticastMessage
-                {
-                    Tokens = fcmTokens,
-                    Data = data,
-                };
-                await FirebaseMessaging.DefaultInstance.SendMulticastAsync(message);
+                return;
             }
+
+            if (tokenList.Count == 1)
+            {
+                await SendNotification(tokenList[0], data);
+                return;
+            }
+
+            var message = new MulticastMessage
+            {
+                Tokens = tokenList,
+                Data = data,
+            };
+            await FirebaseMessaging.DefaultInstance.SendMulticastAsync(message);
         }
     }
 }
