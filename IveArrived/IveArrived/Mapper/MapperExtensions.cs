@@ -16,6 +16,7 @@ namespace IveArrived.Mapper
         
             cfg.CreateMap<Delivery, DeliveryModel>();
             cfg.CreateMap<ApplicationUser, CourierServiceModel>();
+            cfg.CreateMap<ApplicationUser, CourierModel>();
 
         }).CreateMapper();
         
@@ -23,5 +24,7 @@ namespace IveArrived.Mapper
             Mapper.Map<Delivery, DeliveryModel>(model);
         public static CourierServiceModel ToDto(this ApplicationUser model) =>
             Mapper.Map<ApplicationUser, CourierServiceModel>(model);
+        public static CourierModel ToCourierDto(this ApplicationUser model) =>
+            Mapper.Map<ApplicationUser, CourierModel>(model);
     }
 }
