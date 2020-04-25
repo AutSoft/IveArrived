@@ -20,14 +20,7 @@ namespace IveArrived.Entities.ApplicationUser
         public string Email { get; set; }
         public string Password { get; set; }
         public string LogoUrl { get; set; }
-        public string FlierUrlsInternal { get; set; }
-
-        [NotMapped]
-        public IEnumerable<string> FlierUrls
-        {
-            get => FlierUrlsInternal.Split('|');
-            set => FlierUrlsInternal = string.Join('|', value);
-        }
+        public string FlierUrl { get; set; }
 
         public virtual ICollection<ApplicationUserRole> UserRoles { get; set; }
     }

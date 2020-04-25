@@ -31,7 +31,7 @@ namespace IveArrived.Controllers
         }
 
         [HttpPost]
-        public async Task Register(RegistrationModel model)
+        public async Task Register([FromForm] RegistrationModel model)
         {
 
             var reguser = new ApplicationUser

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IveArrived.Models
 {
@@ -18,7 +19,9 @@ namespace IveArrived.Models
         public string Country { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
+        [FromForm]
         public IFormFile Logo { get; set; }
-        public List<IFormFile> Fliers { get; set; }
+        [FromForm]
+        public IFormFile Flier { get; set; }
     }
 }
