@@ -17,4 +17,9 @@
     <PackageReference Include="FcmSharp" Version="3.0.1" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <Folder Include="ClientApp\" />
+  </ItemGroup>
+
 </Project>
