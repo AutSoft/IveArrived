@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IveArrived.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     public class ValuesController : Controller
     {
         // GET: api/<controller>

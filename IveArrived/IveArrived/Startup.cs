@@ -66,6 +66,9 @@ namespace IveArrived
                 app.UseHsts();
             }
 
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
