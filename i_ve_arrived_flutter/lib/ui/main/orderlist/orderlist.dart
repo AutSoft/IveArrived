@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:i_ve_arrived/main.dart';
 import 'package:i_ve_arrived/remote/models.dart';
 import 'package:i_ve_arrived/remote/service.dart';
+import 'package:i_ve_arrived/ui/main/orderdetail/orderdetail.dart';
+import 'package:i_ve_arrived/ui/widget/order_item.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 
@@ -16,7 +19,7 @@ abstract class _OrderListStore with Store {
   }
 
   @observable
-  ObservableFuture<OrderListClientResponse> orderRequest;
+  ObservableFuture<OrderListResponse> orderRequest;
 }
 
 class OrderListPage extends StatelessWidget {
@@ -39,8 +42,8 @@ class OrderListPage extends StatelessWidget {
                 itemBuilder: (context, i) {
                   var item = list[i];
                   return OrderItemWidget(
-                    id: item.id,
-                    date: item.orderDate,
+                    item: item,
+                    onItemPressed: (item) {Navigator.of(context).push(route(() => OrderDetailPage(item: item,)));},
                   );
                 },
                 separatorBuilder: (_, __) => SizedBox(height: 16),
@@ -48,39 +51,6 @@ class OrderListPage extends StatelessWidget {
               );
             }
           },
-        ),
-      ),
-    );
-  }
-}
-
-class OrderItemWidget extends StatelessWidget {
-  final String id;
-  final String date;
-
-  const OrderItemWidget({Key key, this.id, this.date}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Container(
-        height: 80,
-        alignment: Alignment.center,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Text(
-              id,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              date,
-              style: TextStyle(fontSize: 16),
-            )
-          ],
         ),
       ),
     );

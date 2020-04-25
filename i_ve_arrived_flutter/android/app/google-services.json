@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "657911105900",
+    "firebase_url": "https://autsoft-ivearrived.firebaseio.com",
+    "project_id": "autsoft-ivearrived",
+    "storage_bucket": "autsoft-ivearrived.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:657911105900:android:e436309532195a5c680b49",
+        "android_client_info": {
+          "package_name": "com.autsoft.i_ve_arrived"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "657911105900-25pbfknilli3v72qt1nfg3ufs584qul2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD28I-_Q1w5nJb5gUwVqwl1FepDjBZmwP4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "657911105900-25pbfknilli3v72qt1nfg3ufs584qul2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

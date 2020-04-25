@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dio/dio.dart';
 import 'package:i_ve_arrived/remote/models.dart';
 
@@ -31,16 +33,18 @@ class Service {
     return;
   }
 
-  Future<OrderListClientResponse> fetchOrderList() async {
+
+  Future<OrderListResponse> fetchOrderList() async {
     //....
     await Future.delayed(Duration(seconds: 2));
-    return OrderListClientResponse(
+    return OrderListResponse(
       [
         for (int i = 0; i < 50; i++)
-          OrderItemClient("IDID$i", "2020.04.20"),
+          OrderItem(id: "IDID$i", orderDate: "2020.04.20", address: "1138 Budapest Tomori u. 27", lat: 47.5514763, lng: 19.0777766, status: DeliveryStatus.values[Random().nextInt(DeliveryStatus.values.length)]),
       ],
     );
   }
+
 }
 
 var service = Service();

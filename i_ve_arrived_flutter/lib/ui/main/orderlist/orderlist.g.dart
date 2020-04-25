@@ -12,14 +12,14 @@ mixin _$OrderListStore on _OrderListStore, Store {
   final _$orderRequestAtom = Atom(name: '_OrderListStore.orderRequest');
 
   @override
-  ObservableFuture<OrderListClientResponse> get orderRequest {
+  ObservableFuture<OrderListResponse> get orderRequest {
     _$orderRequestAtom.context.enforceReadPolicy(_$orderRequestAtom);
     _$orderRequestAtom.reportObserved();
     return super.orderRequest;
   }
 
   @override
-  set orderRequest(ObservableFuture<OrderListClientResponse> value) {
+  set orderRequest(ObservableFuture<OrderListResponse> value) {
     _$orderRequestAtom.context.conditionallyRunInAction(() {
       super.orderRequest = value;
       _$orderRequestAtom.reportChanged();
