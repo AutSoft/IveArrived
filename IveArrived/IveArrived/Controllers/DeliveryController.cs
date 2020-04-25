@@ -85,17 +85,11 @@ namespace IveArrived.Controllers
                 return null;
             }
 
-            var subsciptionToken = new FcmToken()
+            delivery.RecipientTokens.Add(new FcmToken
             {
-                Token = subscription.FirebaseToken
-            };
-
-            if (await currentUser.IsSignedIn())
-            {
-                subsciptionToken.UserId = await currentUser.CurrentUserId();
-            }
-
-            delivery.RecipientTokens.Add(subsciptionToken);
+                Token = subscription.FirebaseToken,
+                UserId = await currentUser.CurrentUserId()
+            });
 
             await context.SaveChangesAsync();
 
