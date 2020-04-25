@@ -4,7 +4,7 @@ import 'package:flutter_focus_watcher/flutter_focus_watcher.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:i_ve_arrived/main.dart';
 import 'package:i_ve_arrived/remote/service.dart';
-import 'package:i_ve_arrived/ui/orderlist/orderlist.dart';
+import 'package:i_ve_arrived/ui/main/main.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 
@@ -70,7 +70,7 @@ class LoginPage extends StatelessWidget {
                           onSubmitted: (_) async {
                             pageStore.startLogin();
                             await pageStore.loginRequest;
-                            Navigator.of(context).pushReplacement(route(() => OrderListPage()));
+                            Navigator.of(context).pushReplacement(route(() => MainPage()));
                           },
                           decoration: InputDecoration(
                             hintText: "Password",
@@ -82,7 +82,7 @@ class LoginPage extends StatelessWidget {
                           onPressed: () async{
                             pageStore.startLogin();
                             await pageStore.loginRequest;
-                            Navigator.of(context).pushReplacement(route(() => OrderListPage()));
+                            Navigator.of(context).pushReplacement(route(() => MainPage()));
                           },
                         ),
                       ],
