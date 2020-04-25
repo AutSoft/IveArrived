@@ -9,12 +9,14 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { HomeComponent } from './components/home/home.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {MatButtonModule} from '@angular/material/button';
+import { DragDropDirective } from './components/drag-drop.directive';
 
 @NgModule({
     declarations: [
         AppComponent,
         RegisterComponent,
         HomeComponent,
+        DragDropDirective,
     ],
     imports: [
         BrowserModule,

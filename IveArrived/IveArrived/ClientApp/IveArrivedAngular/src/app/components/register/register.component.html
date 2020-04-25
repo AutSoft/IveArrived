@@ -1,12 +1,88 @@
-<div class="w-100" style="height: 141px;">
-    <img class="pl-5" style="height:88px;width:176px" src="/assets/im_sending_logo.svg" />
-    <span class="text-center">Registration</span>
+<div>
+    <div class="col-12" style="box-shadow: 0 3px 30px 0 rgba(0, 0, 0, 0.05);">
+        <div class="col-12 text-center" style="height: 141px;">
+            <img class="pl-5 float-left" style="height:100px;width:186px" src="/assets/im_sending_logo.svg" />
+        </div>
+        <div class="col-12 text-center" style="margin-top:-50px;margin-left:-160px;">
+            <span
+                style="font-size: 25px;font-family: OpenSans-Bold;text-transform: uppercase;color: #0871b8;">Registration</span>
+        </div>
+    </div>
+    <div class="text-center col-4"
+        style="background-color: #f9f9f9;margin-right:auto;margin-left: auto;border-radius: 40px">
+        <div>
+            <mat-horizontal-stepper class="col-12 mt-5 ml-auto mr-auto"
+                style="background-color: #f9f9f9;border-radius: 40px;">
+                <mat-step label="General informations">
+                    <div style="padding:0px 90px">
+                        <div class="mt-3">
+                            <span class="mt-3">Please fill in the following informations below</span>
+                        </div>
+                        <div class="text-left mt-4">
+                            <label class="mt-4 w-100">Your SME's name</label>
+                            <input type="text" class="form-control" placeholder="John Smith's happy barkery">
+                            <label class="mt-4 w-100">Choose your companies profile</label>
+                            <select type="select" class="form-control">
+                                <option>bakery</option>
+                                <option>butchers</option>
+                                <option>bíkery</option>
+                                <option>universal</option>
+                            </select>
+                            <label class="mt-4 w-100" style="color: #739ebb;">Contact name</label>
+                            <input type="text" class="form-control">
+                            <label class="mt-4 w-100" style="color: #739ebb;">Phone number</label>
+                            <input type="text" class="form-control" placeholder="+36 30 123 4567">
+                            <label class="mt-4 w-100" style="color: #739ebb;">Email address</label>
+                            <input type="text" class="form-control" placeholder="joesmithbakery@gmail.com">
+                            <label class="mt-4 w-100" style="color: #739ebb;">Address</label>
+                            <input type="text" class="form-control">
+                            <div class="d-flex">
+                                <label class="mt-4 col-7" style="color:#739ebb">City</label>
+                                <label class="mt-4 ml-5 col-4" style="color:#739ebb">ZipCode</label>
+                            </div>
+                            <div class="d-flex">
+                                <input type="text" class="form-control col-7">
+                                <input type="text" class="form-control ml-5 col-4">
+                            </div>
+                        </div>
+                        <button class="mt-5 float-right" mat-raised-button
+                            style="background-color:#0871b8;border-radius:40px !important ;width: 120px !important;height: 52px !important; color:white">Next&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>
+                        </button>
+                    </div>
+                </mat-step>
+
+                <mat-step label="Upload your profile">
+                    <div style="padding:0px 90px">
+                        <div class="mt-3">
+                            <span class="mt-3">Please upload your profile</span>
+                        </div>
+                        <div class="text-left mt-4">
+                            <label class="mt-4 w-100">Please upload your logo!</label>
+                         </div>
+                         <div>
+                            <img src="/assets/circleFileupload.png">
+                         </div>
+                         
+                         <button class="mt-5 float-left" mat-raised-button
+                            style="background-color:white;
+                            border-radius:40px !important ;width: 120px !important;
+                            height: 52px !important; 
+                            color:#0871b8;
+                            border-color: #0871b8;
+                            border:2px solid">&lt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Back
+                        </button>   
+                        <button class="mt-5 float-right" mat-raised-button
+                            style="background-color:#0871b8;
+                            border-radius:40px !important ;
+                            width: 120px !important;
+                            height: 52px !important; 
+                            color:white">Next&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>
+                        </button>
+                    </div>
+                </mat-step>
+                <mat-step label="Regsitration confirm">
+                </mat-step>
+            </mat-horizontal-stepper>
+        </div>
+    </div>
 </div>
-<mat-horizontal-stepper>
-    <mat-step label="General informations">
-    </mat-step>
-    <mat-step label="Upload your profile">
-    </mat-step>
-    <mat-step label="Regsitration confirm">
-    </mat-step>
-</mat-horizontal-stepper>
