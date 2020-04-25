@@ -31,6 +31,7 @@ $IveArrivedAngular-theme: mat-light-theme($IveArrivedAngular-primary, $IveArrive
     background-repeat: no-repeat;
     background-size: 100px;
     background-position: center;
+    background-color:white !important;
     height: 200px;
     width: 80%;
     margin: 20px auto;
@@ -39,7 +40,7 @@ $IveArrivedAngular-theme: mat-light-theme($IveArrivedAngular-primary, $IveArrive
 
 .uploadfilecontainer:hover {
     cursor: pointer;
-    background-color: #9ecbec !important;
+    background-color: white !important;
     opacity: 0.8;
 }
 
@@ -49,7 +50,7 @@ $IveArrivedAngular-theme: mat-light-theme($IveArrivedAngular-primary, $IveArrive
     width: 80%;
     margin: 10px auto;
     background: #ffffff;
-    border: 1px dashed;
+    border: 1px solid;
     border-radius: 12px;
     padding: 5px;
     color: #1c8adb;
@@ -61,7 +62,4 @@ $IveArrivedAngular-theme: mat-light-theme($IveArrivedAngular-primary, $IveArrive
     cursor: pointer;
 }
 
-.files-list .delete-file img {
-    width: 30px;
-}
 

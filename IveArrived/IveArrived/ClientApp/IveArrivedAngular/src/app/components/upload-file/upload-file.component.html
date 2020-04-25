@@ -1,8 +1,15 @@
 <div class="uploadfilecontainer" (click)="fileInput.click()" appDragDrop (onFileDropped)="uploadFile($event)">
-    <input hidden type="file" #fileInput (change)="uploadFile($event.target.files)">
+  <input hidden type="file" #fileInput (change)="uploadFile($event.target.files)">
+  <div class="mt-5">
+    <span style="font-size:36px; color:#0871b8">Drag and Drop</span>
   </div>
-  <div  class="files-list" *ngFor="let file of files;let i= index">
-      <p> {{ file }} </p>
-      <button class="delete-file" (click)="deleteAttachment(i)">
-      </button>
-   </div>
+  <div class="mt-3">
+    <span style="font-size:24px; color:#0871b8">or browse your file to upload</span>
+  </div>
+</div>
+<div class="files-list" *ngFor="let file of files;let i= index">
+  <p> {{ file.fileName }} </p>
+  <button class="delete-file" (click)="deleteAttachment(i)">
+    <span style="color:#0871b8">X</span>
+  </button>
+</div>

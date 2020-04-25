@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-upload-file',
@@ -12,13 +12,17 @@ export class UploadFileComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  @Output() filechanged = new EventEmitter<any[]>();
+  
   files: any = [];
 
   uploadFile(event) {
     for (let index = 0; index < event.length; index++) {
       const element = event[index];
-      this.files.push(element.name)
+      this.files.push({ data: element, fileName: element.name })
     }  
+    console.log("alma");
+    this.filechanged.emit(this.files);
   }
   deleteAttachment(index) {
     this.files.splice(index, 1)
