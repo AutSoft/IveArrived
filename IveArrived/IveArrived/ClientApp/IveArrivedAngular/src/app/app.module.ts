@@ -13,6 +13,7 @@ import { DragDropDirective } from './directives/drag-drop.directive';
 import { LoginComponent } from './components/login/login.component';
 import { UploadFileComponent } from './components/upload-file/upload-file.component';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
     declarations: [
@@ -30,7 +31,8 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
         MatStepperModule,
         NgbModule,
         MatButtonModule,
-        HttpClientModule
+        HttpClientModule,
+        FormsModule
     ],
     providers: [],
     bootstrap: [AppComponent]

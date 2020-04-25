@@ -14,15 +14,15 @@ export class RegisterComponent implements OnInit {
 
   files: FileParameter;
 
-  smeName: string;
-  email: string;
-  phoneNumber: string;
-  profile: string;
-  contactName: string;
-  address: string;
-  city: string;
-  zipcode: string;
-  password: string;
+  smeName: string = "";
+  email: string = "";
+  phoneNumber: string = "";
+  profile: string  = "";
+  contactName: string = "";
+  address: string = "";
+  city: string ="";
+  zipcode: string ="";
+  password: string ="";
 
   ngOnInit(): void {
   }
@@ -32,6 +32,7 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit() {
+    console.log(this.address);
     this.accountService.register("SME",
       this.smeName,
       this.contactName,
