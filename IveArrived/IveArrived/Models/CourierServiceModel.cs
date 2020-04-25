@@ -1,4 +1,5 @@
 ﻿using System;
+using FirebaseAdmin.Auth;
 
 namespace IveArrived.Models
 {
