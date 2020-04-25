@@ -8,9 +8,9 @@ namespace IveArrived.Services.File
 {
     public class FileService: IFileService
     {
-        public async Task<string> Publish(Stream fileStream)
+        public async Task<string> Publish(Stream fileStream, string extension)
         {
-            var path = Guid.NewGuid().ToString().Insert(2, "/");
+            var path = Guid.NewGuid().ToString().Insert(2, "/") + extension;
 
             using (var stream = System.IO.File.Create("wwwroot/" + path))
             {

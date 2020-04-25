@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using IveArrived.Entities.ApplicationUser;
@@ -41,13 +42,15 @@ namespace IveArrived.Controllers
 
             if (model.Logo != null)
             {
-                logoUrl = await fileService.Publish(model.Logo.OpenReadStream());
+                logoUrl = await fileService.Publish(model.Logo.OpenReadStream(), 
+                    Path.GetExtension(model.Logo.FileName));
             }
             string flierUrl = null;
 
             if (model.Logo != null)
             {
-                flierUrl = await fileService.Publish(model.Flier.OpenReadStream());
+                flierUrl = await fileService.Publish(model.Flier.OpenReadStream(),
+                    Path.GetExtension(model.Flier.FileName));
             }
 
             var reguser = new ApplicationUser

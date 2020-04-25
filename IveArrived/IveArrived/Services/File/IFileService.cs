@@ -5,6 +5,6 @@ namespace IveArrived.Services.File
 {
     public interface IFileService
     {
-        Task<string> Publish(Stream fileStream);
+        Task<string> Publish(Stream fileStream, string extension);
     }
 }
