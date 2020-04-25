@@ -16,6 +16,12 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.2" />
     <PackageReference Include="FcmSharp" Version="3.0.1" />
     <PackageReference Include="NSwag.AspNetCore" Version="13.4.2" />
+    <PackageReference Include="FirebaseAdmin" Version="1.11.0" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Folder Include="ClientApp\" />
   </ItemGroup>
 
 </Project>
