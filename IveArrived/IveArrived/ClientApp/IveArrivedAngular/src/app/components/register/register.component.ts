@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AccountService, FileParameter } from 'src/app/api/app.generated';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
