@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using FirebaseAdmin;
 using FirebaseAdmin.Messaging;
 using IveArrived.Configuration;
+using IveArrived.Entities.ApplicationUser;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.CodeAnalysis.Options;
 using Microsoft.Extensions.Options;
 
@@ -20,21 +22,22 @@ namespace IveArrived.Services.Firebase
         private readonly ApplicationDbContext dbContext;
         private readonly ICurrentUserService currentUserService;
 
-        public FirebaseService(ApplicationDbContext dbContext, ICurrentUserService currentUserService)
+        public FirebaseService(ApplicationDbContext dbContext, 
+            ICurrentUserService currentUserService)
         {
             this.dbContext = dbContext;
             this.currentUserService = currentUserService;
         }
-        public async Task AddFirebaseToken(FcmToken fcmToken)
+        public async Task AddFirebaseToken(string token)
         {
-            var prevToken = await dbContext.FcmToken.SingleOrDefaultAsync(t => t.Token == fcmToken.Token);
+            var prevToken = await dbContext.FcmToken.FirstOrDefaultAsync(t => t.Token == token);
 
             if (prevToken == null)
             {
                 var t = new FcmToken
                 {
                     UserId = await currentUserService.CurrentUserId(),
-                    Token = fcmToken.Token
+                    Token = token
                 };
 
                 dbContext.FcmToken.Add(t);
@@ -61,6 +64,21 @@ namespace IveArrived.Services.Firebase
                 Data = data,
             };
             await FirebaseMessaging.DefaultInstance.SendMulticastAsync(message);
+        }
+
+        public async Task SendAll(Dictionary<string, string> data)
+        {
+            var fcmTokens = dbContext.FcmToken.Select(t => t.Token).ToList();
+
+            if (fcmTokens.Count > 0)
+            {
+                var message = new MulticastMessage
+                {
+                    Tokens = fcmTokens,
+                    Data = data,
+                };
+                await FirebaseMessaging.DefaultInstance.SendMulticastAsync(message);
+            }
         }
     }
 }

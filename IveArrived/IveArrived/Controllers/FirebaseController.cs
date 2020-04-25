@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using IveArrived.Entities;
-using IveArrived.Entities.ApplicationUser;
+using IveArrived.Services.CurrentUser;
 using IveArrived.Services.Firebase;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -16,19 +16,26 @@ namespace IveArrived.Controllers
     public class FirebaseController : ControllerBase
     {
         private readonly IFirebaseService firebaseService;
-        private readonly UserManager<ApplicationUser> userManager;
 
-        public FirebaseController(IFirebaseService firebaseService, UserManager<ApplicationUser> userManager)
+        public FirebaseController(IFirebaseService firebaseService)
         {
             this.firebaseService = firebaseService;
-            this.userManager = userManager;
+        }
+        [HttpPost]
+        public async Task AddFirebaseTokenToUser([FromBody] string token)
+        {
+
+            await firebaseService.AddFirebaseToken(token);
+
         }
 
-        [HttpPost]
-        public async Task AddFirebaseTokenToUser([FromBody] FcmToken data)
+        [HttpGet]
+        public async Task SendToEveryone([FromQuery]string msg)
         {
-            await firebaseService.AddFirebaseToken(data);
-
+            await firebaseService.SendAll(new Dictionary<string, string>
+            {
+                {nameof(msg), msg}
+            });
         }
     }
 }
