@@ -69,7 +69,7 @@ namespace IveArrived
 
             services.AddCors(options =>
             {
-                options.AddDefaultPolicy(
+                options.AddPolicy("MyPolicy",
                     builder =>
                     {
                         builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
@@ -92,6 +92,9 @@ namespace IveArrived
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
             }
+
+            app.UseCors("MyPolicy");
+
             //else
             //{
             //    app.UseExceptionHandler("/Error");
@@ -106,9 +109,10 @@ namespace IveArrived
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+
+
             app.UseRouting();
 
-            app.UseCors();
 
             app.UseAuthentication();
             app.UseAuthorization();
