@@ -18,9 +18,9 @@
                  </div>
                  <div class="text-left mt-2">
                  <label class="mt-4 w-120 label-header">&nbsp;Email</label>
-                  <input (ngModel)="Email" type="text" class="form-control" style="width: 288px;" placeholder="joesmithbakery@gmail.com">
+                  <input name="Email"  [(ngModel)]="Email" type="text" class="form-control" style="width: 288px;" placeholder="joesmithbakery@gmail.com">
                   <label class="mt-4 w-120 label-header" style="color: #739ebb;">&nbsp;Password</label>
-                  <input (ngModel)="Password" type="password" class="form-control" style="width: 288px;" placeholder="******">
+                  <input name="Password"  [(ngModel)]="Password" type="password" class="form-control" style="width: 288px;" placeholder="******">
                    &nbsp;<a href=""><span style="font-size: 14px;color: #2ba4f6;">Forgot your password?</span></a>
                 </div>
                 <button class="mt-5" mat-raised-button (click)="onSubmit()"
