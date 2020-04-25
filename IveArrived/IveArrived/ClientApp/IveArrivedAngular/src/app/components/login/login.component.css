@@ -1,0 +1,30 @@
+.great{
+    width: 352px;
+    height: 53px;
+    -webkit-text-stroke: 1px rgba(0, 0, 0, 0);
+    font-family: NotoSans;
+    font-size: 25px;
+    font-weight: 600;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.03;
+    letter-spacing: normal;
+    text-align: center;
+    color: #2ba4f6;
+  }
+
+
+  .label-header {
+    width: 56px;
+    height: 17px;
+    -webkit-text-stroke: 1px rgba(0, 0, 0, 0);
+    font-family: NotoSans;
+    font-size: 14px;
+    font-weight: 600;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 2.67;
+    letter-spacing: normal;
+    text-align: left;
+    color: #739ebb;
+  }

@@ -22,7 +22,7 @@ export class AccountService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "https://ivearrived.azurewebsites.net";
+        this.baseUrl = "http://localhost:5000";
     }
 
     login(loginModel: LoginModel): Observable<void> {
@@ -73,18 +73,39 @@ export class AccountService {
         return _observableOf<void>(<any>null);
     }
 
-    register(model: RegistrationModel): Observable<void> {
+    register(role: string | null | undefined, displayName: string | null | undefined, contactName: string | null | undefined, address: string | null | undefined, city: string | null | undefined, zipCode: string | null | undefined, country: string | null | undefined, email: string | null | undefined, password: string | null | undefined, logo: FileParameter | null | undefined, flier: FileParameter | null | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/Account/Register";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(model);
+        const content_ = new FormData();
+        if (role !== null && role !== undefined)
+            content_.append("Role", role.toString());
+        if (displayName !== null && displayName !== undefined)
+            content_.append("DisplayName", displayName.toString());
+        if (contactName !== null && contactName !== undefined)
+            content_.append("ContactName", contactName.toString());
+        if (address !== null && address !== undefined)
+            content_.append("Address", address.toString());
+        if (city !== null && city !== undefined)
+            content_.append("City", city.toString());
+        if (zipCode !== null && zipCode !== undefined)
+            content_.append("ZipCode", zipCode.toString());
+        if (country !== null && country !== undefined)
+            content_.append("Country", country.toString());
+        if (email !== null && email !== undefined)
+            content_.append("Email", email.toString());
+        if (password !== null && password !== undefined)
+            content_.append("Password", password.toString());
+        if (logo !== null && logo !== undefined)
+            content_.append("Logo", logo.data, logo.fileName ? logo.fileName : "Logo");
+        if (flier !== null && flier !== undefined)
+            content_.append("Flier", flier.data, flier.fileName ? flier.fileName : "Flier");
 
         let options_ : any = {
             body: content_,
             observe: "response",
             responseType: "blob",			
             headers: new HttpHeaders({
-                "Content-Type": "application/json", 
             })
         };
 
@@ -123,6 +144,530 @@ export class AccountService {
 }
 
 @Injectable()
+export class CourierServiceDeliveryService {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "https://ivearrived.azurewebsites.net";
+    }
+
+    listDeliveries(): Observable<DeliveryModel[]> {
+        let url_ = this.baseUrl + "/api/CourierServiceDelivery/ListDeliveries";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processListDeliveries(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processListDeliveries(<any>response_);
+                } catch (e) {
+                    return <Observable<DeliveryModel[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<DeliveryModel[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processListDeliveries(response: HttpResponseBase): Observable<DeliveryModel[]> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(DeliveryModel.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<DeliveryModel[]>(<any>null);
+    }
+
+    changeDeliveryState(dto: DeliveryStateChangeModel): Observable<void> {
+        let url_ = this.baseUrl + "/api/CourierServiceDelivery/ChangeDeliveryState";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(dto);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processChangeDeliveryState(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processChangeDeliveryState(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processChangeDeliveryState(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    changeDeliveryCourier(dto: DeliveryCourierChangeModel): Observable<void> {
+        let url_ = this.baseUrl + "/api/CourierServiceDelivery/ChangeDeliveryCourier";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(dto);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processChangeDeliveryCourier(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processChangeDeliveryCourier(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processChangeDeliveryCourier(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    addOrUpdateDelivery(dm: AddOrEditDeliveryModel): Observable<DeliveryModel> {
+        let url_ = this.baseUrl + "/api/CourierServiceDelivery/AddOrUpdateDelivery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(dm);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAddOrUpdateDelivery(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAddOrUpdateDelivery(<any>response_);
+                } catch (e) {
+                    return <Observable<DeliveryModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<DeliveryModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processAddOrUpdateDelivery(response: HttpResponseBase): Observable<DeliveryModel> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = DeliveryModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<DeliveryModel>(<any>null);
+    }
+}
+
+@Injectable()
+export class DeliveryService {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "https://ivearrived.azurewebsites.net";
+    }
+
+    listForCourier(): Observable<DeliveryModel[]> {
+        let url_ = this.baseUrl + "/api/Delivery/ListForCourier";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processListForCourier(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processListForCourier(<any>response_);
+                } catch (e) {
+                    return <Observable<DeliveryModel[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<DeliveryModel[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processListForCourier(response: HttpResponseBase): Observable<DeliveryModel[]> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(DeliveryModel.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<DeliveryModel[]>(<any>null);
+    }
+
+    listForRecipient(): Observable<DeliveryModel[]> {
+        let url_ = this.baseUrl + "/api/Delivery/ListForRecipient";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processListForRecipient(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processListForRecipient(<any>response_);
+                } catch (e) {
+                    return <Observable<DeliveryModel[]>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<DeliveryModel[]>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processListForRecipient(response: HttpResponseBase): Observable<DeliveryModel[]> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(DeliveryModel.fromJS(item));
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<DeliveryModel[]>(<any>null);
+    }
+
+    subscribe(dto: PackageSubscriptionModel): Observable<DeliveryModel> {
+        let url_ = this.baseUrl + "/api/Delivery/Subscribe";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(dto);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSubscribe(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSubscribe(<any>response_);
+                } catch (e) {
+                    return <Observable<DeliveryModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<DeliveryModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processSubscribe(response: HttpResponseBase): Observable<DeliveryModel> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = DeliveryModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<DeliveryModel>(<any>null);
+    }
+
+    doorBell(dto: DoorBellModel): Observable<void> {
+        let url_ = this.baseUrl + "/api/Delivery/DoorBell";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(dto);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDoorBell(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDoorBell(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDoorBell(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    doorBellResponse(dto: DoorBellResponseModel): Observable<void> {
+        let url_ = this.baseUrl + "/api/Delivery/DoorBellResponse";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(dto);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDoorBellResponse(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDoorBellResponse(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDoorBellResponse(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    deliveryCompleted(dto: DeliveryCompletedModel): Observable<void> {
+        let url_ = this.baseUrl + "/api/Delivery/DeliveryCompleted";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(dto);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeliveryCompleted(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeliveryCompleted(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processDeliveryCompleted(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+}
+
+@Injectable()
 export class FirebaseService {
     private http: HttpClient;
     private baseUrl: string;
@@ -133,7 +678,7 @@ export class FirebaseService {
         this.baseUrl = baseUrl ? baseUrl : "https://ivearrived.azurewebsites.net";
     }
 
-    addFirebaseTokenToUser(token: string): Observable<void> {
+    addFirebaseTokenToUser(token: TokenModel): Observable<void> {
         let url_ = this.baseUrl + "/api/Firebase/AddFirebaseTokenToUser";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -490,7 +1035,7 @@ export class ValuesService {
 }
 
 export class LoginModel implements ILoginModel {
-    userName?: string | undefined;
+    email?: string | undefined;
     password?: string | undefined;
 
     constructor(data?: ILoginModel) {
@@ -504,7 +1049,7 @@ export class LoginModel implements ILoginModel {
 
     init(_data?: any) {
         if (_data) {
-            this.userName = _data["userName"];
+            this.email = _data["email"];
             this.password = _data["password"];
         }
     }
@@ -518,24 +1063,135 @@ export class LoginModel implements ILoginModel {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["userName"] = this.userName;
+        data["email"] = this.email;
         data["password"] = this.password;
         return data; 
     }
 }
 
 export interface ILoginModel {
-    userName?: string | undefined;
+    email?: string | undefined;
     password?: string | undefined;
 }
 
-export class RegistrationModel implements IRegistrationModel {
+export class DeliveryModel implements IDeliveryModel {
+    id!: number;
+    description?: string | undefined;
+    address?: string | undefined;
+    estimatedDeliveryStart?: Date | undefined;
+    estimatedDeliveryEnd?: Date | undefined;
+    packageId!: string;
+    state!: DeliveryState;
+    senderName?: string | undefined;
+    senderPhoneNumber?: string | undefined;
+    senderEmailAddress?: string | undefined;
+    recipientName?: string | undefined;
+    recipientPhoneNumber?: string | undefined;
+    recipientEmailAddress?: string | undefined;
+    paymentInfo?: string | undefined;
+    courier?: CourierServiceModel | undefined;
+    courierService?: CourierServiceModel | undefined;
+
+    constructor(data?: IDeliveryModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.description = _data["description"];
+            this.address = _data["address"];
+            this.estimatedDeliveryStart = _data["estimatedDeliveryStart"] ? new Date(_data["estimatedDeliveryStart"].toString()) : <any>undefined;
+            this.estimatedDeliveryEnd = _data["estimatedDeliveryEnd"] ? new Date(_data["estimatedDeliveryEnd"].toString()) : <any>undefined;
+            this.packageId = _data["packageId"];
+            this.state = _data["state"];
+            this.senderName = _data["senderName"];
+            this.senderPhoneNumber = _data["senderPhoneNumber"];
+            this.senderEmailAddress = _data["senderEmailAddress"];
+            this.recipientName = _data["recipientName"];
+            this.recipientPhoneNumber = _data["recipientPhoneNumber"];
+            this.recipientEmailAddress = _data["recipientEmailAddress"];
+            this.paymentInfo = _data["paymentInfo"];
+            this.courier = _data["courier"] ? CourierServiceModel.fromJS(_data["courier"]) : <any>undefined;
+            this.courierService = _data["courierService"] ? CourierServiceModel.fromJS(_data["courierService"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): DeliveryModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new DeliveryModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["description"] = this.description;
+        data["address"] = this.address;
+        data["estimatedDeliveryStart"] = this.estimatedDeliveryStart ? this.estimatedDeliveryStart.toISOString() : <any>undefined;
+        data["estimatedDeliveryEnd"] = this.estimatedDeliveryEnd ? this.estimatedDeliveryEnd.toISOString() : <any>undefined;
+        data["packageId"] = this.packageId;
+        data["state"] = this.state;
+        data["senderName"] = this.senderName;
+        data["senderPhoneNumber"] = this.senderPhoneNumber;
+        data["senderEmailAddress"] = this.senderEmailAddress;
+        data["recipientName"] = this.recipientName;
+        data["recipientPhoneNumber"] = this.recipientPhoneNumber;
+        data["recipientEmailAddress"] = this.recipientEmailAddress;
+        data["paymentInfo"] = this.paymentInfo;
+        data["courier"] = this.courier ? this.courier.toJSON() : <any>undefined;
+        data["courierService"] = this.courierService ? this.courierService.toJSON() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IDeliveryModel {
+    id: number;
+    description?: string | undefined;
+    address?: string | undefined;
+    estimatedDeliveryStart?: Date | undefined;
+    estimatedDeliveryEnd?: Date | undefined;
+    packageId: string;
+    state: DeliveryState;
+    senderName?: string | undefined;
+    senderPhoneNumber?: string | undefined;
+    senderEmailAddress?: string | undefined;
+    recipientName?: string | undefined;
+    recipientPhoneNumber?: string | undefined;
+    recipientEmailAddress?: string | undefined;
+    paymentInfo?: string | undefined;
+    courier?: CourierServiceModel | undefined;
+    courierService?: CourierServiceModel | undefined;
+}
+
+export enum DeliveryState {
+    PackageAssembly = "PackageAssembly",
+    PackageReady = "PackageReady",
+    DeliveryInProgress = "DeliveryInProgress",
+    DeliverySuccess = "DeliverySuccess",
+    DeliveryFailed = "DeliveryFailed",
+}
+
+export class CourierServiceModel implements ICourierServiceModel {
     role?: string | undefined;
     userName?: string | undefined;
-    password?: string | undefined;
+    displayName?: string | undefined;
+    contactName?: string | undefined;
+    address?: string | undefined;
+    city?: string | undefined;
+    zipCode?: string | undefined;
+    country?: string | undefined;
     email?: string | undefined;
+    logoUrl?: string | undefined;
+    flierUrl?: string | undefined;
 
-    constructor(data?: IRegistrationModel) {
+    constructor(data?: ICourierServiceModel) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -548,14 +1204,21 @@ export class RegistrationModel implements IRegistrationModel {
         if (_data) {
             this.role = _data["role"];
             this.userName = _data["userName"];
-            this.password = _data["password"];
+            this.displayName = _data["displayName"];
+            this.contactName = _data["contactName"];
+            this.address = _data["address"];
+            this.city = _data["city"];
+            this.zipCode = _data["zipCode"];
+            this.country = _data["country"];
             this.email = _data["email"];
+            this.logoUrl = _data["logoUrl"];
+            this.flierUrl = _data["flierUrl"];
         }
     }
 
-    static fromJS(data: any): RegistrationModel {
+    static fromJS(data: any): CourierServiceModel {
         data = typeof data === 'object' ? data : {};
-        let result = new RegistrationModel();
+        let result = new CourierServiceModel();
         result.init(data);
         return result;
     }
@@ -564,17 +1227,404 @@ export class RegistrationModel implements IRegistrationModel {
         data = typeof data === 'object' ? data : {};
         data["role"] = this.role;
         data["userName"] = this.userName;
-        data["password"] = this.password;
+        data["displayName"] = this.displayName;
+        data["contactName"] = this.contactName;
+        data["address"] = this.address;
+        data["city"] = this.city;
+        data["zipCode"] = this.zipCode;
+        data["country"] = this.country;
         data["email"] = this.email;
+        data["logoUrl"] = this.logoUrl;
+        data["flierUrl"] = this.flierUrl;
         return data; 
     }
 }
 
-export interface IRegistrationModel {
+export interface ICourierServiceModel {
     role?: string | undefined;
     userName?: string | undefined;
-    password?: string | undefined;
+    displayName?: string | undefined;
+    contactName?: string | undefined;
+    address?: string | undefined;
+    city?: string | undefined;
+    zipCode?: string | undefined;
+    country?: string | undefined;
     email?: string | undefined;
+    logoUrl?: string | undefined;
+    flierUrl?: string | undefined;
+}
+
+export class DeliveryStateChangeModel implements IDeliveryStateChangeModel {
+    deliveryId!: number;
+    newState!: DeliveryState;
+
+    constructor(data?: IDeliveryStateChangeModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.deliveryId = _data["deliveryId"];
+            this.newState = _data["newState"];
+        }
+    }
+
+    static fromJS(data: any): DeliveryStateChangeModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new DeliveryStateChangeModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["deliveryId"] = this.deliveryId;
+        data["newState"] = this.newState;
+        return data; 
+    }
+}
+
+export interface IDeliveryStateChangeModel {
+    deliveryId: number;
+    newState: DeliveryState;
+}
+
+export class DeliveryCourierChangeModel implements IDeliveryCourierChangeModel {
+    deliveryId!: number;
+    courierId!: number;
+
+    constructor(data?: IDeliveryCourierChangeModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.deliveryId = _data["deliveryId"];
+            this.courierId = _data["courierId"];
+        }
+    }
+
+    static fromJS(data: any): DeliveryCourierChangeModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new DeliveryCourierChangeModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["deliveryId"] = this.deliveryId;
+        data["courierId"] = this.courierId;
+        return data; 
+    }
+}
+
+export interface IDeliveryCourierChangeModel {
+    deliveryId: number;
+    courierId: number;
+}
+
+export class AddOrEditDeliveryModel implements IAddOrEditDeliveryModel {
+    id!: number;
+    description?: string | undefined;
+    address?: string | undefined;
+    estimatedDeliveryStart?: Date | undefined;
+    estimatedDeliveryEnd?: Date | undefined;
+    packageId!: string;
+    state!: DeliveryState;
+    senderName?: string | undefined;
+    senderPhoneNumber?: string | undefined;
+    senderEmailAddress?: string | undefined;
+    recipientName?: string | undefined;
+    recipientPhoneNumber?: string | undefined;
+    recipientEmailAddress?: string | undefined;
+    paymentInfo?: string | undefined;
+    courierId!: number;
+
+    constructor(data?: IAddOrEditDeliveryModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.description = _data["description"];
+            this.address = _data["address"];
+            this.estimatedDeliveryStart = _data["estimatedDeliveryStart"] ? new Date(_data["estimatedDeliveryStart"].toString()) : <any>undefined;
+            this.estimatedDeliveryEnd = _data["estimatedDeliveryEnd"] ? new Date(_data["estimatedDeliveryEnd"].toString()) : <any>undefined;
+            this.packageId = _data["packageId"];
+            this.state = _data["state"];
+            this.senderName = _data["senderName"];
+            this.senderPhoneNumber = _data["senderPhoneNumber"];
+            this.senderEmailAddress = _data["senderEmailAddress"];
+            this.recipientName = _data["recipientName"];
+            this.recipientPhoneNumber = _data["recipientPhoneNumber"];
+            this.recipientEmailAddress = _data["recipientEmailAddress"];
+            this.paymentInfo = _data["paymentInfo"];
+            this.courierId = _data["courierId"];
+        }
+    }
+
+    static fromJS(data: any): AddOrEditDeliveryModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AddOrEditDeliveryModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["description"] = this.description;
+        data["address"] = this.address;
+        data["estimatedDeliveryStart"] = this.estimatedDeliveryStart ? this.estimatedDeliveryStart.toISOString() : <any>undefined;
+        data["estimatedDeliveryEnd"] = this.estimatedDeliveryEnd ? this.estimatedDeliveryEnd.toISOString() : <any>undefined;
+        data["packageId"] = this.packageId;
+        data["state"] = this.state;
+        data["senderName"] = this.senderName;
+        data["senderPhoneNumber"] = this.senderPhoneNumber;
+        data["senderEmailAddress"] = this.senderEmailAddress;
+        data["recipientName"] = this.recipientName;
+        data["recipientPhoneNumber"] = this.recipientPhoneNumber;
+        data["recipientEmailAddress"] = this.recipientEmailAddress;
+        data["paymentInfo"] = this.paymentInfo;
+        data["courierId"] = this.courierId;
+        return data; 
+    }
+}
+
+export interface IAddOrEditDeliveryModel {
+    id: number;
+    description?: string | undefined;
+    address?: string | undefined;
+    estimatedDeliveryStart?: Date | undefined;
+    estimatedDeliveryEnd?: Date | undefined;
+    packageId: string;
+    state: DeliveryState;
+    senderName?: string | undefined;
+    senderPhoneNumber?: string | undefined;
+    senderEmailAddress?: string | undefined;
+    recipientName?: string | undefined;
+    recipientPhoneNumber?: string | undefined;
+    recipientEmailAddress?: string | undefined;
+    paymentInfo?: string | undefined;
+    courierId: number;
+}
+
+export class PackageSubscriptionModel implements IPackageSubscriptionModel {
+    packageId?: string | undefined;
+    firebaseToken?: string | undefined;
+
+    constructor(data?: IPackageSubscriptionModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.packageId = _data["packageId"];
+            this.firebaseToken = _data["firebaseToken"];
+        }
+    }
+
+    static fromJS(data: any): PackageSubscriptionModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new PackageSubscriptionModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["packageId"] = this.packageId;
+        data["firebaseToken"] = this.firebaseToken;
+        return data; 
+    }
+}
+
+export interface IPackageSubscriptionModel {
+    packageId?: string | undefined;
+    firebaseToken?: string | undefined;
+}
+
+export class DoorBellModel implements IDoorBellModel {
+    packageId?: string | undefined;
+    responseFirebaseToken?: string | undefined;
+
+    constructor(data?: IDoorBellModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.packageId = _data["packageId"];
+            this.responseFirebaseToken = _data["responseFirebaseToken"];
+        }
+    }
+
+    static fromJS(data: any): DoorBellModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new DoorBellModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["packageId"] = this.packageId;
+        data["responseFirebaseToken"] = this.responseFirebaseToken;
+        return data; 
+    }
+}
+
+export interface IDoorBellModel {
+    packageId?: string | undefined;
+    responseFirebaseToken?: string | undefined;
+}
+
+export class DoorBellResponseModel implements IDoorBellResponseModel {
+    packageId?: string | undefined;
+    isAvailable!: boolean;
+
+    constructor(data?: IDoorBellResponseModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.packageId = _data["packageId"];
+            this.isAvailable = _data["isAvailable"];
+        }
+    }
+
+    static fromJS(data: any): DoorBellResponseModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new DoorBellResponseModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["packageId"] = this.packageId;
+        data["isAvailable"] = this.isAvailable;
+        return data; 
+    }
+}
+
+export interface IDoorBellResponseModel {
+    packageId?: string | undefined;
+    isAvailable: boolean;
+}
+
+export class DeliveryCompletedModel implements IDeliveryCompletedModel {
+    packageId?: string | undefined;
+    success!: boolean;
+
+    constructor(data?: IDeliveryCompletedModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.packageId = _data["packageId"];
+            this.success = _data["success"];
+        }
+    }
+
+    static fromJS(data: any): DeliveryCompletedModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new DeliveryCompletedModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["packageId"] = this.packageId;
+        data["success"] = this.success;
+        return data; 
+    }
+}
+
+export interface IDeliveryCompletedModel {
+    packageId?: string | undefined;
+    success: boolean;
+}
+
+export class TokenModel implements ITokenModel {
+    firebaseToken?: string | undefined;
+
+    constructor(data?: ITokenModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.firebaseToken = _data["firebaseToken"];
+        }
+    }
+
+    static fromJS(data: any): TokenModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new TokenModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["firebaseToken"] = this.firebaseToken;
+        return data; 
+    }
+}
+
+export interface ITokenModel {
+    firebaseToken?: string | undefined;
+}
+
+export interface FileParameter {
+    data: any;
+    fileName: string;
 }
 
 export class ApiException extends Error {

@@ -8,5 +8,6 @@ namespace IveArrived.Services.CurrentUser
     public interface ICurrentUserService
     {
         Task<int> CurrentUserId();
+        Task<bool> IsSignedIn();
     }
 }

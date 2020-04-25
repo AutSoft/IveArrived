@@ -9,12 +9,20 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { HomeComponent } from './components/home/home.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {MatButtonModule} from '@angular/material/button';
+import { DragDropDirective } from './directives/drag-drop.directive';
+import { LoginComponent } from './components/login/login.component';
+import { UploadFileComponent } from './components/upload-file/upload-file.component';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
     declarations: [
         AppComponent,
         RegisterComponent,
         HomeComponent,
+        DragDropDirective,
+        LoginComponent,
+        UploadFileComponent,
     ],
     imports: [
         BrowserModule,
@@ -22,7 +30,9 @@ import {MatButtonModule} from '@angular/material/button';
         BrowserAnimationsModule,
         MatStepperModule,
         NgbModule,
-        MatButtonModule
+        MatButtonModule,
+        HttpClientModule,
+        FormsModule
     ],
     providers: [],
     bootstrap: [AppComponent]

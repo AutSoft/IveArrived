@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
@@ -66,9 +67,19 @@ namespace IveArrived
             }
             services.AddSpaStaticFiles(configuration => configuration.RootPath = "ClientApp/IveArrivedAngular/dist/IveArrivedAngular");
 
-            services.AddSwaggerDocument();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("MyPolicy",
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+                    });
+            });
 
-            services.AddControllers();
+            services.AddControllers()
+                .AddJsonOptions(config => config.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
+            services.AddSwaggerDocument();
 
             services.AddTransient<IFileService, FileService>();
         }
@@ -81,6 +92,9 @@ namespace IveArrived
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
             }
+
+            app.UseCors("MyPolicy");
+
             //else
             //{
             //    app.UseExceptionHandler("/Error");
@@ -95,7 +109,10 @@ namespace IveArrived
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+
+
             app.UseRouting();
+
 
             app.UseAuthentication();
             app.UseAuthorization();
