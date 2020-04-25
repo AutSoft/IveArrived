@@ -87,7 +87,7 @@
                 <mat-step label="Regsitration confirm">
                     <label class="mt-4 w-100" style="color: #739ebb;">Password</label>
                             <input (ngModel)="password" type="text" class="form-control">
-                    <button class="mt-5" mat-raised-button
+                    <button class="mt-5" mat-raised-button (click)="onSubmit()"
                             style="background-color:white;
                             border-radius:40px !important ;width: 120px !important;
                             height: 52px !important; 
