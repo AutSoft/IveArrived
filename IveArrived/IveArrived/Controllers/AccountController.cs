@@ -15,16 +15,33 @@ namespace IveArrived.Controllers
     public class AccountController : ControllerBase
     {
         private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly UserManager<ApplicationUser> userManager;
 
-        public AccountController(SignInManager<ApplicationUser> signInManager)
+        public AccountController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
         {
             this.signInManager = signInManager;
+            this.userManager = userManager;
+
         }
 
         [HttpPost]
         public Task Login(LoginModel loginModel)
         {
             return signInManager.PasswordSignInAsync(loginModel.UserName, loginModel.Password, false, false);
+        }
+
+        public async Task Register(RegistrationModel model)
+        {
+
+            var reguser = new ApplicationUser
+            {
+                Email = model.Email,
+                UserName = model.UserName,
+            };
+
+            var result = await userManager.CreateAsync(reguser, model.Password);
+
+
         }
     }
 }
