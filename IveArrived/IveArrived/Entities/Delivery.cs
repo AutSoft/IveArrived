@@ -29,13 +29,4 @@ namespace IveArrived.Entities
         public virtual ApplicationUser.ApplicationUser Courier { get; set; }
         public virtual ApplicationUser.ApplicationUser CourierService { get; set; }
     }
-
-    public enum DeliveryState
-    {
-        PackageAssembly = 0,
-        PackageReady = 1,
-        DeliveryInProgress = 2,
-        DeliverySuccess = 3,
-        DeliveryFailed = 4
-    }
 }
