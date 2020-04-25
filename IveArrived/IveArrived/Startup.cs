@@ -1,7 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
+using IveArrived.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
@@ -32,9 +36,20 @@ namespace IveArrived
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddOptions();
+
             services.AddHttpContextAccessor();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
+            
             services.AddScoped<IFirebaseService, FirebaseService>();
+
+            FirebaseApp.Create(new AppOptions
+            {
+                Credential = GoogleCredential.FromStream(
+                    new MemoryStream(
+                        Convert.FromBase64String(
+                            Configuration["FirebaseServiceAccount"])))
+            });
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(

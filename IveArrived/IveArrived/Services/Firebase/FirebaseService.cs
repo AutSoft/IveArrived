@@ -1,7 +1,4 @@
-﻿using FcmSharp;
-using FcmSharp.Requests;
-using FcmSharp.Settings;
-using IveArrived.Data;
+﻿using IveArrived.Data;
 using IveArrived.Entities;
 using IveArrived.Services.CurrentUser;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +7,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using FirebaseAdmin;
+using FirebaseAdmin.Messaging;
+using IveArrived.Configuration;
+using Microsoft.CodeAnalysis.Options;
+using Microsoft.Extensions.Options;
 
 namespace IveArrived.Services.Firebase
 {
@@ -17,15 +19,11 @@ namespace IveArrived.Services.Firebase
     {
         private readonly ApplicationDbContext dbContext;
         private readonly ICurrentUserService currentUserService;
-        private readonly FcmClient client;
 
         public FirebaseService(ApplicationDbContext dbContext, ICurrentUserService currentUserService)
         {
             this.dbContext = dbContext;
             this.currentUserService = currentUserService;
-            //var settings = FileBasedFcmClientSettings.CreateFromFile(Path.Combine(options.Value.CredentialsPath, options.Value.CredentialsFile));
-            //client = new FcmClient(settings, new FcmHttpClient(settings));
-
         }
         public async Task AddFirebaseToken(FcmToken fcmToken)
         {
@@ -47,16 +45,22 @@ namespace IveArrived.Services.Firebase
 
         public async Task SendNotification(string token, Dictionary<string, string> data)
         {
-            var message = new FcmMessage()
+            var message = new Message
             {
-                ValidateOnly = false,
-                Message = new Message
-                {
-                    Token = token,
-                    Data = data,
-                },
+                Token = token,
+                Data = data,
             };
-            await client.SendAsync(message);
+            await FirebaseMessaging.DefaultInstance.SendAsync(message);
+        }
+
+        public async Task SendMultiCastNotification(IEnumerable<string> tokens, Dictionary<string, string> data)
+        {
+            var message = new MulticastMessage
+            {
+                Tokens = tokens.ToList(),
+                Data = data,
+            };
+            await FirebaseMessaging.DefaultInstance.SendMulticastAsync(message);
         }
     }
 }
