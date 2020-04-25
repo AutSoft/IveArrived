@@ -5,6 +5,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:i_ve_arrived/main.dart';
 import 'package:i_ve_arrived/remote/service.dart';
 import 'package:i_ve_arrived/ui/main/main.dart';
+import 'package:i_ve_arrived/ui/signup/signup.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 
@@ -83,6 +84,12 @@ class LoginPage extends StatelessWidget {
                             pageStore.startLogin();
                             await pageStore.loginRequest;
                             Navigator.of(context).pushReplacement(route(() => MainPage()));
+                          },
+                        ),
+                        RaisedButton(
+                          child: Text("Signup"),
+                          onPressed: () {
+                            Navigator.of(context).push(route(() => SignupPage()));
                           },
                         ),
                       ],

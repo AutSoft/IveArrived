@@ -5,7 +5,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:i_ve_arrived/main.dart';
 import 'package:i_ve_arrived/remote/models.dart';
 import 'package:i_ve_arrived/remote/service.dart';
-import 'package:i_ve_arrived/ui/main/order_delivery_store.dart';
+import 'package:i_ve_arrived/ui/main/order_store.dart';
 import 'package:i_ve_arrived/ui/main/orderdetail/orderdetail.dart';
 import 'package:i_ve_arrived/ui/widget/animated_list.dart';
 import 'package:i_ve_arrived/ui/widget/map_snapshot.dart';
@@ -20,7 +20,7 @@ class DeliveryPage extends StatelessWidget {
       appBar: AppBar(title: Text("Current Delivery")),
       body: Observer(
         builder: (context) {
-          var pageStore = Provider.of<OrderDeliveryStore>(context);
+          var pageStore = Provider.of<OrderStore>(context);
           if (pageStore.deliveryListRequest.status == FutureStatus.pending) {
             return Center(child: CircularProgressIndicator());
           } else {
@@ -45,9 +45,13 @@ class DeliveryPage extends StatelessWidget {
           return SingleChildScrollView(
               child: Column(children: [
                 CurrentDeliveryPanel(
-                  key: ValueKey(list[0].id),
+                  key: ValueKey(list[0].packageId),
                   item: list[0],
                   onItemPressed: (item) {Navigator.of(context).push(route(() => OrderDetailPage(item: item,)));},
+                  isRinging: pageStore.isRingingCurrentOrder,
+                  onRingingPressed: () => pageStore.orderStartRing(list[0]),
+                  onDeliveredPressed: () => pageStore.orderDelivered(list[0]),
+                  onCancelPressed: () => pageStore.orderCancelled(list[0]),
                 ),
                 NextDeliveriesPanel(
                   items: list.skip(1).toList(),
@@ -62,39 +66,35 @@ class DeliveryPage extends StatelessWidget {
   }
 }
 
-class CurrentDeliveryPanel extends StatefulWidget {
+class CurrentDeliveryPanel extends StatelessWidget {
   final OrderItem item;
   final void Function(OrderItem) onItemPressed;
+  final bool isRinging;
+  final VoidCallback onRingingPressed;
+  final VoidCallback onDeliveredPressed;
+  final VoidCallback onCancelPressed;
 
-  const CurrentDeliveryPanel({Key key, this.item, this.onItemPressed}) : super(key: key);
-
-  @override
-  _CurrentDeliveryPanelState createState() => _CurrentDeliveryPanelState();
-}
-
-class _CurrentDeliveryPanelState extends State<CurrentDeliveryPanel> {
-  var isCalling = false;
+  const CurrentDeliveryPanel({Key key, this.item, this.onItemPressed, this.isRinging, this.onRingingPressed, this.onDeliveredPressed, this.onCancelPressed}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var orderDeliveryStore = Provider.of<OrderDeliveryStore>(context);
+    var orderDeliveryStore = Provider.of<OrderStore>(context);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: <Widget>[
           Text("Next address:"),
           DeliveryItemWidget(
-            item: widget.item,
-            onTap: () => widget.onItemPressed(widget.item),
+            item: item,
+            onTap: () => onItemPressed(item),
           ),
           SizedBox(
             height: 200,
             width: double.infinity,
             child: MapSnapshot(
-              lat: widget.item.lat,
-              lng: widget.item.lng,
+              address: item.address,
               onPressed: () async {
-                var url = "https://www.google.com/maps/dir/?api=1&destination=${widget.item.lat},${widget.item.lng}";
+                var url = "https://www.google.com/maps/dir/?api=1&destination=${Uri.encodeFull(item.address)}";
                 if (await canLaunch(url)) {
                   launch(url);
                 }
@@ -104,27 +104,21 @@ class _CurrentDeliveryPanelState extends State<CurrentDeliveryPanel> {
           AnimatedCrossFade(
             firstChild: RaisedButton(
               child: Container(width: 100, alignment: Alignment.center, child: Text("Hívás/Csengő")),
-              onPressed: () => setState((){
-                isCalling = true;
-              }),
+              onPressed: onRingingPressed,
             ),
             secondChild: Column(
               children: <Widget>[
                 RaisedButton(
                   child: Container(width: 100, alignment: Alignment.center, child: Text("Átvette")),
-                  onPressed: (){
-                    orderDeliveryStore.orderDelivered(widget.item);
-                  },
+                  onPressed: onDeliveredPressed,
                 ),
                 RaisedButton(
                   child: Container(width: 100, alignment: Alignment.center, child: Text("Nem vette át")),
-                  onPressed: (){
-                    orderDeliveryStore.orderCancelled(widget.item);
-                  },
+                  onPressed: onCancelPressed,
                 )
               ],
             ),
-            crossFadeState: isCalling ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+            crossFadeState: isRinging ? CrossFadeState.showSecond : CrossFadeState.showFirst,
             duration: kDefaultAnimationDuration,
             firstCurve: kDefaultAnimationCurve,
             secondCurve: kDefaultAnimationCurve,
@@ -174,7 +168,7 @@ class DeliveryItemWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(item.id),
+            Text(item.packageId),
             Text(item.orderDate),
             Text(item.address),
           ],

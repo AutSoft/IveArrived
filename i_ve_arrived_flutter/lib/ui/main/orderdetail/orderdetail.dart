@@ -11,18 +11,17 @@ class OrderDetailPage extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(item.id),),
+      appBar: AppBar(title: Text(item.packageId),),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Image.network("https://topszotar.hu/inc/image/entry/EN/p/package_jelentese.jpg"),
-          Text(item.id),
+          Text(item.packageId),
           Text(item.orderDate),
           SizedBox(
             height: 200,
             child: MapSnapshot(
-              lat: item.lat,
-              lng: item.lng,
+              address: item.address,
             ),
           ),
         ],

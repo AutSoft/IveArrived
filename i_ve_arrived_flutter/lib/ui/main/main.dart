@@ -2,10 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:i_ve_arrived/main.dart';
 import 'package:i_ve_arrived/remote/models.dart';
+import 'package:i_ve_arrived/remote/service.dart';
 import 'package:i_ve_arrived/ui/main/delivery/delivery_history_list.dart';
-import 'package:i_ve_arrived/ui/main/order_delivery_store.dart';
+import 'package:i_ve_arrived/ui/main/order_store.dart';
 import 'package:i_ve_arrived/ui/main/orderlist/orderlist.dart';
+import 'package:i_ve_arrived/ui/main/places/places.dart';
 import 'package:i_ve_arrived/ui/main/profile/profile.dart';
+import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 
 import 'delivery/delivery.dart';
@@ -39,33 +42,72 @@ class _MainPageState extends State<MainPage> {
   List<Widget> widgets;
   List<GlobalKey> navigatorKeys;
 
+  OrderStore pageStore;
+  ReactionDisposer reactionDisposer;
+
   @override
   void initState() {
     widgets = isDeliveryMode
         ? [
             DeliveryPage(),
             DeliveryHistoryPage(
-              filterStatus: DeliveryStatus.DELIVERED,
+              filterStatus: DeliveryStatus.DeliveryInProgress,
             ),
             DeliveryHistoryPage(
-              filterStatus: DeliveryStatus.CANCELLED,
+              filterStatus: DeliveryStatus.DeliveryFailed,
             ),
             ProfilePage(),
           ]
         : [
             OrderListPage(),
-            TestPage(
-              title: "Map",
-            )
+            PlacesPage(),
+            ProfilePage(),
           ];
     navigatorKeys = widgets.map((_) => GlobalKey()).toList();
+    () async {
+      var token = await firebaseMessaging.getToken();
+      service.addFirebaseToken(token);
+    }();
+
+    pageStore = OrderStore();
+    reactionDisposer = reaction((_) => pageStore.currentlyRingingOrder, (item) {
+      if (item != null && !isDeliveryMode) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) {
+            return AlertDialog(
+              title: Text("Order is ringing"),
+              content: Text("Can you accept the order?"),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text("No"),
+                  onPressed: () => pageStore.reactToRingingOrder(false),
+                ),
+                FlatButton(
+                  child: Text("Yes"),
+                  onPressed: () => pageStore.reactToRingingOrder(true),
+                )
+              ],
+            );
+          },
+        );
+      }
+    });
+
     super.initState();
   }
 
   @override
+  void dispose() {
+    reactionDisposer();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Provider(
-      create: (_) => OrderDeliveryStore(),
+    return Provider<OrderStore>.value(
+      value: pageStore,
       child: Scaffold(
         primary: false,
         body: WillPopScope(
@@ -93,7 +135,7 @@ class _MainPageState extends State<MainPage> {
           ),
           onWillPop: () async {
             var subNavigator = navigatorKeys[selectedPage].currentState as NavigatorState;
-            if (subNavigator.canPop()){
+            if (subNavigator.canPop()) {
               return !(await subNavigator.maybePop());
             } else {
               return true;
@@ -132,11 +174,15 @@ class _MainPageState extends State<MainPage> {
               : [
                   BottomNavigationBarItem(
                     icon: Icon(Icons.home),
-                    title: Text("Home"),
+                    title: Text("Orders"),
                   ),
                   BottomNavigationBarItem(
-                    icon: Icon(Icons.map),
-                    title: Text("Map"),
+                    icon: Icon(Icons.store),
+                    title: Text("Stores"),
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.account_circle),
+                    title: Text("Profile"),
                   ),
                 ],
           currentIndex: selectedPage,

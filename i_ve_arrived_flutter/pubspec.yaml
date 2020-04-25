@@ -34,6 +34,10 @@ dependencies:
   firebase_messaging: ^6.0.13
   animated_stream_list: ^1.1.0
   flutter_ringtone_player: ^2.0.0
+  dio_cookie_manager: 1.0.0
+  cookie_jar: ^1.0.0
+  android_intent: ^0.3.7+1
+  flutter_local_notifications: ^1.4.1
 
 dev_dependencies:
   build_runner: ^1.0.0

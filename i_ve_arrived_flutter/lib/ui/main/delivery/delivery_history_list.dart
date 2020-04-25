@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:i_ve_arrived/main.dart';
 import 'package:i_ve_arrived/remote/models.dart';
-import 'package:i_ve_arrived/ui/main/order_delivery_store.dart';
+import 'package:i_ve_arrived/ui/main/order_store.dart';
 import 'package:i_ve_arrived/ui/main/orderdetail/orderdetail.dart';
 import 'package:i_ve_arrived/ui/widget/order_item.dart';
 import 'package:provider/provider.dart';
@@ -19,8 +19,8 @@ class DeliveryHistoryPage extends StatelessWidget {
       appBar: AppBar(title: Text("History")),
       body: Observer(
         builder: (context) {
-          var pageStore = Provider.of<OrderDeliveryStore>(context);
-          var filteredList = pageStore.currentList.where((it) => it.status == filterStatus).toList();
+          var pageStore = Provider.of<OrderStore>(context);
+          var filteredList = pageStore.currentList.where((it) => it.state == filterStatus).toList();
           return ListView.separated(
             itemBuilder: (_, i) => OrderItemWidget(
               item: filteredList[i],

@@ -18,7 +18,7 @@ class OrderItemWidget extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Text(
-              item.id,
+              item.packageId,
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -28,7 +28,7 @@ class OrderItemWidget extends StatelessWidget {
               item.orderDate,
               style: TextStyle(fontSize: 16),
             ),
-            Text("Status: ${item.status}")
+            Text("Status: ${item.state}")
           ],
         ),
       ),

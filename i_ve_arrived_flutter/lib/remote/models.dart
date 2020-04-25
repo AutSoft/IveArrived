@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'models.g.dart';
@@ -13,40 +14,90 @@ class LoginResponse{
 }
 
 enum DeliveryStatus{
-  IN_PROGRESS, DELIVERED, CANCELLED
+  PackageAssembly,
+  PackageReady,
+  DeliveryInProgress,
+  DeliverySuccess,
+  DeliveryFailed,
 }
 
 @JsonSerializable()
 class OrderItem{
-  final String id;
-  final String orderDate;
+  final int id;
+  final String description;
   final String address;
-  final double lat;
-  final double lng;
-  final DeliveryStatus status;
-
-  OrderItem({this.id, this.orderDate, this.address, this.lat, this.lng, this.status});
+  final String estimatedDeliveryStart;
+  final String estimatedDeliveryEnd;
+  final String packageId;
+  final String orderDate;
+  final DeliveryStatus state;
+  final String senderName;
+  final String senderPhoneNumber;
+  final String senderEmailAddress;
+  final String recipientName;
+  final String recipientPhoneNumber;
+  final String recipientEmailAddress;
+  final String paymentInfo;
 
   factory OrderItem.fromJson(Map<String, dynamic> json) => _$OrderItemFromJson(json);
   Map<String, dynamic> toJson() => _$OrderItemToJson(this);
 
+  const OrderItem({
+    this.id,
+    this.description,
+    this.address,
+    this.estimatedDeliveryStart,
+    this.estimatedDeliveryEnd,
+    this.packageId,
+    this.orderDate,
+    this.state,
+    this.senderName,
+    this.senderPhoneNumber,
+    this.senderEmailAddress,
+    this.recipientName,
+    this.recipientPhoneNumber,
+    this.recipientEmailAddress,
+    this.paymentInfo,
+  });
+
   OrderItem copyWith({
-    String id,
-    String orderDate,
+    int id,
+    String description,
     String address,
+    String estimatedDeliveryStart,
+    String estimatedDeliveryEnd,
+    String packageId,
+    String orderDate,
     double lat,
     double lng,
-    DeliveryStatus status,
+    DeliveryStatus state,
+    String senderName,
+    String senderPhoneNumber,
+    String senderEmailAddress,
+    String recipientName,
+    String recipientPhoneNumber,
+    String recipientEmailAddress,
+    String paymentInfo,
   }) {
     return new OrderItem(
       id: id ?? this.id,
-      orderDate: orderDate ?? this.orderDate,
+      description: description ?? this.description,
       address: address ?? this.address,
-      lat: lat ?? this.lat,
-      lng: lng ?? this.lng,
-      status: status ?? this.status,
+      estimatedDeliveryStart: estimatedDeliveryStart ?? this.estimatedDeliveryStart,
+      estimatedDeliveryEnd: estimatedDeliveryEnd ?? this.estimatedDeliveryEnd,
+      packageId: packageId ?? this.packageId,
+      orderDate: orderDate ?? this.orderDate,
+      state: state ?? this.state,
+      senderName: senderName ?? this.senderName,
+      senderPhoneNumber: senderPhoneNumber ?? this.senderPhoneNumber,
+      senderEmailAddress: senderEmailAddress ?? this.senderEmailAddress,
+      recipientName: recipientName ?? this.recipientName,
+      recipientPhoneNumber: recipientPhoneNumber ?? this.recipientPhoneNumber,
+      recipientEmailAddress: recipientEmailAddress ?? this.recipientEmailAddress,
+      paymentInfo: paymentInfo ?? this.paymentInfo,
     );
   }
+
 }
 
 @JsonSerializable()
