@@ -15,17 +15,12 @@ namespace IveArrived.Controllers
     public class AccountController : ControllerBase
     {
         private readonly SignInManager<ApplicationUser> signInManager;
-        private readonly SignInManager<ApplicationUser> signInManager;
         private readonly UserManager<ApplicationUser> userManager;
-        private readonly RoleManager<ApplicationUser> roleManager;
 
-        public AccountController(SignInManager<ApplicationUser> signInManager)
-        public AccountController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager
-            , RoleManager<ApplicationUser> roleManager)
+        public AccountController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
-            this.roleManager = roleManager;
 
         }
 
