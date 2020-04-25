@@ -10,7 +10,6 @@ namespace IveArrived.Models
     public class RegistrationModel
     {
         public string Role { get; set; }
-        public string UserName { get; set; }
         public string DisplayName { get; set; }
         public string ContactName { get; set; }
         public string Address { get; set; }

@@ -32,7 +32,7 @@ namespace IveArrived.Controllers
         [HttpPost]
         public async Task Login(LoginModel loginModel)
         {
-            var result = await signInManager.PasswordSignInAsync(loginModel.UserName, loginModel.Password, false, false);
+            var result = await signInManager.PasswordSignInAsync(loginModel.Email, loginModel.Password, false, false);
             if (result.Succeeded)
                 return;
             else
@@ -62,7 +62,7 @@ namespace IveArrived.Controllers
             var reguser = new ApplicationUser
             {
                 Email = model.Email,
-                UserName = model.UserName,
+                UserName = model.Email,
                 DisplayName = model.DisplayName,
                 ContactName = model.ContactName,
                 Address = model.Address,

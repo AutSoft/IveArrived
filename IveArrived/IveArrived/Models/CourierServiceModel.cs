@@ -16,10 +16,4 @@ namespace IveArrived.Models
         public string LogoUrl { get; set; }
         public string FlierUrl { get; set; }
     }
-
-    public class PackageSubscriptionModel
-    {
-        public string PackageId { get; set; }
-        public string FirebaseToken { get; set; }
-    }
 }
