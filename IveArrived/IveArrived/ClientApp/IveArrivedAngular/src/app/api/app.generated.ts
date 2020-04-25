@@ -22,7 +22,7 @@ export class AccountService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = "http://localhost:5000";
+        this.baseUrl = baseUrl ? baseUrl : "https://ivearrived.azurewebsites.net";
     }
 
     login(loginModel: LoginModel): Observable<void> {
@@ -144,7 +144,7 @@ export class AccountService {
 }
 
 @Injectable()
-export class DeliveryService {
+export class CourierServiceDeliveryService {
     private http: HttpClient;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -154,8 +154,8 @@ export class DeliveryService {
         this.baseUrl = baseUrl ? baseUrl : "https://ivearrived.azurewebsites.net";
     }
 
-    listForCourierService(): Observable<DeliveryModel[]> {
-        let url_ = this.baseUrl + "/api/Delivery/ListForCourierService";
+    listDeliveries(): Observable<DeliveryModel[]> {
+        let url_ = this.baseUrl + "/api/CourierServiceDelivery/ListDeliveries";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -167,11 +167,11 @@ export class DeliveryService {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processListForCourierService(response_);
+            return this.processListDeliveries(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processListForCourierService(<any>response_);
+                    return this.processListDeliveries(<any>response_);
                 } catch (e) {
                     return <Observable<DeliveryModel[]>><any>_observableThrow(e);
                 }
@@ -180,7 +180,7 @@ export class DeliveryService {
         }));
     }
 
-    protected processListForCourierService(response: HttpResponseBase): Observable<DeliveryModel[]> {
+    protected processListDeliveries(response: HttpResponseBase): Observable<DeliveryModel[]> {
         const status = response.status;
         const responseBlob = 
             response instanceof HttpResponse ? response.body : 
@@ -204,6 +204,166 @@ export class DeliveryService {
             }));
         }
         return _observableOf<DeliveryModel[]>(<any>null);
+    }
+
+    changeDeliveryState(dto: DeliveryStateChangeModel): Observable<void> {
+        let url_ = this.baseUrl + "/api/CourierServiceDelivery/ChangeDeliveryState";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(dto);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processChangeDeliveryState(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processChangeDeliveryState(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processChangeDeliveryState(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    changeDeliveryCourier(dto: DeliveryCourierChangeModel): Observable<void> {
+        let url_ = this.baseUrl + "/api/CourierServiceDelivery/ChangeDeliveryCourier";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(dto);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processChangeDeliveryCourier(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processChangeDeliveryCourier(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processChangeDeliveryCourier(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
+    }
+
+    addOrUpdateDelivery(dm: AddOrEditDeliveryModel): Observable<DeliveryModel> {
+        let url_ = this.baseUrl + "/api/CourierServiceDelivery/AddOrUpdateDelivery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(dm);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Content-Type": "application/json", 
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAddOrUpdateDelivery(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAddOrUpdateDelivery(<any>response_);
+                } catch (e) {
+                    return <Observable<DeliveryModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<DeliveryModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processAddOrUpdateDelivery(response: HttpResponseBase): Observable<DeliveryModel> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = DeliveryModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<DeliveryModel>(<any>null);
+    }
+}
+
+@Injectable()
+export class DeliveryService {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ? baseUrl : "https://ivearrived.azurewebsites.net";
     }
 
     listForCourier(): Observable<DeliveryModel[]> {
@@ -310,11 +470,11 @@ export class DeliveryService {
         return _observableOf<DeliveryModel[]>(<any>null);
     }
 
-    subscribe(subscription: PackageSubscriptionModel): Observable<DeliveryModel> {
+    subscribe(dto: PackageSubscriptionModel): Observable<DeliveryModel> {
         let url_ = this.baseUrl + "/api/Delivery/Subscribe";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(subscription);
+        const content_ = JSON.stringify(dto);
 
         let options_ : any = {
             body: content_,
@@ -362,11 +522,11 @@ export class DeliveryService {
         return _observableOf<DeliveryModel>(<any>null);
     }
 
-    doorBell(package: DoorBellModel): Observable<void> {
+    doorBell(dto: DoorBellModel): Observable<void> {
         let url_ = this.baseUrl + "/api/Delivery/DoorBell";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(package);
+        const content_ = JSON.stringify(dto);
 
         let options_ : any = {
             body: content_,
@@ -410,11 +570,11 @@ export class DeliveryService {
         return _observableOf<void>(<any>null);
     }
 
-    doorBellResponse(package: DoorBellResponseModel): Observable<void> {
+    doorBellResponse(dto: DoorBellResponseModel): Observable<void> {
         let url_ = this.baseUrl + "/api/Delivery/DoorBellResponse";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(package);
+        const content_ = JSON.stringify(dto);
 
         let options_ : any = {
             body: content_,
@@ -458,11 +618,11 @@ export class DeliveryService {
         return _observableOf<void>(<any>null);
     }
 
-    deliveryCompleted(package: DeliveryCompletedModel): Observable<void> {
+    deliveryCompleted(dto: DeliveryCompletedModel): Observable<void> {
         let url_ = this.baseUrl + "/api/Delivery/DeliveryCompleted";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(package);
+        const content_ = JSON.stringify(dto);
 
         let options_ : any = {
             body: content_,
@@ -1092,6 +1252,178 @@ export interface ICourierServiceModel {
     email?: string | undefined;
     logoUrl?: string | undefined;
     flierUrl?: string | undefined;
+}
+
+export class DeliveryStateChangeModel implements IDeliveryStateChangeModel {
+    deliveryId!: number;
+    newState!: DeliveryState;
+
+    constructor(data?: IDeliveryStateChangeModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.deliveryId = _data["deliveryId"];
+            this.newState = _data["newState"];
+        }
+    }
+
+    static fromJS(data: any): DeliveryStateChangeModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new DeliveryStateChangeModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["deliveryId"] = this.deliveryId;
+        data["newState"] = this.newState;
+        return data; 
+    }
+}
+
+export interface IDeliveryStateChangeModel {
+    deliveryId: number;
+    newState: DeliveryState;
+}
+
+export class DeliveryCourierChangeModel implements IDeliveryCourierChangeModel {
+    deliveryId!: number;
+    courierId!: number;
+
+    constructor(data?: IDeliveryCourierChangeModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.deliveryId = _data["deliveryId"];
+            this.courierId = _data["courierId"];
+        }
+    }
+
+    static fromJS(data: any): DeliveryCourierChangeModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new DeliveryCourierChangeModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["deliveryId"] = this.deliveryId;
+        data["courierId"] = this.courierId;
+        return data; 
+    }
+}
+
+export interface IDeliveryCourierChangeModel {
+    deliveryId: number;
+    courierId: number;
+}
+
+export class AddOrEditDeliveryModel implements IAddOrEditDeliveryModel {
+    id!: number;
+    description?: string | undefined;
+    address?: string | undefined;
+    estimatedDeliveryStart?: Date | undefined;
+    estimatedDeliveryEnd?: Date | undefined;
+    packageId!: string;
+    state!: DeliveryState;
+    senderName?: string | undefined;
+    senderPhoneNumber?: string | undefined;
+    senderEmailAddress?: string | undefined;
+    recipientName?: string | undefined;
+    recipientPhoneNumber?: string | undefined;
+    recipientEmailAddress?: string | undefined;
+    paymentInfo?: string | undefined;
+    courierId!: number;
+
+    constructor(data?: IAddOrEditDeliveryModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.description = _data["description"];
+            this.address = _data["address"];
+            this.estimatedDeliveryStart = _data["estimatedDeliveryStart"] ? new Date(_data["estimatedDeliveryStart"].toString()) : <any>undefined;
+            this.estimatedDeliveryEnd = _data["estimatedDeliveryEnd"] ? new Date(_data["estimatedDeliveryEnd"].toString()) : <any>undefined;
+            this.packageId = _data["packageId"];
+            this.state = _data["state"];
+            this.senderName = _data["senderName"];
+            this.senderPhoneNumber = _data["senderPhoneNumber"];
+            this.senderEmailAddress = _data["senderEmailAddress"];
+            this.recipientName = _data["recipientName"];
+            this.recipientPhoneNumber = _data["recipientPhoneNumber"];
+            this.recipientEmailAddress = _data["recipientEmailAddress"];
+            this.paymentInfo = _data["paymentInfo"];
+            this.courierId = _data["courierId"];
+        }
+    }
+
+    static fromJS(data: any): AddOrEditDeliveryModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new AddOrEditDeliveryModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["description"] = this.description;
+        data["address"] = this.address;
+        data["estimatedDeliveryStart"] = this.estimatedDeliveryStart ? this.estimatedDeliveryStart.toISOString() : <any>undefined;
+        data["estimatedDeliveryEnd"] = this.estimatedDeliveryEnd ? this.estimatedDeliveryEnd.toISOString() : <any>undefined;
+        data["packageId"] = this.packageId;
+        data["state"] = this.state;
+        data["senderName"] = this.senderName;
+        data["senderPhoneNumber"] = this.senderPhoneNumber;
+        data["senderEmailAddress"] = this.senderEmailAddress;
+        data["recipientName"] = this.recipientName;
+        data["recipientPhoneNumber"] = this.recipientPhoneNumber;
+        data["recipientEmailAddress"] = this.recipientEmailAddress;
+        data["paymentInfo"] = this.paymentInfo;
+        data["courierId"] = this.courierId;
+        return data; 
+    }
+}
+
+export interface IAddOrEditDeliveryModel {
+    id: number;
+    description?: string | undefined;
+    address?: string | undefined;
+    estimatedDeliveryStart?: Date | undefined;
+    estimatedDeliveryEnd?: Date | undefined;
+    packageId: string;
+    state: DeliveryState;
+    senderName?: string | undefined;
+    senderPhoneNumber?: string | undefined;
+    senderEmailAddress?: string | undefined;
+    recipientName?: string | undefined;
+    recipientPhoneNumber?: string | undefined;
+    recipientEmailAddress?: string | undefined;
+    paymentInfo?: string | undefined;
+    courierId: number;
 }
 
 export class PackageSubscriptionModel implements IPackageSubscriptionModel {

@@ -7,6 +7,7 @@ using IveArrived.Entities;
 using IveArrived.Mapper;
 using IveArrived.Models;
 using IveArrived.Services.CurrentUser;
+using IveArrived.Services.Firebase;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,12 +19,15 @@ namespace IveArrived.Controllers
     {
         private readonly ICurrentUserService currentUser;
         private readonly ApplicationDbContext context;
+        private readonly IFirebaseService firebase;
 
         public CourierServiceDeliveryController(ICurrentUserService currentUser,
-            ApplicationDbContext context)
+            ApplicationDbContext context,
+            IFirebaseService firebase)
         {
             this.currentUser = currentUser;
             this.context = context;
+            this.firebase = firebase;
         }
 
         [HttpGet]
@@ -38,26 +42,35 @@ namespace IveArrived.Controllers
                 .ToListAsync();
         }
         [HttpPost]
-        public async Task ChangeDeliveryState([FromBody] DeliveryStateChangeModel package)
+        public async Task ChangeDeliveryState([FromBody] DeliveryStateChangeModel dto)
         {
             var delivery = await context.Delivery
-                .FirstOrDefaultAsync(d => d.Id == package.DeliveryId);
+                .FirstOrDefaultAsync(d => d.Id == dto.DeliveryId);
 
             if (delivery == null)
             {
                 return;
             }
 
-            delivery.State = package.NewState;
+            delivery.State = dto.NewState;
 
             await context.SaveChangesAsync();
+
+            await firebase.SendMultiCastNotification(
+                delivery.RecipientTokens.Select(t => t.Token),
+                new Dictionary<string, string>
+                {
+                    { "MessageType", nameof(ChangeDeliveryState) },
+                    { nameof(DeliveryModel.PackageId), delivery.PackageId },
+                    { nameof(DeliveryModel.State), delivery.State.ToString() }
+                });
         }
 
         [HttpPost]
-        public async Task ChangeDeliveryCourier([FromBody] DeliveryCourierChangeModel package)
+        public async Task ChangeDeliveryCourier([FromBody] DeliveryCourierChangeModel dto)
         {
             var delivery = await context.Delivery
-                .FirstOrDefaultAsync(d => d.Id == package.DeliveryId);
+                .FirstOrDefaultAsync(d => d.Id == dto.DeliveryId);
 
             if (delivery == null)
             {
@@ -65,9 +78,18 @@ namespace IveArrived.Controllers
             }
 
             delivery.Courier = await context.Users
-                .FirstOrDefaultAsync(u => u.Id == package.CourierId);
+                .FirstOrDefaultAsync(u => u.Id == dto.CourierId);
 
             await context.SaveChangesAsync();
+
+            await firebase.SendMultiCastNotification(
+                delivery.RecipientTokens.Select(t => t.Token),
+                new Dictionary<string, string>
+                {
+                    { "MessageType", nameof(ChangeDeliveryCourier) },
+                    { nameof(DeliveryModel.PackageId), delivery.PackageId },
+                    { nameof(DeliveryModel.Courier.DisplayName), delivery.Courier.DisplayName }
+                });
         }
 
         [HttpPost]
