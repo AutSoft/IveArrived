@@ -1,10 +1,9 @@
 ﻿using System;
 using IveArrived.Entities;
-using IveArrived.Entities.ApplicationUser;
 
 namespace IveArrived.Models
 {
-    public class DeliveryModel
+    public class AddOrEditDeliveryModel
     {
         public int Id { get; set; }
         public string Description { get; set; }
@@ -20,7 +19,6 @@ namespace IveArrived.Models
         public string RecipientPhoneNumber { get; set; }
         public string RecipientEmailAddress { get; set; }
         public string PaymentInfo { get; set; }
-        public CourierServiceModel Courier { get; set; }
-        public CourierServiceModel CourierService { get; set; }
+        public int CourierId { get; set; }
     }
 }

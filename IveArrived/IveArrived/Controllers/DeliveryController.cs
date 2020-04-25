@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,30 +23,15 @@ namespace IveArrived.Controllers
     {
         private readonly ICurrentUserService currentUser;
         private readonly ApplicationDbContext context;
-        private readonly IHttpContextAccessor httpContext;
         private readonly IFirebaseService firebase;
 
         public DeliveryController(ICurrentUserService currentUser,
             ApplicationDbContext context,
-            IHttpContextAccessor httpContext,
             IFirebaseService firebase)
         {
             this.currentUser = currentUser;
             this.context = context;
-            this.httpContext = httpContext;
             this.firebase = firebase;
-        }
-
-        [HttpGet]
-        public async Task<List<DeliveryModel>> ListForCourierService()
-        {
-            int currentUserId = await currentUser.CurrentUserId();
-            return await context.Delivery
-                .Include(d => d.CourierService)
-                .Include(d => d.Courier)
-                .Where(d => d.CourierService.Id == currentUserId)
-                .Select(d => d.ToDto())
-                .ToListAsync();
         }
 
         [HttpGet]
@@ -81,19 +65,19 @@ namespace IveArrived.Controllers
             var delivery = await context.Delivery
                 .Include(d => d.CourierService)
                 .Include(d => d.Courier)
-                .Where(d => d.PackageId == subscription.PackageId)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(d => d.PackageId == subscription.PackageId);
 
             if (delivery == null)
             {
                 return null;
             }
 
-            var token = await context.FcmToken.FirstOrDefaultAsync() ?? new FcmToken
-            {
-                Token = subscription.FirebaseToken,
-                UserId = await currentUser.CurrentUserId()
-            };
+            var token = await context.FcmToken.FirstOrDefaultAsync(t => t.Token == subscription.FirebaseToken)
+                        ?? new FcmToken
+                        {
+                            Token = subscription.FirebaseToken,
+                            UserId = await currentUser.CurrentUserId()
+                        };
 
             delivery.RecipientTokens.Add(token);
 
@@ -107,18 +91,28 @@ namespace IveArrived.Controllers
         {
             var delivery = await context.Delivery
                 .Include(d => d.RecipientTokens)
-                .Where(d => d.PackageId == package.PackageId)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(d => d.PackageId == package.PackageId);
 
             if (delivery == null)
             {
                 return;
             }
 
+            var token = await context.FcmToken.FirstOrDefaultAsync(t => t.Token == package.ResponseFirebaseToken)
+                        ?? new FcmToken
+                        {
+                            Token = package.ResponseFirebaseToken,
+                            UserId = await currentUser.CurrentUserId()
+                        };
+
+            delivery.CourierToken = token;
+            await context.SaveChangesAsync();
+
             await firebase.SendMultiCastNotification(
                 delivery.RecipientTokens.Select(t => t.Token),
                 new Dictionary<string, string>
                 {
+                    { "MessageType", nameof(DoorBell) },
                     { nameof(DoorBellModel.PackageId), package.PackageId }
                 });
         }
@@ -127,27 +121,38 @@ namespace IveArrived.Controllers
         public async Task DoorBellResponse([FromBody] DoorBellResponseModel package)
         {
             var delivery = await context.Delivery
-                .Include(d => d.RecipientTokens)
-                .Where(d => d.PackageId == package.PackageId)
-                .FirstOrDefaultAsync();
+                .Include(d => d.CourierToken)
+                .FirstOrDefaultAsync(d => d.PackageId == package.PackageId);
+
+            if (delivery?.CourierToken == null)
+            {
+                return;
+            }
+
+            await firebase.SendNotification(
+                delivery.CourierToken.Token,
+                new Dictionary<string, string>
+                {
+                    { "MessageType", nameof(DoorBellResponse) },
+                    { nameof(DoorBellModel.PackageId), package.PackageId },
+                    { nameof(DoorBellResponseModel.IsAvailable), package.IsAvailable.ToString() }
+                });
+        }
+
+        [HttpPost]
+        public async Task DeliveryCompleted([FromBody] DeliveryCompletedModel package)
+        {
+            var delivery = await context.Delivery
+                .FirstOrDefaultAsync(d => d.PackageId == package.PackageId);
 
             if (delivery == null)
             {
                 return;
             }
 
-            await firebase.SendMultiCastNotification(
-                delivery.RecipientTokens.Select(t => t.Token),
-                new Dictionary<string, string>
-                {
-                    { nameof(DoorBellModel.PackageId), package.PackageId }
-                });
-        }
+            delivery.State = package.Success ? DeliveryState.DeliverySuccess : DeliveryState.DeliveryFailed;
 
-        [HttpPost]
-        public Task DeliveryCompleted([FromBody] DeliveryCompletedModel package)
-        {
-            throw new NotImplementedException();
+            await context.SaveChangesAsync();
         }
     }
 }

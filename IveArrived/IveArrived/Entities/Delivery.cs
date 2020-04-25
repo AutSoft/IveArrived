@@ -26,6 +26,7 @@ namespace IveArrived.Entities
         public string RecipientPhoneNumber { get; set; }
         public string RecipientEmailAddress { get; set; }
         public string PaymentInfo { get; set; }
+        public virtual FcmToken CourierToken { get; set; }
         public virtual ICollection<FcmToken> RecipientTokens { get; set; }
         public virtual ApplicationUser.ApplicationUser Courier { get; set; }
         public virtual ApplicationUser.ApplicationUser CourierService { get; set; }
