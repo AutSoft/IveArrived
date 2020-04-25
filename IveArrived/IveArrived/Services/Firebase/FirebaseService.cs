@@ -33,7 +33,7 @@ namespace IveArrived.Services.Firebase
             {
                 var t = new FcmToken
                 {
-                    ProfileId = await currentUserService.CurrentUserId(),
+                    UserId = await currentUserService.CurrentUserId(),
                     Token = fcmToken.Token
                 };
 
