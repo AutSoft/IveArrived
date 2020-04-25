@@ -30,6 +30,7 @@ namespace IveArrived.Controllers
             return signInManager.PasswordSignInAsync(loginModel.UserName, loginModel.Password, false, false);
         }
 
+        [HttpPost]
         public async Task Register(RegistrationModel model)
         {
 
@@ -40,6 +41,8 @@ namespace IveArrived.Controllers
             };
 
             var result = await userManager.CreateAsync(reguser, model.Password);
+
+            await userManager.AddToRoleAsync(reguser, model.Role);
 
 
         }
