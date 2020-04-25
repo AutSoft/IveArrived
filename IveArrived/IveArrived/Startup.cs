@@ -19,6 +19,7 @@ using Microsoft.Extensions.Hosting;
 using IveArrived.Services.CurrentUser;
 using IveArrived.Services.Firebase;
 using IveArrived.Entities.ApplicationUser;
+using IveArrived.Services.File;
 
 namespace IveArrived
 {
@@ -68,6 +69,8 @@ namespace IveArrived
             services.AddSwaggerDocument();
 
             services.AddControllers();
+
+            services.AddTransient<IFileService, FileService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
