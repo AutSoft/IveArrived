@@ -10,7 +10,9 @@ import { HomeComponent } from './components/home/home.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {MatButtonModule} from '@angular/material/button';
 import { DragDropDirective } from './directives/drag-drop.directive';
+import { LoginComponent } from './components/login/login.component';
 import { UploadFileComponent } from './components/upload-file/upload-file.component';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @NgModule({
     declarations: [
@@ -18,6 +20,7 @@ import { UploadFileComponent } from './components/upload-file/upload-file.compon
         RegisterComponent,
         HomeComponent,
         DragDropDirective,
+        LoginComponent,
         UploadFileComponent,
     ],
     imports: [
@@ -26,7 +29,8 @@ import { UploadFileComponent } from './components/upload-file/upload-file.compon
         BrowserAnimationsModule,
         MatStepperModule,
         NgbModule,
-        MatButtonModule
+        MatButtonModule,
+        HttpClientModule
     ],
     providers: [],
     bootstrap: [AppComponent]

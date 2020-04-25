@@ -1,5 +1,9 @@
-﻿namespace IveArrived.Entities
+﻿using System.Text.Json.Serialization;
+using Newtonsoft.Json.Converters;
+
+namespace IveArrived.Entities
 {
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum DeliveryState
     {
         PackageAssembly = 0,

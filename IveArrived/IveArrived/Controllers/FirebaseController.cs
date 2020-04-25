@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using IveArrived.Entities;
+using IveArrived.Models;
 using IveArrived.Services.CurrentUser;
 using IveArrived.Services.Firebase;
 using Microsoft.AspNetCore.Http;
@@ -22,10 +23,10 @@ namespace IveArrived.Controllers
             this.firebaseService = firebaseService;
         }
         [HttpPost]
-        public async Task AddFirebaseTokenToUser([FromBody] string token)
+        public async Task AddFirebaseTokenToUser([FromBody] TokenModel token)
         {
 
-            await firebaseService.AddFirebaseToken(token);
+            await firebaseService.AddFirebaseToken(token.FirebaseToken);
 
         }
 

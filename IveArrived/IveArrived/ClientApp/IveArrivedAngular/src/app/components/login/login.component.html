@@ -1,0 +1,36 @@
+<div>
+    <div class="col-12" style="box-shadow: 0 3px 30px 0 rgba(0, 0, 0, 0.05);">
+        <div class="col-12 text-center" style="height: 141px;">
+            <img class="pl-5 float-left" style="height:100px;width:186px" src="/assets/im_sending_logo.svg" />
+        </div>
+        <div class="col-12 text-center" style="margin-top:-50px;margin-left:-160px;">
+            <span
+                style="font-size: 25px;font-family: OpenSans-Bold;text-transform: uppercase;color: #0871b8;">Login</span>
+        </div>
+    </div>
+    <div class="text-center col-5"
+        style="background-color: #f9f9f9;margin-right:auto;margin-left: auto;border-radius: 40px;margin-top: 60px;">
+        <div>
+              <br>
+              <div style="padding:0px 165px">
+                <div class="mt-4">
+                    <span class="great" style="margin-top: 100px;">Great to see you again!</span>
+                 </div>
+                 <div class="text-left mt-2">
+                 <label class="mt-4 w-120 label-header">&nbsp;Email</label>
+                  <input (ngModel)="Email" type="text" class="form-control" style="width: 288px;" placeholder="joesmithbakery@gmail.com">
+                  <label class="mt-4 w-120 label-header" style="color: #739ebb;">&nbsp;Password</label>
+                  <input (ngModel)="Password" type="password" class="form-control" style="width: 288px;" placeholder="******">
+                   &nbsp;<a href=""><span style="font-size: 14px;color: #2ba4f6;">Forgot your password?</span></a>
+                </div>
+                <button class="mt-5" mat-raised-button (click)="onSubmit()"
+                    style="background-color:#0871b8;border-radius:40px !important ;width: 300px !important;height: 52px !important; color:white">Log in
+                </button>
+            </div>
+            <br>
+            <br>
+        </div>
+    </div>
+</div>
+
+
