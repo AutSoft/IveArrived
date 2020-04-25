@@ -1,23 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+using IveArrived.Entities;
+using IveArrived.Entities.ApplicationUser;
 
-namespace IveArrived.Entities
+namespace IveArrived.Models
 {
-    public class Delivery
+    public class DeliveryModel
     {
-        public Delivery()
-        {
-            RecipientTokens = new HashSet<FcmToken>();
-        }
-
-        [Key]
         public int Id { get; set; }
         public string Description { get; set; }
         public string Address { get; set; }
         public DateTime? EstimatedDeliveryStart { get; set; }
         public DateTime? EstimatedDeliveryEnd { get; set; }
-        public string PackageId { get; set; }
+        public Guid PackageId { get; set; }
         public DeliveryState State { get; set; }
         public string SenderName { get; set; }
         public string SenderPhoneNumber { get; set; }
@@ -26,8 +20,7 @@ namespace IveArrived.Entities
         public string RecipientPhoneNumber { get; set; }
         public string RecipientEmailAddress { get; set; }
         public string PaymentInfo { get; set; }
-        public virtual ICollection<FcmToken> RecipientTokens { get; set; }
-        public virtual ApplicationUser.ApplicationUser Courier { get; set; }
-        public virtual ApplicationUser.ApplicationUser CourierService { get; set; }
+        public virtual CourierServiceModel Courier { get; set; }
+        public virtual CourierServiceModel CourierService { get; set; }
     }
 }

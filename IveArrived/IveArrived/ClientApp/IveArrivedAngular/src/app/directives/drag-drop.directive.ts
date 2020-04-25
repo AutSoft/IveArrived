@@ -37,4 +37,5 @@ export class DragDropDirective {
       this.onFileDropped.emit(files)
     }
   }
+	
 }

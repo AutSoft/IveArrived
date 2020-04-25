@@ -20,7 +20,7 @@ namespace IveArrived.Controllers
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IFileService fileService;
 
-        public AccountController(SignInManager<ApplicationUser> signInManager, 
+        public AccountController(SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
             IFileService fileService)
         {
@@ -30,9 +30,15 @@ namespace IveArrived.Controllers
         }
 
         [HttpPost]
-        public Task Login(LoginModel loginModel)
+        public async Task Login(LoginModel loginModel)
         {
-            return signInManager.PasswordSignInAsync(loginModel.UserName, loginModel.Password, false, false);
+            var result = await signInManager.PasswordSignInAsync(loginModel.Email, loginModel.Password, false, false);
+            if (result.Succeeded)
+                return;
+            else
+            {
+                throw new Exception("Invalid username or password");
+            }
         }
 
         [HttpPost]
@@ -42,7 +48,7 @@ namespace IveArrived.Controllers
 
             if (model.Logo != null)
             {
-                logoUrl = await fileService.Publish(model.Logo.OpenReadStream(), 
+                logoUrl = await fileService.Publish(model.Logo.OpenReadStream(),
                     Path.GetExtension(model.Logo.FileName));
             }
             string flierUrl = null;
@@ -56,7 +62,7 @@ namespace IveArrived.Controllers
             var reguser = new ApplicationUser
             {
                 Email = model.Email,
-                UserName = model.UserName,
+                UserName = model.Email,
                 DisplayName = model.DisplayName,
                 ContactName = model.ContactName,
                 Address = model.Address,
@@ -64,14 +70,19 @@ namespace IveArrived.Controllers
                 ZipCode = model.ZipCode,
                 Country = model.Country,
                 LogoUrl = logoUrl,
-                FlierUrl = flierUrl
+                FlierUrl = flierUrl,
+                SecurityStamp = new Guid().ToString(),
+                EmailConfirmed = true,
             };
 
             var result = await userManager.CreateAsync(reguser, model.Password);
 
+            if (result.Succeeded != true)
+            {
+                throw new Exception("USERNAME");
+            }
+
             await userManager.AddToRoleAsync(reguser, model.Role);
-
-
         }
     }
 }

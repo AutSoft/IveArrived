@@ -11,6 +11,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {MatButtonModule} from '@angular/material/button';
 import { DragDropDirective } from './components/drag-drop.directive';
 import { LoginComponent } from './components/login/login.component';
+import { DragDropDirective } from './directives/drag-drop.directive';
+import { UploadFileComponent } from './components/upload-file/upload-file.component';
 
 @NgModule({
     declarations: [
@@ -19,6 +21,7 @@ import { LoginComponent } from './components/login/login.component';
         HomeComponent,
         DragDropDirective,
         LoginComponent,
+        UploadFileComponent,
     ],
     imports: [
         BrowserModule,
