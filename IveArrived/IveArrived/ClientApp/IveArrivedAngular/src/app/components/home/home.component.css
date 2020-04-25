@@ -1,0 +1,20 @@
+:host .mat-raised-button{
+    border-radius: 20px !important;
+    width: 150px !important;
+    height: 62px !important;
+    font-size: 20px !important;
+}
+
+.right{
+    float: right;
+    padding-right: 62.5px;
+    padding-top: 38px;
+    height: 133px;
+    align-items: center;
+}
+
+.header-text{
+    font-size: large;
+    padding-right: 20px;
+    color: tomato;
+}

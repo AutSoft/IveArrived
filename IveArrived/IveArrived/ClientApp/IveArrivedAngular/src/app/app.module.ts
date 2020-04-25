@@ -7,6 +7,8 @@ import { RegisterComponent } from './components/register/register.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatStepperModule } from '@angular/material/stepper';
 import { HomeComponent } from './components/home/home.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {MatButtonModule} from '@angular/material/button';
 
 @NgModule({
     declarations: [
@@ -18,7 +20,9 @@ import { HomeComponent } from './components/home/home.component';
         BrowserModule,
         AppRoutingModule,
         BrowserAnimationsModule,
-        MatStepperModule
+        MatStepperModule,
+        NgbModule,
+        MatButtonModule
     ],
     providers: [],
     bootstrap: [AppComponent]
