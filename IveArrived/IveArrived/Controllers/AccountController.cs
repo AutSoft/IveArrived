@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using IveArrived.Entities.ApplicationUser;
 using IveArrived.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -13,15 +14,35 @@ namespace IveArrived.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly SignInManager<IdentityUser> signInManager;
+        private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly UserManager<ApplicationUser> userManager;
+        private readonly RoleManager<ApplicationUser> roleManager;
 
-        public AccountController(SignInManager<IdentityUser> signInManager)
+        public AccountController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager
+            , RoleManager<ApplicationUser> roleManager)
         {
             this.signInManager = signInManager;
+            this.userManager = userManager;
+            this.roleManager = roleManager;
+
         }
         public Task Login(LoginModel loginModel)
         {
             return signInManager.PasswordSignInAsync(loginModel.UserName, loginModel.Password, false, false);
+        }
+
+        public async Task Register(RegistrationModel model)
+        {
+
+            var reguser = new ApplicationUser
+            {
+                Email = model.Email,
+                UserName = model.UserName,
+            };
+
+            var result = await userManager.CreateAsync(reguser, model.Password);
+
+
         }
     }
 }
