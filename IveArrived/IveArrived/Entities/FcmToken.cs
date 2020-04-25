@@ -9,6 +9,6 @@ namespace IveArrived.Entities
     {
         public int Id { get; set; }
         public string Token { get; set; }
-        public Guid ProfileId { get; set; }
+        public int UserId { get; set; }
     }
 }

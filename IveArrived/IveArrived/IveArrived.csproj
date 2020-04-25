@@ -17,4 +17,9 @@
     <PackageReference Include="FirebaseAdmin" Version="1.11.0" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <Folder Include="ClientApp\" />
+  </ItemGroup>
+
 </Project>
