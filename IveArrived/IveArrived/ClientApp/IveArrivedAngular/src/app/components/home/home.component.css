@@ -1,20 +1,76 @@
 :host .mat-raised-button{
     border-radius: 20px !important;
-    width: 150px !important;
+    width: 155px !important;
     height: 62px !important;
-    font-size: 20px !important;
+    box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16) !important;
+    border: solid 2px #ff6363 !important;
+    background-color: #ff6363 !important;
 }
 
 .right{
-    float: right;
+    display: flex; 
+    justify-content: flex-end;
     padding-right: 62.5px;
     padding-top: 38px;
-    height: 133px;
-    align-items: center;
+    height: 132px;
+    text-align: center;
+    line-height: 70px;
 }
+
+.mycard{
+  border-radius: 30px;
+  width: 574px;
+  height: 470px;
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.2);
+  border: solid 2px #0871b8;
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+.mycard .rectangle-3 {
+    width: 574px;
+    height: 104px;
+    background-color: #0871b8;
+  }
+
+.mycard .text{
+    width: 574px;
+  height: 55px;
+  font-family: Heebo;
+  font-size: 27px;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.44;
+  letter-spacing: normal;
+  text-align: center;
+  color: #ffffff;
+}
+
+.footer-text {
+    height: 85px;
+  font-family: OpenSans;
+  font-size: 25px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.2;
+  letter-spacing: normal;
+  text-align: center;
+  color: #707070;
+  }
 
 .header-text{
     font-size: large;
     padding-right: 20px;
-    color: tomato;
+    color: #ff6363;
+    font-family: OpenSans;
+}
+
+.background{
+    position: absolute;
+    background-size: 100%;
+    background-image: url('/assets/main_background.jpg');
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat;
 }
