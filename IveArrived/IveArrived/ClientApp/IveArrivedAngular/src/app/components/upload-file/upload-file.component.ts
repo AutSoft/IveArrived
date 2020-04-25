@@ -17,11 +17,11 @@ export class UploadFileComponent implements OnInit {
   files: any = [];
 
   uploadFile(event) {
+    this.files = [];
     for (let index = 0; index < event.length; index++) {
       const element = event[index];
       this.files.push({ data: element, fileName: element.name })
     }  
-    console.log("alma");
     this.filechanged.emit(this.files);
   }
   deleteAttachment(index) {

@@ -20,28 +20,28 @@
                         </div>
                         <div class="text-left mt-4">
                             <label class="mt-4 w-100">Your SME's name</label>
-                            <input (ngModel)="smeName" type="text" class="form-control" placeholder="John Smith's happy barkery">
+                            <input name="DisplayName" [(ngModel)]="smeName" type="text" class="form-control" placeholder="John Smith's happy barkery">
                             <label class="mt-4 w-100">Choose your companies profile</label>
-                            <select (ngModel)="profile" type="select" class="form-control">
+                            <select name="profile" [(ngModel)]="profile" type="select" class="form-control">
                                 <option value="bakery">bakery</option>
                                 <option value="butchers">butchers</option>
                                 <option value="universal">universal</option>
                             </select>
                             <label class="mt-4 w-100" style="color: #739ebb;">Contact name</label>
-                            <input (ngModel)="contactName" type="text" class="form-control">
+                            <input name="ContactName" [(ngModel)]="contactName" type="text" class="form-control">
                             <label class="mt-4 w-100" style="color: #739ebb;">Phone number</label>
-                            <input (ngModel)="phoneNumber" type="text" class="form-control" placeholder="+36 30 123 4567">
+                            <input name="PhoneNumber" [(ngModel)]="phoneNumber" type="text" class="form-control" placeholder="+36 30 123 4567">
                             <label class="mt-4 w-100" style="color: #739ebb;">Email address</label>
-                            <input (ngModel)="email" type="text" class="form-control" placeholder="joesmithbakery@gmail.com">
+                            <input name="Email" [(ngModel)]="email" type="text" class="form-control" placeholder="joesmithbakery@gmail.com">
                             <label class="mt-4 w-100" style="color: #739ebb;">Address</label>
-                            <input (ngModel)="address" type="text" class="form-control">
+                            <input name="Address" [(ngModel)]="address" type="text" class="form-control">
                             <div class="d-flex">
                                 <label class="mt-4 col-7" style="color:#739ebb">City</label>
                                 <label class="mt-4 ml-5 col-4" style="color:#739ebb">ZipCode</label>
                             </div>
                             <div class="d-flex">
-                                <input (ngModel)="city" type="text" class="form-control col-7">
-                                <input (ngModel)="zipcode" type="text" class="form-control ml-5 col-4">
+                                <input name="City" [(ngModel)]="city" type="text" class="form-control col-7">
+                                <input name="ZipCode" [(ngModel)]="zipcode" type="text" class="form-control ml-5 col-4">
                             </div>
                         </div>
                         <button matStepperNext class="mt-5 float-right" mat-raised-button
@@ -85,7 +85,9 @@
                     </div>
                 </mat-step>
                 <mat-step label="Regsitration confirm">
-                    <button class="mt-5" mat-raised-button
+                    <label class="mt-4 w-100" style="color: #739ebb;">Password</label>
+                            <input name="Password" [(ngModel)]="password" type="text" class="form-control">
+                    <button class="mt-5" mat-raised-button (click)="onSubmit()"
                             style="background-color:white;
                             border-radius:40px !important ;width: 120px !important;
                             height: 52px !important; 
