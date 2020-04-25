@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using FirebaseAdmin;
 using Google.Apis.Auth.OAuth2;
@@ -66,9 +67,10 @@ namespace IveArrived
             }
             services.AddSpaStaticFiles(configuration => configuration.RootPath = "ClientApp/IveArrivedAngular/dist/IveArrivedAngular");
 
-            services.AddSwaggerDocument();
+            services.AddControllers()
+                .AddJsonOptions(config => config.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
-            services.AddControllers();
+            services.AddSwaggerDocument();
 
             services.AddTransient<IFileService, FileService>();
         }
