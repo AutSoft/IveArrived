@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using IveArrived.Entities.ApplicationUser;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -10,17 +11,17 @@ namespace IveArrived.Services.CurrentUser
     public class CurrentUserService : ICurrentUserService
     {
         private readonly IHttpContextAccessor httpContext;
-        private readonly UserManager<IdentityUser> userManager;
+        private readonly UserManager<ApplicationUser> userManager;
 
-        public CurrentUserService(IHttpContextAccessor httpContext, UserManager<IdentityUser> userManager)
+        public CurrentUserService(IHttpContextAccessor httpContext, UserManager<ApplicationUser> userManager)
         {
             this.httpContext = httpContext;
             this.userManager = userManager;
         }
 
-        public async Task<Guid> CurrentUserId()
+        public async Task<int> CurrentUserId()
         {
-            return new Guid((await userManager.GetUserAsync(httpContext.HttpContext.User)).Id);
+            return (await userManager.GetUserAsync(httpContext.HttpContext.User)).Id;
         }
     }
 }

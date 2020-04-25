@@ -7,6 +7,6 @@ namespace IveArrived.Services.CurrentUser
 {
     public interface ICurrentUserService
     {
-        Task<Guid> CurrentUserId();
+        Task<int> CurrentUserId();
     }
 }

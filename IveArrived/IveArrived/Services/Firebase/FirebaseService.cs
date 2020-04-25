@@ -23,7 +23,7 @@ namespace IveArrived.Services.Firebase
         {
             this.dbContext = dbContext;
             this.currentUserService = currentUserService;
-            //var settings = FileBasedFcmClientSettings.CreateFromFile(Path.Combine(options.Value.CredentialsPath, options.Value.CredentialsFile));
+            //var settings = StreamBasedFcmClientSettings.CreateFromStream()
             //client = new FcmClient(settings, new FcmHttpClient(settings));
 
         }
@@ -35,7 +35,7 @@ namespace IveArrived.Services.Firebase
             {
                 var t = new FcmToken
                 {
-                    ProfileId = await currentUserService.CurrentUserId(),
+                    UserId = await currentUserService.CurrentUserId(),
                     Token = fcmToken.Token
                 };
 
