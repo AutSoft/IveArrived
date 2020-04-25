@@ -9,7 +9,8 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { HomeComponent } from './components/home/home.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {MatButtonModule} from '@angular/material/button';
-import { DragDropDirective } from './components/drag-drop.directive';
+import { DragDropDirective } from './directives/drag-drop.directive';
+import { UploadFileComponent } from './components/upload-file/upload-file.component';
 
 @NgModule({
     declarations: [
@@ -17,6 +18,7 @@ import { DragDropDirective } from './components/drag-drop.directive';
         RegisterComponent,
         HomeComponent,
         DragDropDirective,
+        UploadFileComponent,
     ],
     imports: [
         BrowserModule,
