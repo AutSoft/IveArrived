@@ -23,5 +23,10 @@ namespace IveArrived.Services.CurrentUser
         {
             return (await userManager.GetUserAsync(httpContext.HttpContext.User)).Id;
         }
+
+        public Task<bool> IsSignedIn()
+        {
+            return Task.FromResult(httpContext.HttpContext.User.Identity.IsAuthenticated);
+        }
     }
 }
