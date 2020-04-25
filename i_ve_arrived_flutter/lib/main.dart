@@ -5,9 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:i_ve_arrived/example/welcome_page.dart';
 import 'package:i_ve_arrived/ui/login/login.dart';
+import 'package:i_ve_arrived/ui/splash/splash.dart';
 
-void main() async{
-  runApp(MyApp());
+void main() {
+  runApp(new MaterialApp(
+    home: new SplashScreen(),
+    routes: <String, WidgetBuilder>{
+      '/HomeScreen': (BuildContext context) => new MyApp()
+    },
+  ));
 }
 
 class MyApp extends StatelessWidget {
