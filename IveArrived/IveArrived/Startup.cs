@@ -63,7 +63,7 @@ namespace IveArrived
                 services.AddApplicationInsightsTelemetry();
             }
 
-            services.AddRazorPages();
+            services.AddSwaggerDocument();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
