@@ -10,6 +10,7 @@ import { HomeComponent } from './components/home/home.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {MatButtonModule} from '@angular/material/button';
 import { DragDropDirective } from './components/drag-drop.directive';
+import { LoginComponent } from './components/login/login.component';
 
 @NgModule({
     declarations: [
@@ -17,6 +18,7 @@ import { DragDropDirective } from './components/drag-drop.directive';
         RegisterComponent,
         HomeComponent,
         DragDropDirective,
+        LoginComponent,
     ],
     imports: [
         BrowserModule,
