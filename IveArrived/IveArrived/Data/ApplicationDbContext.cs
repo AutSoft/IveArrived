@@ -19,6 +19,7 @@ namespace IveArrived.Data
         public DbSet<FcmToken> FcmToken { get; set; }
         public DbSet<Delivery> Delivery { get; set; }
         public DbSet<CourierServiceToCourier> CourierServiceToCourier { get; set; }
+        public DbSet<FcmTokenToDelivery> FcmTokenToDelivery { get; set; }
 
     }
 }

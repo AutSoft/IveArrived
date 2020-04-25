@@ -54,7 +54,8 @@ namespace IveArrived.Controllers
                 .Include(d => d.CourierService)
                 .Include(d => d.Courier)
                 .Include(d => d.RecipientTokens)
-                .Where(d => d.RecipientTokens.Any(t => t.UserId == currentUserId))
+                    .ThenInclude(dt => dt.Token)
+                .Where(d => d.RecipientTokens.Any(t => t.Token.UserId == currentUserId))
                 .Select(d => d.ToDto())
                 .ToListAsync();
         }
@@ -65,6 +66,7 @@ namespace IveArrived.Controllers
             var delivery = await context.Delivery
                 .Include(d => d.CourierService)
                 .Include(d => d.Courier)
+                .Include(d => d.RecipientTokens)
                 .FirstOrDefaultAsync(d => d.PackageId == dto.PackageId);
 
             if (delivery == null)
@@ -79,7 +81,11 @@ namespace IveArrived.Controllers
                             UserId = await currentUser.CurrentUserId()
                         };
 
-            delivery.RecipientTokens.Add(token);
+            delivery.RecipientTokens.Add(new FcmTokenToDelivery
+            {
+                Token = token,
+                Delivery = delivery
+            });
 
             await context.SaveChangesAsync();
 
@@ -91,6 +97,7 @@ namespace IveArrived.Controllers
         {
             var delivery = await context.Delivery
                 .Include(d => d.RecipientTokens)
+                .ThenInclude(dt => dt.Token)
                 .FirstOrDefaultAsync(d => d.PackageId == dto.PackageId);
 
             if (delivery == null)
@@ -109,7 +116,7 @@ namespace IveArrived.Controllers
             await context.SaveChangesAsync();
 
             await firebase.SendMultiCastNotification(
-                delivery.RecipientTokens.Select(t => t.Token),
+                delivery.RecipientTokens.Select(t => t.Token.Token),
                 new Dictionary<string, string>
                 {
                     { "MessageType", nameof(DoorBell) },
@@ -144,6 +151,7 @@ namespace IveArrived.Controllers
         {
             var delivery = await context.Delivery
                 .Include(d => d.RecipientTokens)
+                .ThenInclude(dt => dt.Token)
                 .FirstOrDefaultAsync(d => d.PackageId == dto.PackageId);
 
             if (delivery == null)
@@ -156,7 +164,7 @@ namespace IveArrived.Controllers
             await context.SaveChangesAsync();
 
             await firebase.SendMultiCastNotification(
-                delivery.RecipientTokens.Select(t => t.Token),
+                delivery.RecipientTokens.Select(t => t.Token.Token),
                 new Dictionary<string, string>
                 {
                     { "MessageType", nameof(CourierServiceDeliveryController.ChangeDeliveryState) },

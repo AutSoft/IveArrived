@@ -45,6 +45,8 @@ namespace IveArrived.Controllers
         public async Task ChangeDeliveryState([FromBody] DeliveryStateChangeModel dto)
         {
             var delivery = await context.Delivery
+                .Include(d => d.RecipientTokens)
+                    .ThenInclude(dt => dt.Token)
                 .FirstOrDefaultAsync(d => d.Id == dto.DeliveryId);
 
             if (delivery == null)
@@ -57,7 +59,7 @@ namespace IveArrived.Controllers
             await context.SaveChangesAsync();
 
             await firebase.SendMultiCastNotification(
-                delivery.RecipientTokens.Select(t => t.Token),
+                delivery.RecipientTokens.Select(t => t.Token.Token),
                 new Dictionary<string, string>
                 {
                     { "MessageType", nameof(ChangeDeliveryState) },
@@ -70,6 +72,8 @@ namespace IveArrived.Controllers
         public async Task ChangeDeliveryCourier([FromBody] DeliveryCourierChangeModel dto)
         {
             var delivery = await context.Delivery
+                .Include(d => d.RecipientTokens)
+                .ThenInclude(dt => dt.Token)
                 .FirstOrDefaultAsync(d => d.Id == dto.DeliveryId);
 
             if (delivery == null)
@@ -83,7 +87,7 @@ namespace IveArrived.Controllers
             await context.SaveChangesAsync();
 
             await firebase.SendMultiCastNotification(
-                delivery.RecipientTokens.Select(t => t.Token),
+                delivery.RecipientTokens.Select(t => t.Token.Token),
                 new Dictionary<string, string>
                 {
                     { "MessageType", nameof(ChangeDeliveryCourier) },
@@ -119,6 +123,7 @@ namespace IveArrived.Controllers
                     SenderPhoneNumber = dm.SenderPhoneNumber,
                     State = dm.State
                 };
+                context.Delivery.Add(delivery);
             }
             else
             {

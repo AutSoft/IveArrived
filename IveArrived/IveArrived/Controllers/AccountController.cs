@@ -53,7 +53,7 @@ namespace IveArrived.Controllers
             }
             string flierUrl = null;
 
-            if (model.Logo != null)
+            if (model.Flier != null)
             {
                 flierUrl = await fileService.Publish(model.Flier.OpenReadStream(),
                     Path.GetExtension(model.Flier.FileName));
