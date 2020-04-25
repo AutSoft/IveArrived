@@ -10,14 +10,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IveArrived.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class AccountController : ControllerBase
     {
         private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly SignInManager<ApplicationUser> signInManager;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly RoleManager<ApplicationUser> roleManager;
 
+        public AccountController(SignInManager<ApplicationUser> signInManager)
         public AccountController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager
             , RoleManager<ApplicationUser> roleManager)
         {
@@ -26,6 +28,8 @@ namespace IveArrived.Controllers
             this.roleManager = roleManager;
 
         }
+
+        [HttpPost]
         public Task Login(LoginModel loginModel)
         {
             return signInManager.PasswordSignInAsync(loginModel.UserName, loginModel.Password, false, false);
