@@ -22,7 +22,7 @@ export class AccountService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "";
+        this.baseUrl = baseUrl ? baseUrl : "https://ivearrived.azurewebsites.net";
     }
 
     login(loginModel: LoginModel): Observable<void> {
@@ -130,7 +130,7 @@ export class FirebaseService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "";
+        this.baseUrl = baseUrl ? baseUrl : "https://ivearrived.azurewebsites.net";
     }
 
     addFirebaseTokenToUser(token: string): Observable<void> {
@@ -236,7 +236,7 @@ export class ValuesService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "";
+        this.baseUrl = baseUrl ? baseUrl : "https://ivearrived.azurewebsites.net";
     }
 
     getAll(): Observable<string[]> {

@@ -63,6 +63,7 @@ namespace IveArrived
             {
                 services.AddApplicationInsightsTelemetry();
             }
+            services.AddSpaStaticFiles(configuration => configuration.RootPath = "ClientApp/IveArrivedAngular/dist/IveArrivedAngular");
 
             services.AddSwaggerDocument();
 
@@ -77,15 +78,16 @@ namespace IveArrived
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
             }
-            else
-            {
-                app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
+            //else
+            //{
+            //    app.UseExceptionHandler("/Error");
+            //    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+            //    app.UseHsts();
+            //}
 
             app.UseOpenApi();
             app.UseSwaggerUi3();
+            app.UseSpaStaticFiles();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -98,6 +100,10 @@ namespace IveArrived
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+            app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = "ClientApp/IveArrivedAngular";
             });
         }
     }
