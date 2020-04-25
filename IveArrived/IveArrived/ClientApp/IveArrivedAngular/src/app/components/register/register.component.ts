@@ -5,14 +5,13 @@ import { AccountService } from 'src/app/api/app.generated';
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
-  providers:[AccountService]
 })
 export class RegisterComponent implements OnInit {
 
-  constructor(private accountService: AccountService) { }
+  constructor() { }
 
   ngOnInit(): void {
-    
+
   }
 
 }
