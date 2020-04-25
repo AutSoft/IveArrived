@@ -21,6 +21,7 @@ namespace IveArrived.Controllers
         {
             this.firebaseService = firebaseService;
         }
+        [HttpPost]
         public async Task AddFirebaseTokenToUser([FromBody] string token)
         {
 
@@ -31,7 +32,10 @@ namespace IveArrived.Controllers
         [HttpGet]
         public async Task SendToEveryone([FromQuery]string msg)
         {
-            await firebaseService.SendAll(msg)
+            await firebaseService.SendAll(new Dictionary<string, string>
+            {
+                {nameof(msg), msg}
+            });
         }
     }
 }

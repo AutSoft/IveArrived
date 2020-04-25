@@ -8,7 +8,8 @@ namespace IveArrived.Services.Firebase
 {
     public interface IFirebaseService
     {
-        Task AddFirebaseToken(FcmToken fcmToken);
+        Task AddFirebaseToken(string token);
         Task SendMultiCastNotification(IEnumerable<string> tokens, Dictionary<string, string> data);
+        Task SendAll(Dictionary<string, string> data);
     }
 }
