@@ -34,9 +34,9 @@ export class AccountService {
         let options_ : any = {
             body: content_,
             observe: "response",
-            responseType: "blob",
+            responseType: "blob",			
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                "Content-Type": "application/json", 
             })
         };
 
@@ -56,8 +56,8 @@ export class AccountService {
 
     protected processLogin(response: HttpResponseBase): Observable<void> {
         const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
@@ -106,7 +106,7 @@ export class AccountService {
         let options_ : any = {
             body: content_,
             observe: "response",
-            responseType: "blob",
+            responseType: "blob",			
             headers: new HttpHeaders({
                 "Accept": "application/octet-stream"
             })
@@ -128,8 +128,73 @@ export class AccountService {
 
     protected processRegister(response: HttpResponseBase): Observable<FileResponse | null> {
         const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return _observableOf({ fileName: fileName, data: <any>responseBlob, status: status, headers: _headers });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<FileResponse | null>(<any>null);
+    }
+
+    updateSME(displayName: string | null | undefined, contactName: string | null | undefined, address: string | null | undefined, city: string | null | undefined, zipCode: string | null | undefined, phoneNumber: string | null | undefined, logo: FileParameter | null | undefined, flier: FileParameter | null | undefined): Observable<FileResponse | null> {
+        let url_ = this.baseUrl + "/api/Account/UpdateSME";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = new FormData();
+        if (displayName !== null && displayName !== undefined)
+            content_.append("DisplayName", displayName.toString());
+        if (contactName !== null && contactName !== undefined)
+            content_.append("ContactName", contactName.toString());
+        if (address !== null && address !== undefined)
+            content_.append("Address", address.toString());
+        if (city !== null && city !== undefined)
+            content_.append("City", city.toString());
+        if (zipCode !== null && zipCode !== undefined)
+            content_.append("ZipCode", zipCode.toString());
+        if (phoneNumber !== null && phoneNumber !== undefined)
+            content_.append("PhoneNumber", phoneNumber.toString());
+        if (logo !== null && logo !== undefined)
+            content_.append("Logo", logo.data, logo.fileName ? logo.fileName : "Logo");
+        if (flier !== null && flier !== undefined)
+            content_.append("Flier", flier.data, flier.fileName ? flier.fileName : "Flier");
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "application/octet-stream"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateSME(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateSME(<any>response_);
+                } catch (e) {
+                    return <Observable<FileResponse | null>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<FileResponse | null>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdateSME(response: HttpResponseBase): Observable<FileResponse | null> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
@@ -152,7 +217,7 @@ export class AccountService {
 
         let options_ : any = {
             observe: "response",
-            responseType: "blob",
+            responseType: "blob",			
             headers: new HttpHeaders({
                 "Accept": "application/json"
             })
@@ -174,8 +239,8 @@ export class AccountService {
 
     protected processMe(response: HttpResponseBase): Observable<CourierServiceModel> {
         const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
@@ -225,7 +290,7 @@ export class CourierService {
         let options_ : any = {
             body: content_,
             observe: "response",
-            responseType: "blob",
+            responseType: "blob",			
             headers: new HttpHeaders({
                 "Accept": "application/octet-stream"
             })
@@ -247,8 +312,8 @@ export class CourierService {
 
     protected processRegister(response: HttpResponseBase): Observable<FileResponse | null> {
         const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
@@ -271,7 +336,7 @@ export class CourierService {
 
         let options_ : any = {
             observe: "response",
-            responseType: "blob",
+            responseType: "blob",			
             headers: new HttpHeaders({
                 "Accept": "application/json"
             })
@@ -293,8 +358,8 @@ export class CourierService {
 
     protected processMyCouriers(response: HttpResponseBase): Observable<CourierModel[]> {
         const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
@@ -335,7 +400,7 @@ export class CourierServiceDeliveryService {
 
         let options_ : any = {
             observe: "response",
-            responseType: "blob",
+            responseType: "blob",			
             headers: new HttpHeaders({
                 "Accept": "application/json"
             })
@@ -357,8 +422,8 @@ export class CourierServiceDeliveryService {
 
     protected processListDeliveries(response: HttpResponseBase): Observable<DeliveryModel[]> {
         const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
@@ -390,9 +455,9 @@ export class CourierServiceDeliveryService {
         let options_ : any = {
             body: content_,
             observe: "response",
-            responseType: "blob",
+            responseType: "blob",			
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                "Content-Type": "application/json", 
             })
         };
 
@@ -412,8 +477,8 @@ export class CourierServiceDeliveryService {
 
     protected processChangeDeliveryState(response: HttpResponseBase): Observable<void> {
         const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
@@ -438,9 +503,9 @@ export class CourierServiceDeliveryService {
         let options_ : any = {
             body: content_,
             observe: "response",
-            responseType: "blob",
+            responseType: "blob",			
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                "Content-Type": "application/json", 
             })
         };
 
@@ -460,8 +525,8 @@ export class CourierServiceDeliveryService {
 
     protected processChangeDeliveryCourier(response: HttpResponseBase): Observable<void> {
         const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
@@ -486,9 +551,9 @@ export class CourierServiceDeliveryService {
         let options_ : any = {
             body: content_,
             observe: "response",
-            responseType: "blob",
+            responseType: "blob",			
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                "Content-Type": "application/json", 
                 "Accept": "application/json"
             })
         };
@@ -509,8 +574,8 @@ export class CourierServiceDeliveryService {
 
     protected processAddOrUpdateDelivery(response: HttpResponseBase): Observable<DeliveryModel> {
         const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
@@ -547,7 +612,7 @@ export class DeliveryService {
 
         let options_ : any = {
             observe: "response",
-            responseType: "blob",
+            responseType: "blob",			
             headers: new HttpHeaders({
                 "Accept": "application/json"
             })
@@ -569,8 +634,8 @@ export class DeliveryService {
 
     protected processListForCourier(response: HttpResponseBase): Observable<DeliveryModel[]> {
         const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
@@ -599,7 +664,7 @@ export class DeliveryService {
 
         let options_ : any = {
             observe: "response",
-            responseType: "blob",
+            responseType: "blob",			
             headers: new HttpHeaders({
                 "Accept": "application/json"
             })
@@ -621,8 +686,8 @@ export class DeliveryService {
 
     protected processListForRecipient(response: HttpResponseBase): Observable<DeliveryModel[]> {
         const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
@@ -654,9 +719,9 @@ export class DeliveryService {
         let options_ : any = {
             body: content_,
             observe: "response",
-            responseType: "blob",
+            responseType: "blob",			
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                "Content-Type": "application/json", 
                 "Accept": "application/json"
             })
         };
@@ -677,8 +742,8 @@ export class DeliveryService {
 
     protected processSubscribe(response: HttpResponseBase): Observable<DeliveryModel> {
         const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
@@ -706,9 +771,9 @@ export class DeliveryService {
         let options_ : any = {
             body: content_,
             observe: "response",
-            responseType: "blob",
+            responseType: "blob",			
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                "Content-Type": "application/json", 
                 "Accept": "application/json"
             })
         };
@@ -729,8 +794,8 @@ export class DeliveryService {
 
     protected processGetDelivery(response: HttpResponseBase): Observable<DeliveryModel> {
         const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
@@ -758,9 +823,9 @@ export class DeliveryService {
         let options_ : any = {
             body: content_,
             observe: "response",
-            responseType: "blob",
+            responseType: "blob",			
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                "Content-Type": "application/json", 
             })
         };
 
@@ -780,8 +845,8 @@ export class DeliveryService {
 
     protected processDoorBell(response: HttpResponseBase): Observable<void> {
         const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
@@ -806,9 +871,9 @@ export class DeliveryService {
         let options_ : any = {
             body: content_,
             observe: "response",
-            responseType: "blob",
+            responseType: "blob",			
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                "Content-Type": "application/json", 
             })
         };
 
@@ -828,8 +893,8 @@ export class DeliveryService {
 
     protected processDoorBellResponse(response: HttpResponseBase): Observable<void> {
         const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
@@ -854,9 +919,9 @@ export class DeliveryService {
         let options_ : any = {
             body: content_,
             observe: "response",
-            responseType: "blob",
+            responseType: "blob",			
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                "Content-Type": "application/json", 
             })
         };
 
@@ -876,8 +941,8 @@ export class DeliveryService {
 
     protected processDeliveryCompleted(response: HttpResponseBase): Observable<void> {
         const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
@@ -914,9 +979,9 @@ export class FirebaseService {
         let options_ : any = {
             body: content_,
             observe: "response",
-            responseType: "blob",
+            responseType: "blob",			
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
+                "Content-Type": "application/json", 
             })
         };
 
@@ -936,8 +1001,8 @@ export class FirebaseService {
 
     protected processAddFirebaseTokenToUser(response: HttpResponseBase): Observable<void> {
         const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
@@ -956,12 +1021,12 @@ export class FirebaseService {
     sendToEveryone(msg: string | null | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/Firebase/SendToEveryone?";
         if (msg !== undefined)
-            url_ += "msg=" + encodeURIComponent("" + msg) + "&";
+            url_ += "msg=" + encodeURIComponent("" + msg) + "&"; 
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
             observe: "response",
-            responseType: "blob",
+            responseType: "blob",			
             headers: new HttpHeaders({
             })
         };
@@ -982,8 +1047,8 @@ export class FirebaseService {
 
     protected processSendToEveryone(response: HttpResponseBase): Observable<void> {
         const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
             (<any>response).error instanceof Blob ? (<any>response).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
@@ -1031,7 +1096,7 @@ export class LoginModel implements ILoginModel {
         data = typeof data === 'object' ? data : {};
         data["email"] = this.email;
         data["password"] = this.password;
-        return data;
+        return data; 
     }
 }
 
@@ -1101,7 +1166,7 @@ export class CourierServiceModel implements ICourierServiceModel {
         data["phoneNumber"] = this.phoneNumber;
         data["logoUrl"] = this.logoUrl;
         data["flierUrl"] = this.flierUrl;
-        return data;
+        return data; 
     }
 }
 
@@ -1163,7 +1228,7 @@ export class CourierModel implements ICourierModel {
         data["phoneNumber"] = this.phoneNumber;
         data["email"] = this.email;
         data["logoUrl"] = this.logoUrl;
-        return data;
+        return data; 
     }
 }
 
@@ -1249,7 +1314,7 @@ export class DeliveryModel implements IDeliveryModel {
         data["paymentInfo"] = this.paymentInfo;
         data["courier"] = this.courier ? this.courier.toJSON() : <any>undefined;
         data["courierService"] = this.courierService ? this.courierService.toJSON() : <any>undefined;
-        return data;
+        return data; 
     }
 }
 
@@ -1311,7 +1376,7 @@ export class DeliveryStateChangeModel implements IDeliveryStateChangeModel {
         data = typeof data === 'object' ? data : {};
         data["deliveryId"] = this.deliveryId;
         data["newState"] = this.newState;
-        return data;
+        return data; 
     }
 }
 
@@ -1351,7 +1416,7 @@ export class DeliveryCourierChangeModel implements IDeliveryCourierChangeModel {
         data = typeof data === 'object' ? data : {};
         data["deliveryId"] = this.deliveryId;
         data["courierId"] = this.courierId;
-        return data;
+        return data; 
     }
 }
 
@@ -1427,7 +1492,7 @@ export class AddOrEditDeliveryModel implements IAddOrEditDeliveryModel {
         data["recipientEmailAddress"] = this.recipientEmailAddress;
         data["paymentInfo"] = this.paymentInfo;
         data["courierId"] = this.courierId;
-        return data;
+        return data; 
     }
 }
 
@@ -1479,7 +1544,7 @@ export class PackageSubscriptionModel implements IPackageSubscriptionModel {
         data = typeof data === 'object' ? data : {};
         data["packageId"] = this.packageId;
         data["firebaseToken"] = this.firebaseToken;
-        return data;
+        return data; 
     }
 }
 
@@ -1516,7 +1581,7 @@ export class PackageIdModel implements IPackageIdModel {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["packageId"] = this.packageId;
-        return data;
+        return data; 
     }
 }
 
@@ -1555,7 +1620,7 @@ export class DoorBellModel implements IDoorBellModel {
         data = typeof data === 'object' ? data : {};
         data["packageId"] = this.packageId;
         data["responseFirebaseToken"] = this.responseFirebaseToken;
-        return data;
+        return data; 
     }
 }
 
@@ -1595,7 +1660,7 @@ export class DoorBellResponseModel implements IDoorBellResponseModel {
         data = typeof data === 'object' ? data : {};
         data["packageId"] = this.packageId;
         data["isAvailable"] = this.isAvailable;
-        return data;
+        return data; 
     }
 }
 
@@ -1635,7 +1700,7 @@ export class DeliveryCompletedModel implements IDeliveryCompletedModel {
         data = typeof data === 'object' ? data : {};
         data["packageId"] = this.packageId;
         data["success"] = this.success;
-        return data;
+        return data; 
     }
 }
 
@@ -1672,7 +1737,7 @@ export class TokenModel implements ITokenModel {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["firebaseToken"] = this.firebaseToken;
-        return data;
+        return data; 
     }
 }
 
@@ -1694,10 +1759,10 @@ export interface FileResponse {
 
 export class ApiException extends Error {
     message: string;
-    status: number;
-    response: string;
+    status: number; 
+    response: string; 
     headers: { [key: string]: any; };
-    result: any;
+    result: any; 
 
     constructor(message: string, status: number, response: string, headers: { [key: string]: any; }, result: any) {
         super();
@@ -1729,12 +1794,12 @@ function blobToText(blob: any): Observable<string> {
             observer.next("");
             observer.complete();
         } else {
-            let reader = new FileReader();
-            reader.onload = event => {
+            let reader = new FileReader(); 
+            reader.onload = event => { 
                 observer.next((<any>event.target).result);
                 observer.complete();
             };
-            reader.readAsText(blob);
+            reader.readAsText(blob); 
         }
     });
 }
