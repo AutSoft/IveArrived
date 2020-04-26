@@ -2,12 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:i_ve_arrived/ui/color.dart';
 
-class GreenGradientButton extends StatelessWidget{
+class GradientButton extends StatelessWidget{
   final String title;
   final bool isLoading;
   final VoidCallback onPressed;
+  final Gradient gradient;
 
-  const GreenGradientButton({Key key, this.title, this.isLoading, this.onPressed}) : super(key: key);
+  const GradientButton({Key key, this.title, this.isLoading, this.onPressed, this.gradient}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,14 +18,7 @@ class GreenGradientButton extends StatelessWidget{
       padding: const EdgeInsets.all(0.0),
       child: Ink(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                parseColor("#47ae4c"),
-                parseColor("#67c46b"),
-              ]
-          ),
+          gradient: gradient,
           borderRadius: BorderRadius.all(Radius.circular(80.0)),
         ),
         child: Container(
@@ -53,6 +47,56 @@ class GreenGradientButton extends StatelessWidget{
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class GreenGradientButton extends StatelessWidget{
+  final String title;
+  final bool isLoading;
+  final VoidCallback onPressed;
+
+  const GreenGradientButton({Key key, this.title, this.isLoading, this.onPressed}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GradientButton(
+      title: title,
+      isLoading: isLoading ?? false,
+      onPressed: onPressed ?? (){},
+      gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            parseColor("#47ae4c"),
+            parseColor("#67c46b"),
+          ]
+      ),
+    );
+  }
+}
+
+class RedGradientButton extends StatelessWidget{
+  final String title;
+  final bool isLoading;
+  final VoidCallback onPressed;
+
+  const RedGradientButton({Key key, this.title, this.isLoading, this.onPressed}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GradientButton(
+      title: title,
+      isLoading: isLoading ?? false,
+      onPressed: onPressed ?? (){},
+      gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            parseColor("#ef5814"),
+            parseColor("#fb7a5f"),
+          ]
       ),
     );
   }

@@ -33,9 +33,42 @@ class OrderItemWidget extends StatelessWidget {
                   SizedBox(
                     height: 21,
                   ),
-                  Image.network(
-                    item.courierService?.logoUrl ?? "https://cdn.cnn.com/cnnnext/dam/assets/180301124611-fedex-logo.png",
-                    height: 24,
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: <Widget>[
+                      Image.network(
+                        item.courierService?.logoUrl ?? "https://cdn.cnn.com/cnnnext/dam/assets/180301124611-fedex-logo.png",
+                        height: 24,
+                      ),
+                      SizedBox(width: 13),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                          border: Border.all(color: parseColor("#74db78")),
+                        ),
+                        width: 69,
+                        height: 26,
+                        alignment: Alignment.center,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Icon(
+                              Icons.check,
+                              color: parseColor("#74db78"),
+                              size: 17,
+                            ),
+                            Text(
+                              "paid",
+                              style: TextStyle(
+                                color: parseColor("#74db78"),
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
                   ),
                   Expanded(
                     child: Container(),

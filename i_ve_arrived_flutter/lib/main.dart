@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:isolate';
 
 import 'package:android_intent/android_intent.dart';
@@ -9,8 +10,11 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:i_ve_arrived/example/welcome_page.dart';
+import 'package:i_ve_arrived/remote/service.dart';
 import 'package:i_ve_arrived/ui/login/login.dart';
+import 'package:i_ve_arrived/ui/main/main.dart';
 import 'package:i_ve_arrived/ui/splash/splash.dart';
+import 'package:path_provider/path_provider.dart';
 
 FirebaseMessaging firebaseMessaging = FirebaseMessaging();
 
@@ -42,7 +46,10 @@ void main() async{
     },
     onBackgroundMessage: myBackgroundMessageHandler,
   );
-  firebaseMessaging.getToken().then((it) => print(it));
+
+  Directory tempDir = await getTemporaryDirectory();
+  String tempPath = tempDir.path;
+  service = Service(tempPath);
   runApp(MyApp());
 }
 
@@ -114,7 +121,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.green,
         textTheme: GoogleFonts.heeboTextTheme(Theme.of(context).textTheme),
       ),
-      home: SplashScreen(),
+      home: service.hasAccessToken() ? MainPage() : SplashScreen(),
     );
   }
 }
