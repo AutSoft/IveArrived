@@ -1,0 +1,30 @@
+<div style="padding:0px 90px">
+    <div class="mt-3">
+        <span class="mt-3">Please fill in the following informations below</span>
+    </div>
+    <div class="mt-3" style="color: #739ebb;">
+        <label class="mt-3">Add courier profile picture</label>
+    </div>
+    <div class="text-center" style="width: 40%; height: 40%;">
+        <app-upload-file (filechanged)="fileChanged($event)" ></app-upload-file>
+    </div>
+    <div class="text-left mt-4">
+        <label class="mt-4 w-100" style="color: #739ebb;">Your courier's name</label>
+        <input name="DisplayName" [(ngModel)]="courierName" type="text" class="form-control" placeholder="John Smith">
+        <label class="mt-4 w-100" style="color: #739ebb;">Email address</label>
+        <input name="Email" [(ngModel)]="email" type="text" class="form-control" placeholder="joesmithbakery@gmail.com">
+        <label class="mt-4 w-100" style="color: #739ebb;">Phone number</label>
+        <input name="PhoneNumber" [(ngModel)]="phoneNumber" type="text" class="form-control" placeholder="+36 30 123 4567">
+        <label class="mt-4 w-100" style="color: #739ebb;">Address</label>
+        <input name="Address" [(ngModel)]="address" type="text" class="form-control" placeholder="Address">
+        <label class="mt-4 w-100" style="color: #739ebb;">Password</label>
+        <input type="password" name="Password" [(ngModel)]="password" class="form-control" placeholder="*****">
+    </div>
+</div>
+
+<div class="text-center" style="padding-top: 20px;">
+    <button class="rounded-button p-1 mr-3" style="color:white; font-size: 18px;" (click)="onBack()"
+    mat-raised-button>&nbsp;&nbsp;&nbsp;Cancel&nbsp;&nbsp;&nbsp;</button>
+    <button class="rounded-button p-1" style="color:white; font-size: 18px;" (click)="onSubmit()"
+    mat-raised-button>&nbsp;&nbsp;&nbsp;Add&nbsp;&nbsp;&nbsp;</button>
+</div>

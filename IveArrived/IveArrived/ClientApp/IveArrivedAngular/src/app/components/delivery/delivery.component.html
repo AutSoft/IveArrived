@@ -2,10 +2,16 @@
   <mat-toolbar-row>
    <img height="84px" src="assets/im_sending_logo.svg" >
     <span class="example-spacer"></span>
+    
     <span class="display-name" *ngIf="me">{{me.displayName}}</span>
+    
     <img class="user-logo" src="assets/logo-placeholder.png"
      srcset="assets/logo-placeholder@2x.png 2x,
-     assets/logo-placeholder@3x.png 3x"  >
+     assets/logo-placeholder@3x.png 3x"  >   
+     <span class="ml-3" style="float: right;">
+      <button class="rounded-button p-1" style="color:white; font-size: 18px;" (click)="logout()"
+      mat-raised-button>&nbsp;&nbsp;&nbsp;Log out&nbsp;&nbsp;&nbsp;</button>
+    </span>
   </mat-toolbar-row>
 </mat-toolbar>
 <mat-sidenav-container class="example-container" >

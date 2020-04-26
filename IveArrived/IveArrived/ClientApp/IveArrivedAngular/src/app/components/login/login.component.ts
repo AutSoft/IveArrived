@@ -21,8 +21,12 @@ export class LoginComponent implements OnInit {
   Password: string;
 
   ngOnInit(): void {
-    this.Email="";
-    this.Password="";
+    this.Email="bakery@test.euvirus";
+    this.Password="EuB2020.";
+  }
+
+  back(){
+    this.router.navigate(['']);
   }
 
 
@@ -30,10 +34,10 @@ export class LoginComponent implements OnInit {
 
 
 
-    var vody = new LoginModel;
-    vody.email = this.Email;
-    vody.password = this.Password;
-    this.accountService.login(vody).subscribe(
+    var body = new LoginModel;
+    body.email = this.Email;
+    body.password = this.Password;
+    this.accountService.login(body).subscribe(
       () => {
         this.router.navigate(["/delivery/daily-delivery"]);
         console.log("navigated to delivery");

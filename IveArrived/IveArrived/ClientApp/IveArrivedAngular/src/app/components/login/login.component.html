@@ -5,7 +5,7 @@
         </div>
         <div class="col-12 text-center" style="margin-top:-50px;margin-left:-160px;">
             <span
-                style="font-size: 25px;font-family: OpenSans-Bold;text-transform: uppercase;color: #0871b8;">Login</span>
+                style="font-size: 25px;font-family: Roboto,Helvetica Neue,sans-serif;text-transform: uppercase;color: #0871b8;">Login</span>
         </div>
     </div>
     <div class="text-center col-5"
@@ -16,7 +16,7 @@
                 <div class="mt-4">
                     <span class="great" style="margin-top: 100px;">Great to see you again!</span>
                  </div>
-                 <div class="text-left mt-2">
+                 <div class="text-left mt-2" style="width: fit-content; margin-left: auto; margin-right: auto;">
                  <label class="mt-4 w-120 label-header">&nbsp;Email</label>
                   <input name="Email"  [(ngModel)]="Email" type="text" class="form-control" style="width: 288px;" placeholder="joesmithbakery@gmail.com">
                   <label class="mt-4 w-120 label-header" style="color: #739ebb;">&nbsp;Password</label>
@@ -30,6 +30,10 @@
             <br>
             <br>
         </div>
+    </div>
+    <div class="text-center" style="padding-top: 20px; padding-bottom: 20px;">
+        <button class="rounded-button p-1" style="color:white; font-size: 18px;" (click)="back()"
+        mat-raised-button>&nbsp;&nbsp;&nbsp;Back&nbsp;&nbsp;&nbsp;</button>
     </div>
 </div>
 

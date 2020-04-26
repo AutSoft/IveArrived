@@ -67,6 +67,7 @@ namespace IveArrived.Controllers
                 .Include(d => d.CourierService)
                 .Include(d => d.Courier)
                 .Include(d => d.RecipientTokens)
+                    .ThenInclude(d => d.Token)
                 .FirstOrDefaultAsync(d => d.PackageId == dto.PackageId);
 
             if (delivery == null)
@@ -81,15 +82,29 @@ namespace IveArrived.Controllers
                             UserId = await currentUser.CurrentUserId()
                         };
 
-            delivery.RecipientTokens.Add(new FcmTokenToDelivery
+            if (delivery.RecipientTokens.All(rt => rt.Token.Id != token.Id))
             {
-                Token = token,
-                Delivery = delivery
-            });
+                delivery.RecipientTokens.Add(new FcmTokenToDelivery
+                {
+                    Token = token,
+                    Delivery = delivery
+                });
+            }
 
             await context.SaveChangesAsync();
 
             return delivery.ToDto();
+        }
+
+        [HttpPost]
+        public async Task<DeliveryModel> GetDelivery([FromBody] PackageIdModel dto)
+        {
+            var delivery = await context.Delivery
+                .Include(d => d.CourierService)
+                .Include(d => d.Courier)
+                .FirstOrDefaultAsync(d => d.PackageId == dto.PackageId);
+
+            return delivery?.ToDto();
         }
 
         [HttpPost]

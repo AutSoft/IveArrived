@@ -31,6 +31,10 @@ export class RegisterComponent implements OnInit {
     this.files = file[0];
   }
 
+  back(){
+    this.router.navigate(['']);
+  }
+
   onSubmit() {
     console.log(this.address);
     this.accountService.register("SME",

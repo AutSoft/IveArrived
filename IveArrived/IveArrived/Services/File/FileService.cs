@@ -22,7 +22,7 @@ namespace IveArrived.Services.File
                 await fileStream.CopyToAsync(stream);
             }
 
-            return "~/" + path;
+            return "/" + path;
         }
     }
 }

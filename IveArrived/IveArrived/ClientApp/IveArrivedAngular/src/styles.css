@@ -7,3 +7,14 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   background-color:#0871b8;
   border-radius:40px !important
 }
+
+mat-card.mat-card {
+  border-radius: 25px;
+  padding: 30px;
+}
+.card-label {
+  font-family:Roboto,Helvetica Neue,sans-serif;color:#0871b8;font-size: 16px;
+}
+.card-content {
+  font-family:Roboto,Helvetica Neue,sans-serif;color:#3e3e3e;font-size: 14px;
+}

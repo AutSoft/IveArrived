@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using IveArrived.Data;
 using IveArrived.Entities.ApplicationUser;
 using IveArrived.Mapper;
 using IveArrived.Models;
@@ -22,16 +23,19 @@ namespace IveArrived.Controllers
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IFileService fileService;
         private readonly ICurrentUserService currentUserService;
+        private readonly ApplicationDbContext context;
 
         public AccountController(SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
             IFileService fileService,
-            ICurrentUserService currentUserService)
+            ICurrentUserService currentUserService,
+            ApplicationDbContext context)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
             this.fileService = fileService;
             this.currentUserService = currentUserService;
+            this.context = context;
         }
 
         [HttpPost]
@@ -44,6 +48,14 @@ namespace IveArrived.Controllers
             {
                 throw new Exception("Invalid username or password");
             }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await signInManager.SignOutAsync();
+
+            return Ok();
         }
 
         [HttpPost]
@@ -88,6 +100,45 @@ namespace IveArrived.Controllers
             }
 
             await userManager.AddToRoleAsync(reguser, model.Role);
+
+            return Ok();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateSME([FromForm] EditProfileModel model)
+        {
+            string logoUrl = null;
+
+            if (model.Logo != null)
+            {
+                logoUrl = await fileService.Publish(model.Logo.OpenReadStream(),
+                    Path.GetExtension(model.Logo.FileName));
+            }
+            string flierUrl = null;
+
+            if (model.Flier != null)
+            {
+                flierUrl = await fileService.Publish(model.Flier.OpenReadStream(),
+                    Path.GetExtension(model.Flier.FileName));
+            }
+
+            var currentUser = await currentUserService.CurrentUserId();
+
+            var sme = context.Users.FirstOrDefault(x => x.Id == currentUser);
+
+            if (sme != null)
+            {
+                sme.Address = model.Address;
+                sme.City = model.City;
+                sme.DisplayName = model.DisplayName;
+                sme.ContactName = model.ContactName;
+                sme.ZipCode = model.ZipCode;
+                sme.PhoneNumber = model.PhoneNumber;
+                sme.LogoUrl = logoUrl ?? sme.LogoUrl;
+                sme.FlierUrl = flierUrl ?? sme.FlierUrl;
+            }
+
+            await context.SaveChangesAsync();
 
             return Ok();
         }
