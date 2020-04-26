@@ -97,6 +97,17 @@ namespace IveArrived.Controllers
         }
 
         [HttpPost]
+        public async Task<DeliveryModel> GetDelivery([FromBody] PackageIdModel dto)
+        {
+            var delivery = await context.Delivery
+                .Include(d => d.CourierService)
+                .Include(d => d.Courier)
+                .FirstOrDefaultAsync(d => d.PackageId == dto.PackageId);
+
+            return delivery?.ToDto();
+        }
+
+        [HttpPost]
         public async Task DoorBell([FromBody] DoorBellModel dto)
         {
             var delivery = await context.Delivery

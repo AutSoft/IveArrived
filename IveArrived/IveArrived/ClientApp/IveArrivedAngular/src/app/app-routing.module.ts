@@ -8,6 +8,7 @@ import { DailyDeliveryComponent } from './components/delivery/daily-delivery/dai
 import { MyCouriersComponent } from './components/delivery/my-couriers/my-couriers.component';
 import { NewDeliveryComponent } from './components/delivery/new-delivery/new-delivery.component';
 import { ProfileSettingsComponent } from './components/delivery/profile-settings/profile-settings.component';
+import { DeliveryDetailsComponent } from './components/delivery/delivery-details/delivery-details.component';
 import { AddCourierComponent } from './components/delivery/add-courier/add-courier.component';
 
 
@@ -23,7 +24,8 @@ const routes: Routes = [
         { path: 'add-courier', component: AddCourierComponent}
       ]
     },
-    { path: 'login', component: LoginComponent}
+    { path: 'login', component: LoginComponent},
+    { path: 'delivery/delivery-details/:id', component: DeliveryDetailsComponent}
 ];
 
 @NgModule({

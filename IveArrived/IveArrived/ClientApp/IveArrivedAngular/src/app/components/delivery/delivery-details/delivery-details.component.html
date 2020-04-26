@@ -1,0 +1,44 @@
+<div class="container-fluid" >
+<mat-card class="mat-elevation-z4" *ngIf="delivery">
+  <mat-grid-list cols="4" rowHeight="45px">
+    <mat-grid-tile>
+      <div class="card-label">Recipient</div>
+    </mat-grid-tile>
+    <mat-grid-tile colspan="2">
+      <div class="card-label">Planned delivery interval</div>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <div class="card-label">Courier</div>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <div class="card-content">{{delivery.recipientName}}</div>
+    </mat-grid-tile>
+    <mat-grid-tile colspan="2">
+      <div class="card-content">{{delivery.estimatedDeliveryStart | date}}-</div>
+      <div class="card-content">{{delivery.estimatedDeliveryEnd | date}}</div>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <div class="card-content">
+        <ng-container *ngIf="delivery.courier; else nocourier">
+          {{delivery.courier?.displayName | deliveryState}}
+        </ng-container>
+        <ng-template #nocourier>
+          No courier is assigned to your delivery yet
+        </ng-template>
+      </div>
+    </mat-grid-tile>
+    <mat-grid-tile colspan="3">
+      <div class="card-label">Description</div>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <div class="card-label">Status</div>
+    </mat-grid-tile>
+    <mat-grid-tile colspan="3">
+      <div class="card-content">{{delivery.description}}</div>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <div class="card-content">{{delivery.state}}</div>
+    </mat-grid-tile>
+  </mat-grid-list>
+</mat-card>
+</div>

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AccountService, FileParameter } from 'src/app/api/app.generated';
+import { AccountService, FileParameter, CourierService } from 'src/app/api/app.generated';
 import { Router } from '@angular/router';
 
 @Component({
@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 })
 export class ProfileSettingsComponent implements OnInit {
 
-  constructor(private accountService : AccountService, private router : Router) { }
+  constructor(private courierService: CourierService, private accountService : AccountService, private router : Router) { }
 
   files: FileParameter;
 
@@ -20,8 +20,17 @@ export class ProfileSettingsComponent implements OnInit {
   address: string = "";
   city: string ="";
   zipcode: string ="";
+  flierUrl: string = "";
 
   ngOnInit(): void {
+    this.courierService.getSMEDataForModify().subscribe(data=>{
+      this.city = data.city;
+      this.contactName = data.contactName;
+      this.phoneNumber = data.phoneNumber;
+      this.smeName = data.displayName;
+      this.zipcode = data.zipCode;
+      this.flierUrl = data.flier;
+    })
   }
 
   fileChanged(file: FileParameter[]) {
