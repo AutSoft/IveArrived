@@ -23,13 +23,13 @@
               {{delivery.estimatedDeliveryStart | date}}-{{delivery.estimatedDeliveryEnd | date}}</div>
           </div>
           <div class="col-4 d-flex">
-            <mat-select matNativeControl [(value)]="delivery.courier">
+            <mat-select style="max-width:200px" matNativeControl [(value)]="delivery.courier">
               <mat-option *ngFor="let courier of couriers" [value]="courier">
                 {{courier.displayName}}
               </mat-option>
             </mat-select>
             <button style="color:white" class="rounded-button ml-3" mat-raised-button (click)="setCourier(delivery)">
-              &nbsp;&nbsp;Set Courier&nbsp;&nbsp;</button>
+              Set Courier&nbsp;&nbsp;</button>
           </div>
         </div>
       </div>
@@ -46,13 +46,13 @@
           <div class="card-content">{{delivery.description}}</div>
         </div>
         <div class="col-4 d-flex">
-          <mat-select matNativeControl [(value)]="delivery.state">
+          <mat-select style="max-width:200px" matNativeControl [(value)]="delivery.state">
             <mat-option *ngFor="let state of deliveryStates" [value]="state">
               {{state | deliveryState}}
             </mat-option>
           </mat-select>
           <button style="color: white;" class="rounded-button ml-3" mat-raised-button
-            (click)="changeDeliveryState(delivery)">&nbsp;&nbsp;Change&nbsp;&nbsp;</button>
+            (click)="changeDeliveryState(delivery)">Change&nbsp;&nbsp;</button>
         </div>
       </div>
     </mat-card>
