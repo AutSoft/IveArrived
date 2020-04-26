@@ -8,7 +8,7 @@ namespace IveArrived.Entities
     {
         public Delivery()
         {
-            RecipientTokens = new HashSet<FcmToken>();
+            RecipientTokens = new HashSet<FcmTokenToDelivery>();
         }
 
         [Key]
@@ -27,7 +27,7 @@ namespace IveArrived.Entities
         public string RecipientEmailAddress { get; set; }
         public string PaymentInfo { get; set; }
         public virtual FcmToken CourierToken { get; set; }
-        public virtual ICollection<FcmToken> RecipientTokens { get; set; }
+        public virtual ICollection<FcmTokenToDelivery> RecipientTokens { get; set; }
         public virtual ApplicationUser.ApplicationUser Courier { get; set; }
         public virtual ApplicationUser.ApplicationUser CourierService { get; set; }
     }

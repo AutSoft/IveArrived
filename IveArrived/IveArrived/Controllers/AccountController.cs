@@ -42,7 +42,7 @@ namespace IveArrived.Controllers
         }
 
         [HttpPost]
-        public async Task Register([FromForm] RegistrationModel model)
+        public async Task<IActionResult> Register([FromForm] RegistrationModel model)
         {
             string logoUrl = null;
 
@@ -53,7 +53,7 @@ namespace IveArrived.Controllers
             }
             string flierUrl = null;
 
-            if (model.Logo != null)
+            if (model.Flier != null)
             {
                 flierUrl = await fileService.Publish(model.Flier.OpenReadStream(),
                     Path.GetExtension(model.Flier.FileName));
@@ -79,10 +79,12 @@ namespace IveArrived.Controllers
 
             if (result.Succeeded != true)
             {
-                throw new Exception("USERNAME");
+                return BadRequest();
             }
 
             await userManager.AddToRoleAsync(reguser, model.Role);
+
+            return Ok();
         }
     }
 }

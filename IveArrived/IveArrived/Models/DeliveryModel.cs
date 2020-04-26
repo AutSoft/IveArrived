@@ -11,7 +11,7 @@ namespace IveArrived.Models
         public string Address { get; set; }
         public DateTime? EstimatedDeliveryStart { get; set; }
         public DateTime? EstimatedDeliveryEnd { get; set; }
-        public Guid PackageId { get; set; }
+        public string PackageId { get; set; }
         public DeliveryState State { get; set; }
         public string SenderName { get; set; }
         public string SenderPhoneNumber { get; set; }

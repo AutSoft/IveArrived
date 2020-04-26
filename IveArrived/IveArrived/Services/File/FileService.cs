@@ -12,6 +12,11 @@ namespace IveArrived.Services.File
         {
             var path = Guid.NewGuid().ToString().Insert(2, "/") + extension;
 
+            if (!Directory.Exists("wwwroot/" + path.Substring(0, 2)))
+            {
+                Directory.CreateDirectory("wwwroot/" + path.Substring(0, 2));
+            }
+
             using (var stream = System.IO.File.Create("wwwroot/" + path))
             {
                 await fileStream.CopyToAsync(stream);
