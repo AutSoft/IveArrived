@@ -1,7 +1,7 @@
 <h1>Daily orders {{today}}</h1>
 <div *ngIf="deliveries && deliveries.length > 0; else nodeliveries" class="container-fluid">
   <div class="row">
-    <mat-card class="col-12 p-5 mat-elevation-z4 mb-5" *ngFor="let delivery of deliveries">
+    <mat-card class="col-12 p-5 mat-elevation-z1 mb-5" *ngFor="let delivery of deliveries">
       <div class="col-12">
         <div class="col-12 d-flex p-0">
           <div class="col-4">

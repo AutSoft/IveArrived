@@ -5,7 +5,7 @@
     mat-raised-button>&nbsp;&nbsp;&nbsp;Add courier&nbsp;&nbsp;&nbsp;</button>
 <div style="background-color: #f9f9f9">
     <div *ngFor="let currier of curriers">
-        <div class="col-7 d-flex p-5 float-left"
+        <mat-card class="mat-elevation-z1" class="col-7 d-flex p-5 float-left"
             style="background-color:white;margin-right:auto;margin-left: auto;border-radius: 40px;margin-top: 60px;">
             <div name="image" class="col-2">
                 <img src="{{currier.logoUrl}}" style="height: 74px;width: 74px;border-radius: 40px;">
@@ -23,6 +23,6 @@
                     </div>
                 </div>
             </div>
-        </div>
+          </mat-card>
     </div>
 </div>
