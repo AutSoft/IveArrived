@@ -4,6 +4,8 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:i_ve_arrived/main.dart';
+import 'package:i_ve_arrived/ui/login/login.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -17,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void navigationPage() {
-    Navigator.of(context).pushReplacementNamed('/HomeScreen');
+    Navigator.of(context).pushReplacement(route(() => LoginPage()));
   }
 
   @override
@@ -29,6 +31,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      backgroundColor: Colors.white,
       body: new Center(
         child: new Image.asset('images/splash.png'),
       ),

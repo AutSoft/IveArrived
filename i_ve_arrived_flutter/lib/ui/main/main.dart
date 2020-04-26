@@ -1,11 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i_ve_arrived/main.dart';
 import 'package:i_ve_arrived/remote/models.dart';
+import 'package:i_ve_arrived/remote/service.dart';
+import 'package:i_ve_arrived/ui/color.dart';
 import 'package:i_ve_arrived/ui/main/delivery/delivery_history_list.dart';
-import 'package:i_ve_arrived/ui/main/order_delivery_store.dart';
+import 'package:i_ve_arrived/ui/main/me_store.dart';
+import 'package:i_ve_arrived/ui/main/order_store.dart';
 import 'package:i_ve_arrived/ui/main/orderlist/orderlist.dart';
+import 'package:i_ve_arrived/ui/main/places/places.dart';
 import 'package:i_ve_arrived/ui/main/profile/profile.dart';
+import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 
 import 'delivery/delivery.dart';
@@ -39,114 +45,179 @@ class _MainPageState extends State<MainPage> {
   List<Widget> widgets;
   List<GlobalKey> navigatorKeys;
 
+  OrderStore pageStore;
+  ReactionDisposer reactionDisposer;
+
   @override
   void initState() {
     widgets = isDeliveryMode
         ? [
             DeliveryPage(),
             DeliveryHistoryPage(
-              filterStatus: DeliveryStatus.DELIVERED,
+              filterStatus: DeliveryStatus.DeliveryInProgress,
             ),
             DeliveryHistoryPage(
-              filterStatus: DeliveryStatus.CANCELLED,
+              filterStatus: DeliveryStatus.DeliveryFailed,
             ),
             ProfilePage(),
           ]
         : [
             OrderListPage(),
-            TestPage(
-              title: "Map",
-            )
+            ProfilePage(),
+            PlacesPage(),
           ];
     navigatorKeys = widgets.map((_) => GlobalKey()).toList();
+    () async {
+      var token = await firebaseMessaging.getToken();
+      service.addFirebaseToken(token);
+    }();
+
+    pageStore = OrderStore();
+    reactionDisposer = reaction((_) => pageStore.currentlyRingingOrder?.packageId, (item) {
+      if (item != null && !isDeliveryMode) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) {
+            return AlertDialog(
+              title: Text("Order is ringing"),
+              content: Text("Can you accept the order?"),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text("No"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    pageStore.reactToRingingOrder(false);
+                  },
+                ),
+                FlatButton(
+                  child: Text("Yes"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    pageStore.reactToRingingOrder(true);
+                  },
+                )
+              ],
+            );
+          },
+        );
+      }
+    });
+
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    pageStore.dispose();
+    reactionDisposer();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Provider(
-      create: (_) => OrderDeliveryStore(),
-      child: Scaffold(
-        primary: false,
-        body: WillPopScope(
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              for (int i = 0; i < widgets.length; i++)
-                Positioned.fill(
-                  child: IgnorePointer(
-                    ignoring: i != selectedPage,
-                    child: AnimatedOpacity(
-                      child: Navigator(
-                        key: navigatorKeys[i],
-                        initialRoute: "/",
-                        onGenerateRoute: (_) => routeContext(
-                          (context) => widgets[i],
+      create: (_) => MeStore(),
+      child: Provider<OrderStore>.value(
+        value: pageStore,
+        child: Scaffold(
+          primary: false,
+          body: WillPopScope(
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                for (int i = 0; i < widgets.length; i++)
+                  Positioned.fill(
+                    child: IgnorePointer(
+                      ignoring: i != selectedPage,
+                      child: AnimatedOpacity(
+                        child: Navigator(
+                          key: navigatorKeys[i],
+                          initialRoute: "/",
+                          onGenerateRoute: (_) => routeContext(
+                            (context) => widgets[i],
+                          ),
                         ),
+                        opacity: selectedPage == i ? 1 : 0,
+                        duration: kDefaultAnimationDuration,
                       ),
-                      opacity: selectedPage == i ? 1 : 0,
-                      duration: kDefaultAnimationDuration,
                     ),
                   ),
-                ),
-            ],
+              ],
+            ),
+            onWillPop: () async {
+              var subNavigator = navigatorKeys[selectedPage].currentState as NavigatorState;
+              if (subNavigator.canPop()) {
+                return !(await subNavigator.maybePop());
+              } else {
+                return true;
+              }
+            },
           ),
-          onWillPop: () async {
-            var subNavigator = navigatorKeys[selectedPage].currentState as NavigatorState;
-            if (subNavigator.canPop()){
-              return !(await subNavigator.maybePop());
-            } else {
-              return true;
-            }
-          },
-        ),
-        /*AnimatedCrossFadeExtended(
-          children: <Widget>[
-            DeliveryPage(),
-            TestPage(title: "Map"),
-          ],
-          currentChildPosition: selectedPage,
-          duration: kDefaultAnimationDuration,
-          curve: kDefaultAnimationCurve,
-        ),*/
-        bottomNavigationBar: BottomNavigationBar(
-          items: isDeliveryMode
-              ? [
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.home),
-                    title: Text("Home"),
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.check),
-                    title: Text("Delivered"),
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.delete),
-                    title: Text("Cancelled"),
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.account_circle),
-                    title: Text("Profile"),
-                  ),
-                ]
-              : [
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.home),
-                    title: Text("Home"),
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.map),
-                    title: Text("Map"),
-                  ),
-                ],
-          currentIndex: selectedPage,
-          unselectedItemColor: Colors.grey,
-          selectedItemColor: Colors.amber[800],
-          onTap: (i) {
-            setState(() {
-              selectedPage = i;
-            });
-          },
+          /*AnimatedCrossFadeExtended(
+            children: <Widget>[
+              DeliveryPage(),
+              TestPage(title: "Map"),
+            ],
+            currentChildPosition: selectedPage,
+            duration: kDefaultAnimationDuration,
+            curve: kDefaultAnimationCurve,
+          ),*/
+          bottomNavigationBar: BottomNavigationBar(
+            elevation: 20,
+            items: isDeliveryMode
+                ? [
+                    BottomNavigationBarItem(
+                      icon: SvgPicture.asset("images/address.svg"),
+                      title: Text("Home"),
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.check),
+                      title: Text("Delivered"),
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.delete),
+                      title: Text("Cancelled"),
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.account_circle),
+                      title: Text("Profile"),
+                    ),
+                  ]
+                : [
+                    BottomNavigationBarItem(
+                      icon: SvgPicture.asset(
+                        "images/address.svg",
+                        color: selectedPage == 0 ? parseColor("#47ae4c") : null,
+                      ),
+                      title: Text("MY PACKAGES", style: TextStyle(fontWeight: selectedPage == 0 ? FontWeight.w600 : null,),),
+                    ),
+                    BottomNavigationBarItem(
+                      icon: SvgPicture.asset(
+                        "images/user.svg",
+                        color: selectedPage == 1 ? parseColor("#47ae4c") : null,
+                      ),
+                      title: Text("MY PROFILE", style: TextStyle(fontWeight: selectedPage == 1 ? FontWeight.w600 : null,),),
+                    ),
+                    BottomNavigationBarItem(
+                      icon: SvgPicture.asset(
+                        "images/address.svg",
+                        color: selectedPage == 2 ? parseColor("#47ae4c") : null,
+                      ),
+                      title: Text("LOCAL STORES", style: TextStyle(fontWeight: selectedPage == 2 ? FontWeight.w600 : null,),),
+                    ),
+                  ],
+            currentIndex: selectedPage,
+            selectedItemColor: parseColor("#928f8f"),
+            unselectedItemColor: parseColor("#928f8f"),
+            selectedFontSize: 10,
+            unselectedFontSize: 10,
+            onTap: (i) {
+              setState(() {
+                selectedPage = i;
+              });
+            },
+          ),
         ),
       ),
     );

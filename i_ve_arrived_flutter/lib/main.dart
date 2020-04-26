@@ -1,20 +1,99 @@
+import 'dart:convert';
 import 'dart:isolate';
 
+import 'package:android_intent/android_intent.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:i_ve_arrived/example/welcome_page.dart';
 import 'package:i_ve_arrived/ui/login/login.dart';
 import 'package:i_ve_arrived/ui/splash/splash.dart';
 
-void main() {
-  runApp(new MaterialApp(
-    home: new SplashScreen(),
-    routes: <String, WidgetBuilder>{
-      '/HomeScreen': (BuildContext context) => new MyApp()
+FirebaseMessaging firebaseMessaging = FirebaseMessaging();
+
+var lastMessageNotifier = ValueNotifier<Map<String, dynamic>>({});
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+   flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+  var initializationSettingsAndroid = AndroidInitializationSettings('ic_launcher');
+  var initializationSettings = InitializationSettings(
+      initializationSettingsAndroid, null);
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+      onSelectNotification: selectNotificationCallback);
+
+  firebaseMessaging.configure(
+    onMessage: (message) async{
+      print("MESSAGE");
+      print(message);
+      lastMessageNotifier.value = message;
     },
-  ));
+    onLaunch: (message) async {
+      print("Launch");
+      print(message);
+    },
+    onResume: (message) async {
+      print("Resume");
+      print(message);
+    },
+    onBackgroundMessage: myBackgroundMessageHandler,
+  );
+  firebaseMessaging.getToken().then((it) => print(it));
+  runApp(MyApp());
 }
+
+Future<dynamic> selectNotificationCallback(String payload){
+  var message = jsonDecode(payload);
+  lastMessageNotifier.value = message;
+}
+
+Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) async {
+  flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+  var initializationSettingsAndroid = AndroidInitializationSettings('ic_launcher');
+  var initializationSettings = InitializationSettings(
+      initializationSettingsAndroid, null);
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+      onSelectNotification: selectNotificationCallback);
+  var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+      'channel_id', 'channel_name', 'channel_description',
+      importance: Importance.Max, priority: Priority.High, playSound: false);
+  var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+  var platformChannelSpecifics = NotificationDetails(
+      androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+  await flutterLocalNotificationsPlugin.show(
+    0,
+    'Hello',
+    'World!',
+    platformChannelSpecifics,
+    payload: jsonEncode(message),
+  );
+
+  FlutterRingtonePlayer.playAlarm();
+  await Future.delayed(Duration(seconds: 30));
+  FlutterRingtonePlayer.stop();
+
+  /*WidgetsFlutterBinding.ensureInitialized();
+  FlutterRingtonePlayer.playAlarm();
+  await Future.delayed(Duration(seconds: 5));
+  FlutterRingtonePlayer.stop();
+
+  if (message.containsKey('data')) {
+    // Handle data message
+    final dynamic data = message['data'];
+  }
+
+  if (message.containsKey('notification')) {
+    // Handle notification message
+    final dynamic notification = message['notification'];
+  }
+  return;*/
+}
+
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -32,9 +111,10 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.green,
+        textTheme: GoogleFonts.heeboTextTheme(Theme.of(context).textTheme),
       ),
-      home: LoginPage(),
+      home: SplashScreen(),
     );
   }
 }
@@ -72,17 +152,4 @@ var isDeliveryMode = true;
 
 const kDefaultAnimationDuration = Duration(milliseconds: 200);
 const kDefaultAnimationCurve = Curves.easeOut;
-
-Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) {
-  if (message.containsKey('data')) {
-    // Handle data message
-    final dynamic data = message['data'];
-  }
-
-  if (message.containsKey('notification')) {
-    // Handle notification message
-    final dynamic notification = message['notification'];
-  }
-
-  // Or do other work.
-}
+const placeholderProfileUrl = "https://organicthemes.com/demo/profile/files/2018/05/profile-pic.jpg";

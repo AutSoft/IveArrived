@@ -6,6 +6,7 @@ import io.flutter.plugin.common.PluginRegistry
 import io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback
 import io.flutter.plugins.firebasemessaging.FlutterFirebaseMessagingService
 import io.flutter.plugins.firebasemessaging.FirebaseMessagingPlugin
+import com.dexterous.flutterlocalnotifications.FlutterLocalNotificationsPlugin
 
 object FirebaseCloudMessagingPluginRegistrant {
     fun registerWith(registry: PluginRegistry) {
@@ -13,6 +14,8 @@ object FirebaseCloudMessagingPluginRegistrant {
             return
         }
         FirebaseMessagingPlugin.registerWith(registry.registrarFor("io.flutter.plugins.firebasemessaging.FirebaseMessagingPlugin"))
+        FlutterLocalNotificationsPlugin.registerWith(registry.registrarFor("com.dexterous.flutterlocalnotifications.FlutterLocalNotificationsPlugin"))
+        io.inway.ringtone.player.FlutterRingtonePlayerPlugin.registerWith(registry.registrarFor("io.inway.ringtone.player.FlutterRingtonePlayerPlugin"))
     }
 
     private fun alreadyRegisteredWith(registry: PluginRegistry): Boolean {
