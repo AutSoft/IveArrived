@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using System.Web;
 using IveArrived.Data;
 using IveArrived.Entities;
 using IveArrived.Mapper;
@@ -10,6 +13,7 @@ using IveArrived.Services.CurrentUser;
 using IveArrived.Services.Firebase;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NSwag;
 
 namespace IveArrived.Controllers
 {
@@ -113,7 +117,7 @@ namespace IveArrived.Controllers
                     Description = dm.Description,
                     EstimatedDeliveryEnd = dm.EstimatedDeliveryEnd,
                     EstimatedDeliveryStart = dm.EstimatedDeliveryStart,
-                    PackageId = Convert.ToBase64String(Guid.NewGuid().ToByteArray()),
+                    PackageId = Convert.ToBase64String((Guid.NewGuid().ToByteArray())).Replace('/', 'S'),
                     PaymentInfo = dm.PaymentInfo,
                     RecipientEmailAddress = dm.RecipientEmailAddress,
                     RecipientName = dm.RecipientName,

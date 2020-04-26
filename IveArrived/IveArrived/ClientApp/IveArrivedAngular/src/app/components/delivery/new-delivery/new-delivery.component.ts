@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CourierServiceDeliveryService, CourierService, CourierModel, AddOrEditDeliveryModel, DeliveryState } from 'src/app/api/app.generated';
+import { Component, OnInit, Inject } from '@angular/core';
+import { CourierServiceDeliveryService, CourierService, CourierModel, AddOrEditDeliveryModel, DeliveryState, DeliveryModel, API_BASE_URL } from 'src/app/api/app.generated';
 import { FormControl } from '@angular/forms';
 
 @Component({
@@ -29,8 +29,12 @@ export class NewDeliveryComponent implements OnInit {
     zipCode: ""
   });
 
+  result: DeliveryModel;
+  detailsUrl: string;
+
   constructor(private deliveryService: CourierServiceDeliveryService,
-    private courierService: CourierService) {
+    private courierService: CourierService,
+    @Inject(API_BASE_URL) private baseUrl) {
 
     }
 
@@ -42,7 +46,11 @@ export class NewDeliveryComponent implements OnInit {
   addNewDelivery() {
     this.delivery.estimatedDeliveryStart = this.date.value;
     this.delivery.estimatedDeliveryEnd = this.date.value;
-    this.deliveryService.addOrUpdateDelivery(this.delivery)
-    .subscribe();
+    this.deliveryService.addOrUpdateDelivery(this.delivery).subscribe(
+      d => {
+        this.result = d;
+        this.detailsUrl = `${this.baseUrl}/delivery/delivery-details/${encodeURI(this.result.packageId)}`;
+      }
+    );
   }
 }
