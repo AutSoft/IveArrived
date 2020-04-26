@@ -25,8 +25,8 @@ abstract class _LoginPageStore with Store {
     loginRequest = ObservableFuture(service.loginUser(emailController.text, passwordController.text));
   }
 
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  TextEditingController emailController = TextEditingController(text: "bakery@test.euvirus");
+  TextEditingController passwordController = TextEditingController(text: "EuB2020.");
 }
 
 class LoginPage extends StatelessWidget {

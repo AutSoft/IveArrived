@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
@@ -16,6 +18,7 @@ import 'package:i_ve_arrived/ui/main/profile/profile.dart';
 import 'package:i_ve_arrived/ui/widget/fullscreen_dialog.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
+import 'package:uni_links/uni_links.dart';
 
 import 'delivery/delivery.dart';
 
@@ -50,6 +53,7 @@ class _MainPageState extends State<MainPage> {
 
   OrderStore pageStore;
   ReactionDisposer reactionDisposer;
+  StreamSubscription linkSubscription;
 
   @override
   void initState() {
@@ -76,11 +80,12 @@ class _MainPageState extends State<MainPage> {
     }();
 
     pageStore = OrderStore();
-    reactionDisposer = reaction((_) => pageStore.currentlyRingingOrder?.packageId, (item) async {
-    //reactionDisposer = reaction((_) => pageStore.currentList?.firstWhere((_) => true, orElse: null)?.packageId, (item) async {
+    reactionDisposer = reaction((_) => pageStore.currentlyRingingOrder?.packageId, (text) async {
+      //reactionDisposer = reaction((_) => pageStore.currentList?.firstWhere((_) => true, orElse: null)?.packageId, (item) async {
       var item = pageStore.currentList?.firstWhere((_) => true, orElse: null);
-      if (item != null && !isDeliveryMode) {
+      if (item != null && !isDeliveryMode && text != null) {
         FlutterRingtonePlayer.playAlarm();
+        print("ShowDialog");
         var result = await showDialog(
           barrierDismissible: false,
           context: context,
@@ -88,19 +93,35 @@ class _MainPageState extends State<MainPage> {
             builder: (_) => DoorbellPage(item: item),
           ),
         );
-        if (result != null){
+        if (result != null) {
           pageStore.reactToRingingOrder(result);
         }
         FlutterRingtonePlayer.stop();
       }
     });
+    () async {
+      linkSubscription = getLinksStream().listen(_handleLink);
+      var url = await getInitialLink();
+      _handleLink(url);
+    }();
+
     super.initState();
+  }
+
+  void _handleLink(String url) {
+    if (url != null) {
+      var part = url.split("/").last;
+      var packageId = Uri.decodeFull(part);
+      print(packageId);
+      pageStore.subscribeToOrder(packageId);
+    }
   }
 
   @override
   void dispose() {
     pageStore.dispose();
     reactionDisposer();
+    linkSubscription.cancel();
     super.dispose();
   }
 
@@ -113,27 +134,32 @@ class _MainPageState extends State<MainPage> {
         child: Scaffold(
           primary: false,
           body: WillPopScope(
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                for (int i = 0; i < widgets.length; i++)
-                  Positioned.fill(
-                    child: IgnorePointer(
-                      ignoring: i != selectedPage,
-                      child: AnimatedOpacity(
-                        child: Navigator(
-                          key: navigatorKeys[i],
-                          initialRoute: "/",
-                          onGenerateRoute: (_) => routeContext(
-                            (context) => widgets[i],
+            child: GestureDetector(
+              onTap: () {
+                pageStore.test_setRingingOrder();
+              },
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  for (int i = 0; i < widgets.length; i++)
+                    Positioned.fill(
+                      child: IgnorePointer(
+                        ignoring: i != selectedPage,
+                        child: AnimatedOpacity(
+                          child: Navigator(
+                            key: navigatorKeys[i],
+                            initialRoute: "/",
+                            onGenerateRoute: (_) => routeContext(
+                              (context) => widgets[i],
+                            ),
                           ),
+                          opacity: selectedPage == i ? 1 : 0,
+                          duration: kDefaultAnimationDuration,
                         ),
-                        opacity: selectedPage == i ? 1 : 0,
-                        duration: kDefaultAnimationDuration,
                       ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
             onWillPop: () async {
               var subNavigator = navigatorKeys[selectedPage].currentState as NavigatorState;

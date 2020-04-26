@@ -117,6 +117,14 @@ mixin _$OrderStore on _OrderStore, Store {
     return _$fetchDeliveryListAsyncAction.run(() => super.fetchDeliveryList());
   }
 
+  final _$subscribeToOrderAsyncAction = AsyncAction('subscribeToOrder');
+
+  @override
+  Future<dynamic> subscribeToOrder(String packageId) {
+    return _$subscribeToOrderAsyncAction
+        .run(() => super.subscribeToOrder(packageId));
+  }
+
   final _$_OrderStoreActionController = ActionController(name: '_OrderStore');
 
   @override
@@ -124,6 +132,16 @@ mixin _$OrderStore on _OrderStore, Store {
     final _$actionInfo = _$_OrderStoreActionController.startAction();
     try {
       return super.messageNotification();
+    } finally {
+      _$_OrderStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void test_setRingingOrder() {
+    final _$actionInfo = _$_OrderStoreActionController.startAction();
+    try {
+      return super.test_setRingingOrder();
     } finally {
       _$_OrderStoreActionController.endAction(_$actionInfo);
     }

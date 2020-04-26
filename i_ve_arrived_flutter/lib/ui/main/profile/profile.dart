@@ -87,7 +87,7 @@ class ProfilePage extends StatelessWidget {
                       _buildField("ZIP code", meData?.zipCode ?? "1117"),
                       _buildField("Address", meData?.address ?? "Gábor Dénes utca 4."),
                       _buildField("Phone number", "+36 30 458 7631"),
-                      _buildField("Email", meData?.email ?? "test@example.com"),
+                      _buildField("Email", "frjulie@gmail.com"/*meData?.email ?? "test@example.com"*/),
                       SizedBox(height: 18,),
                       Center(
                         child: SizedBox(

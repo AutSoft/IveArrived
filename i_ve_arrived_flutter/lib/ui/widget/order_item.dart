@@ -138,7 +138,8 @@ class OrderItemWidget extends StatelessWidget {
                       Icon(
                         Icons.chevron_right,
                         color: parseColor("#47ae4c"),
-                      )
+                      ),
+                      SizedBox(width: 8,)
                     ],
                   ),
                   Container(

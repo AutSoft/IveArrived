@@ -48,6 +48,11 @@ abstract class _OrderStore with Store {
   OrderItem currentlyRingingOrder;
 
   @action
+  void test_setRingingOrder(){
+    currentlyRingingOrder = currentList[0];
+  }
+
+  @action
   void reactToRingingOrder(bool accept){
     service.orderRingingResponse(currentlyRingingOrder.packageId, accept);
     currentlyRingingOrder = null;
@@ -103,5 +108,13 @@ abstract class _OrderStore with Store {
     isRingingCurrentOrder = false;
     isRingingSuccess = null;
     service.finishOrder(item.packageId, false);
+  }
+
+  @action
+  Future subscribeToOrder(String packageId) async{
+    var firebaseToken = await firebaseMessaging.getToken();
+    await deliveryListRequest;
+    await service.subscribeToOrder(packageId, firebaseToken);
+    await fetchDeliveryList();
   }
 }

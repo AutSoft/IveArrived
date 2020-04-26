@@ -108,6 +108,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -155,7 +156,7 @@ class RingtonePage extends StatelessWidget{
 
 Route<T> route<T>(Widget Function() pageBuilder) => routeContext((_) => pageBuilder());
 Route<T> routeContext<T>(Widget Function(BuildContext) pageBuilder) => MaterialPageRoute<T>(builder: (context) => pageBuilder(context));
-var isDeliveryMode = true;
+var isDeliveryMode = false;
 
 const kDefaultAnimationDuration = Duration(milliseconds: 200);
 const kDefaultAnimationCurve = Curves.easeOut;
