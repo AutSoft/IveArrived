@@ -42,14 +42,14 @@ class Service {
 
   Future<OrderListResponse> fetchOrderListCourier() async {
     var response = await _dio.get("Delivery/ListForCourier");
-    var list = response.data as List<Map<String, dynamic>>;
-    return OrderListResponse(list.map((it) => OrderItem.fromJson(it)));
+    var list = response.data as List<dynamic>;
+    return OrderListResponse(list.map((it) => OrderItem.fromJson(it)).toList());
   }
 
   Future<OrderListResponse> fetchOrderListRecipient() async {
     var response = await _dio.get("Delivery/ListForRecipient");
-    var list = response.data as List<Map<String, dynamic>>;
-    return OrderListResponse(list.map((it) => OrderItem.fromJson(it)));
+    var list = response.data as List<dynamic>;
+    return OrderListResponse(list.map((it) => OrderItem.fromJson(it)).toList());
   }
 
   Future signupCourier(String password, String email) async {
@@ -86,34 +86,39 @@ class Service {
     return;
   }
 
-  Future startOrderRinging(String packageId, String firebaseToken) async{
+  Future startOrderRinging(String packageId, String firebaseToken) async {
     await _dio.post(
-      "Delivery/DoorBell",
-      data: {
-        "packageId": packageId,
-        "responseFirebaseToken": firebaseToken
-      }
+        "Delivery/DoorBell",
+        data: {
+          "packageId": packageId,
+          "responseFirebaseToken": firebaseToken
+        }
     );
   }
 
-  Future finishOrder(String packageId, bool success) async{
+  Future finishOrder(String packageId, bool success) async {
     await _dio.post(
-      "Delivery/DeliveryCompleted",
-      data: {
-        "packageId": packageId,
-        "success": success,
-      }
+        "Delivery/DeliveryCompleted",
+        data: {
+          "packageId": packageId,
+          "success": success,
+        }
     );
   }
 
-  Future orderRingingResponse(String packageId, bool accept) async{
+  Future orderRingingResponse(String packageId, bool accept) async {
     await _dio.post(
-      "Delivery/DoorBellResponse",
-      data: {
-        "packageId": packageId,
-        "isAvailable": accept,
-      }
+        "Delivery/DoorBellResponse",
+        data: {
+          "packageId": packageId,
+          "isAvailable": accept,
+        }
     );
+  }
+
+  Future<MeData> fetchMeData() async {
+    var response = await _dio.get("Account/Me");
+    return MeData.fromJson(response.data);
   }
 }
 

@@ -44,15 +44,17 @@ class DeliveryPage extends StatelessWidget {
             );*/
           return SingleChildScrollView(
               child: Column(children: [
-                CurrentDeliveryPanel(
-                  key: ValueKey(list[0].packageId),
-                  item: list[0],
-                  onItemPressed: (item) {Navigator.of(context).push(route(() => OrderDetailPage(item: item,)));},
-                  isRinging: pageStore.isRingingCurrentOrder,
-                  onRingingPressed: () => pageStore.orderStartRing(list[0]),
-                  onDeliveredPressed: () => pageStore.orderDelivered(list[0]),
-                  onCancelPressed: () => pageStore.orderCancelled(list[0]),
-                ),
+                if (list.length > 0)
+                  CurrentDeliveryPanel(
+                    key: ValueKey(list[0].packageId),
+                    item: list[0],
+                    onItemPressed: (item) {Navigator.of(context).push(route(() => OrderDetailPage(item: item,)));},
+                    isRinging: pageStore.isRingingCurrentOrder,
+                    hasAccepted: pageStore.isRingingSuccess,
+                    onRingingPressed: () => pageStore.orderStartRing(list[0]),
+                    onDeliveredPressed: () => pageStore.orderDelivered(list[0]),
+                    onCancelPressed: () => pageStore.orderCancelled(list[0]),
+                  ),
                 NextDeliveriesPanel(
                   items: list.skip(1).toList(),
                   onItemPressed: (item) {Navigator.of(context).push(route(() => OrderDetailPage(item: item,)));},
@@ -70,11 +72,12 @@ class CurrentDeliveryPanel extends StatelessWidget {
   final OrderItem item;
   final void Function(OrderItem) onItemPressed;
   final bool isRinging;
+  final bool hasAccepted;
   final VoidCallback onRingingPressed;
   final VoidCallback onDeliveredPressed;
   final VoidCallback onCancelPressed;
 
-  const CurrentDeliveryPanel({Key key, this.item, this.onItemPressed, this.isRinging, this.onRingingPressed, this.onDeliveredPressed, this.onCancelPressed}) : super(key: key);
+  const CurrentDeliveryPanel({Key key, this.item, this.onItemPressed, this.isRinging, this.onRingingPressed, this.onDeliveredPressed, this.onCancelPressed, this.hasAccepted}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -108,6 +111,10 @@ class CurrentDeliveryPanel extends StatelessWidget {
             ),
             secondChild: Column(
               children: <Widget>[
+                if (hasAccepted == true)
+                  Text("ACCEPTED"),
+                if (hasAccepted == false)
+                  Text("DECLINED"),
                 RaisedButton(
                   child: Container(width: 100, alignment: Alignment.center, child: Text("Átvette")),
                   onPressed: onDeliveredPressed,
@@ -169,7 +176,7 @@ class DeliveryItemWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(item.packageId),
-            Text(item.orderDate),
+            Text(item.estimatedDeliveryStart),
             Text(item.address),
           ],
         ),

@@ -14,9 +14,11 @@ class MapSnapshot extends StatelessWidget {
         "https://maps.googleapis.com/maps/api/staticmap?"
             "center=${Uri.encodeFull(address)}&"
             "zoom=17&"
-            "markers=color:red|${Uri.encodeFull(address)}&"
+            "markers=color:0x53b557|${Uri.encodeFull(address)}&"
             "size=600x600&"
-            "key=AIzaSyDrGXhVduV5TA3pr3WYjU8b8HAsTf5GZqQ",
+            "key=AIzaSyDrGXhVduV5TA3pr3WYjU8b8HAsTf5GZqQ&"
+            "style=feature:poi|visibility:off&"
+            "maptype=roadmap",
         fit: BoxFit.cover,
       ),
     );

@@ -22,6 +22,19 @@ enum DeliveryStatus{
 }
 
 @JsonSerializable()
+class CourierData{
+  final String role;
+  final String displayName;
+  final String logoUrl;
+  final String phoneNumber;
+
+  CourierData(this.role, this.displayName, this.logoUrl, this.phoneNumber);
+
+  factory CourierData.fromJson(Map<String, dynamic> json) => _$CourierDataFromJson(json);
+  Map<String, dynamic> toJson() => _$CourierDataToJson(this);
+}
+
+@JsonSerializable()
 class OrderItem{
   final int id;
   final String description;
@@ -29,7 +42,6 @@ class OrderItem{
   final String estimatedDeliveryStart;
   final String estimatedDeliveryEnd;
   final String packageId;
-  final String orderDate;
   final DeliveryStatus state;
   final String senderName;
   final String senderPhoneNumber;
@@ -38,18 +50,19 @@ class OrderItem{
   final String recipientPhoneNumber;
   final String recipientEmailAddress;
   final String paymentInfo;
+  final CourierData courier;
+  final CourierData courierService;
 
   factory OrderItem.fromJson(Map<String, dynamic> json) => _$OrderItemFromJson(json);
   Map<String, dynamic> toJson() => _$OrderItemToJson(this);
 
-  const OrderItem({
+  const OrderItem({this.courier, this.courierService,
     this.id,
     this.description,
     this.address,
     this.estimatedDeliveryStart,
     this.estimatedDeliveryEnd,
     this.packageId,
-    this.orderDate,
     this.state,
     this.senderName,
     this.senderPhoneNumber,
@@ -67,9 +80,6 @@ class OrderItem{
     String estimatedDeliveryStart,
     String estimatedDeliveryEnd,
     String packageId,
-    String orderDate,
-    double lat,
-    double lng,
     DeliveryStatus state,
     String senderName,
     String senderPhoneNumber,
@@ -78,6 +88,8 @@ class OrderItem{
     String recipientPhoneNumber,
     String recipientEmailAddress,
     String paymentInfo,
+    CourierData courier,
+    CourierData courierService,
   }) {
     return new OrderItem(
       id: id ?? this.id,
@@ -86,7 +98,6 @@ class OrderItem{
       estimatedDeliveryStart: estimatedDeliveryStart ?? this.estimatedDeliveryStart,
       estimatedDeliveryEnd: estimatedDeliveryEnd ?? this.estimatedDeliveryEnd,
       packageId: packageId ?? this.packageId,
-      orderDate: orderDate ?? this.orderDate,
       state: state ?? this.state,
       senderName: senderName ?? this.senderName,
       senderPhoneNumber: senderPhoneNumber ?? this.senderPhoneNumber,
@@ -95,6 +106,8 @@ class OrderItem{
       recipientPhoneNumber: recipientPhoneNumber ?? this.recipientPhoneNumber,
       recipientEmailAddress: recipientEmailAddress ?? this.recipientEmailAddress,
       paymentInfo: paymentInfo ?? this.paymentInfo,
+      courier: courier ?? this.courier,
+      courierService: courierService ?? this.courierService,
     );
   }
 
@@ -120,4 +133,22 @@ class Meta{
 
   factory Meta.fromJson(Map<String, dynamic> json) => _$MetaFromJson(json);
   Map<String, dynamic> toJson() => _$MetaToJson(this);
+}
+
+@JsonSerializable()
+class MeData{
+  final String role;
+  final String displayName;
+  final String contactName;
+  final String address;
+  final String city;
+  final String zipCode;
+  final String country;
+  final String email;
+  final String logoUrl;
+
+  MeData({this.role, this.displayName, this.contactName, this.address, this.city, this.zipCode, this.country, this.email, this.logoUrl});
+
+  factory MeData.fromJson(Map<String, dynamic> json) => _$MeDataFromJson(json);
+  Map<String, dynamic> toJson() => _$MeDataToJson(this);
 }

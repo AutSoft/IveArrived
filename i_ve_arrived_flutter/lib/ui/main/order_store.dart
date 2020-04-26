@@ -12,20 +12,22 @@ abstract class _OrderStore with Store {
   }
 
   void dispose(){
+    print("DISPOSING!");
     lastMessageNotifier.removeListener(messageNotification);
   }
 
   @action
   void messageNotification(){
-    var message = lastMessageNotifier.value;
+    var message = lastMessageNotifier.value as Map<dynamic, dynamic>;
     if (message.isNotEmpty){
+      message = message["data"] as Map<dynamic, dynamic>;
       var packageId = message["PackageId"] as String;
       var orderItem = currentList.firstWhere((it) => it.packageId == packageId);
       if (orderItem != null) {
         if (message["MessageType"] == "DoorBell") {
           currentlyRingingOrder = orderItem;
         } else if (message["MessageType"] == "DoorBellResponse") {
-          isRingingSuccess = message["IsAvailable"] == "true";
+          isRingingSuccess = message["IsAvailable"] == "True";
         } else if (message["MessageType"] == "ChangeDeliveryState"){
           var newState = DeliveryStatus.values.firstWhere((it) => it.toString() == message["State"]);
           var index = currentList.indexOf(orderItem);
@@ -72,6 +74,7 @@ abstract class _OrderStore with Store {
     currentList.clear();
     currentList.addAll(deliveryListRequest.value.resultList);
     lastMessageNotifier.addListener(messageNotification);
+    messageNotification();
   }
 
   @action
