@@ -24,7 +24,9 @@ export class NewDeliveryComponent implements OnInit {
     paymentInfo: "",
     recipientEmailAddress: "",
     recipientName: "",
-    recipientPhoneNumber: ""
+    recipientPhoneNumber: "",
+    city: "",
+    zipCode: ""
   });
 
   constructor(private deliveryService: CourierServiceDeliveryService,
