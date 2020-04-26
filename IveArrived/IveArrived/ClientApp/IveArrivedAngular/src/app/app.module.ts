@@ -29,8 +29,9 @@ import { DailyDeliveryComponent } from './components/delivery/daily-delivery/dai
 import { NewDeliveryComponent } from './components/delivery/new-delivery/new-delivery.component';
 import { MyCouriersComponent } from './components/delivery/my-couriers/my-couriers.component';
 import { ProfileSettingsComponent } from './components/delivery/profile-settings/profile-settings.component';
-import { AccountService, CourierService, CourierServiceDeliveryService } from './api/app.generated';
+import { AccountService, CourierService, CourierServiceDeliveryService, API_BASE_URL } from './api/app.generated';
 import { DeliveryStateToString } from './delivery-state.pipe';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
     declarations: [
@@ -71,7 +72,8 @@ import { DeliveryStateToString } from './delivery-state.pipe';
     providers: [
       AccountService,
       CourierService,
-      CourierServiceDeliveryService
+      CourierServiceDeliveryService,
+      { provide: API_BASE_URL, useValue: environment.apiBaseUrl },
     ],
     bootstrap: [AppComponent]
 })
