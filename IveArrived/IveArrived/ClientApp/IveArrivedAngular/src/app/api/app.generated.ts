@@ -22,7 +22,7 @@ export class AccountService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "https://ivearrived.azurewebsites.net";
+        this.baseUrl = baseUrl ? baseUrl : "https://localhost:5001";
     }
 
     login(loginModel: LoginModel): Observable<void> {
@@ -203,7 +203,7 @@ export class CourierService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "https://ivearrived.azurewebsites.net";
+        this.baseUrl = baseUrl ? baseUrl : "https://localhost:5001";
     }
 
     register(displayName: string | null | undefined, email: string | null | undefined, phoneNumber: string | null | undefined, password: string | null | undefined, logo: FileParameter | null | undefined): Observable<FileResponse | null> {
@@ -326,7 +326,7 @@ export class CourierServiceDeliveryService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "https://ivearrived.azurewebsites.net";
+        this.baseUrl = baseUrl ? baseUrl : "https://localhost:5001";
     }
 
     listDeliveries(): Observable<DeliveryModel[]> {
@@ -538,7 +538,7 @@ export class DeliveryService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "https://ivearrived.azurewebsites.net";
+        this.baseUrl = baseUrl ? baseUrl : "https://localhost:5001";
     }
 
     listForCourier(): Observable<DeliveryModel[]> {
@@ -850,7 +850,7 @@ export class FirebaseService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "https://ivearrived.azurewebsites.net";
+        this.baseUrl = baseUrl ? baseUrl : "https://localhost:5001";
     }
 
     addFirebaseTokenToUser(token: TokenModel): Observable<void> {

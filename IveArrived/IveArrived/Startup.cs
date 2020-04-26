@@ -59,22 +59,14 @@ namespace IveArrived
                     Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<ApplicationUser, ApplicationRole>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
 
             if (environment.IsProduction())
             {
                 services.AddApplicationInsightsTelemetry();
             }
             services.AddSpaStaticFiles(configuration => configuration.RootPath = "ClientApp/IveArrivedAngular/dist/IveArrivedAngular");
-
-            services.AddCors(options =>
-            {
-                options.AddPolicy("MyPolicy",
-                    builder =>
-                    {
-                        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-                    });
-            });
 
             services.AddControllers()
                 .AddJsonOptions(config => config.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
@@ -92,8 +84,6 @@ namespace IveArrived
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
             }
-
-            app.UseCors("MyPolicy");
 
             //else
             //{
@@ -124,6 +114,11 @@ namespace IveArrived
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "ClientApp/IveArrivedAngular";
+
+                if (environment.IsDevelopment())
+                {
+                    spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
+                }
             });
         }
     }
