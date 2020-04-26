@@ -29,7 +29,7 @@ export class ProfileSettingsComponent implements OnInit {
       this.phoneNumber = data.phoneNumber;
       this.smeName = data.displayName;
       this.zipcode = data.zipCode;
-      this.flierUrl = data.flier.split("~")[1];
+      this.flierUrl = data.flier;
       this.address = data.address;
     });
   }
