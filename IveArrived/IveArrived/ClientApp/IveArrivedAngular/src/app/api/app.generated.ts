@@ -22,7 +22,7 @@ export class AccountService {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ? baseUrl : "https://ivearrived.azurewebsites.net";
+        this.baseUrl = "localhost:5000";
     }
 
     login(loginModel: LoginModel): Observable<void> {
