@@ -54,6 +54,9 @@
           <button style="color: white;" class="rounded-button ml-3" mat-raised-button
             (click)="changeDeliveryState(delivery)">Change&nbsp;&nbsp;</button>
         </div>
+        <div class="col-4">
+          <a [href]="getUrl(delivery.packageId)" class="card-content">{{getUrl(delivery.packageId)}}</a>
+        </div>
       </div>
     </mat-card>
   </div>

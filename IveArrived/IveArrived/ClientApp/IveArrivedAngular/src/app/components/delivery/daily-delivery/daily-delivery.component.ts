@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CourierServiceDeliveryService, DeliveryModel, DeliveryState, DeliveryStateChangeModel, DeliveryCourierChangeModel, CourierModel, CourierService } from 'src/app/api/app.generated';
+import { Component, OnInit, Inject } from '@angular/core';
+import { CourierServiceDeliveryService, DeliveryModel, DeliveryState, DeliveryStateChangeModel, DeliveryCourierChangeModel, CourierModel, CourierService, API_BASE_URL } from 'src/app/api/app.generated';
 
 @Component({
   selector: 'app-daily-delivery',
@@ -21,7 +21,8 @@ export class DailyDeliveryComponent implements OnInit {
   couriers: CourierModel[];
 
   constructor(private deliveryService: CourierServiceDeliveryService,
-    private courierService: CourierService) {
+    private courierService: CourierService,
+    @Inject(API_BASE_URL) public baseUrl) {
     const todayDate = new Date();
     const dd = String(todayDate.getDate()).padStart(2, '0');
     const mm = String(todayDate.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -51,6 +52,10 @@ export class DailyDeliveryComponent implements OnInit {
       deliveryId: delivery.id,
       courierId: delivery.courier.id
     })).subscribe();
+  }
+
+  getUrl(packageId: string): string {
+    return `${this.baseUrl}/delivery/delivery-details/${escape(packageId)}`
   }
 
 }
