@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { CourierServiceDeliveryService, CourierService, CourierModel, AddOrEditDeliveryModel, DeliveryState, DeliveryModel, API_BASE_URL } from 'src/app/api/app.generated';
 import { FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-new-delivery',
@@ -33,7 +34,7 @@ export class NewDeliveryComponent implements OnInit {
   detailsUrl: string;
 
   constructor(private deliveryService: CourierServiceDeliveryService,
-    private courierService: CourierService,
+    private courierService: CourierService, private router: Router,
     @Inject(API_BASE_URL) private baseUrl) {
 
     }
@@ -43,6 +44,7 @@ export class NewDeliveryComponent implements OnInit {
       couriers => this.couriers = couriers
     )
   }
+
   addNewDelivery() {
     this.delivery.estimatedDeliveryStart = this.date.value;
     this.delivery.estimatedDeliveryEnd = this.date.value;
@@ -50,6 +52,7 @@ export class NewDeliveryComponent implements OnInit {
       d => {
         this.result = d;
         this.detailsUrl = `${this.baseUrl}/delivery/delivery-details/${encodeURI(this.result.packageId)}`;
+        this.router.navigate(['/delivery/daily-delivery']);
       }
     );
   }
