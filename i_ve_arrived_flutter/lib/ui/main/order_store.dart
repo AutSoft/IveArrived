@@ -48,11 +48,6 @@ abstract class _OrderStore with Store {
   OrderItem currentlyRingingOrder;
 
   @action
-  void test_setRingingOrder(){
-    currentlyRingingOrder = currentList[0];
-  }
-
-  @action
   void reactToRingingOrder(bool accept){
     service.orderRingingResponse(currentlyRingingOrder.packageId, accept);
     currentlyRingingOrder = null;

@@ -138,16 +138,6 @@ mixin _$OrderStore on _OrderStore, Store {
   }
 
   @override
-  void test_setRingingOrder() {
-    final _$actionInfo = _$_OrderStoreActionController.startAction();
-    try {
-      return super.test_setRingingOrder();
-    } finally {
-      _$_OrderStoreActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
   void reactToRingingOrder(bool accept) {
     final _$actionInfo = _$_OrderStoreActionController.startAction();
     try {

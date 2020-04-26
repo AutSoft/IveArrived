@@ -38,10 +38,10 @@ class Service {
   }
 
   Future<OrderListResponse> fetchOrderListRecipient() async {
-   /* var response = await _dio.get("Delivery/ListForRecipient");
+    var response = await _dio.get("Delivery/ListForRecipient");
     var list = response.data as List<dynamic>;
-    return OrderListResponse(list.map((it) => OrderItem.fromJson(it)).toList());*/
-   return OrderListResponse(
+    return OrderListResponse(list.map((it) => OrderItem.fromJson(it)).toList());
+   /*return OrderListResponse(
      [
        OrderItem(
            courier: CourierData(
@@ -89,7 +89,7 @@ class Service {
            senderName: "Adam's Bakery"
        ),
      ]
-   );
+   );*/
   }
 
   Future signupCourier(String password, String email) async {

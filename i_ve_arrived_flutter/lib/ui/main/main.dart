@@ -80,12 +80,11 @@ class _MainPageState extends State<MainPage> {
     }();
 
     pageStore = OrderStore();
-    reactionDisposer = reaction((_) => pageStore.currentlyRingingOrder?.packageId, (text) async {
-      //reactionDisposer = reaction((_) => pageStore.currentList?.firstWhere((_) => true, orElse: null)?.packageId, (item) async {
-      var item = pageStore.currentList?.firstWhere((_) => true, orElse: null);
-      if (item != null && !isDeliveryMode && text != null) {
+    //reactionDisposer = reaction((_) => pageStore.currentlyRingingOrder?.packageId, (text) async {
+      reactionDisposer = reaction((_) => pageStore.currentList?.firstWhere((_) => true, orElse: null)?.packageId, (itemId) async {
+      var item = pageStore.currentList?.firstWhere((it) => it.packageId == itemId, orElse: null);
+      if (item != null && !isDeliveryMode) {
         FlutterRingtonePlayer.playAlarm();
-        print("ShowDialog");
         var result = await showDialog(
           barrierDismissible: false,
           context: context,
@@ -134,32 +133,27 @@ class _MainPageState extends State<MainPage> {
         child: Scaffold(
           primary: false,
           body: WillPopScope(
-            child: GestureDetector(
-              onTap: () {
-                pageStore.test_setRingingOrder();
-              },
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  for (int i = 0; i < widgets.length; i++)
-                    Positioned.fill(
-                      child: IgnorePointer(
-                        ignoring: i != selectedPage,
-                        child: AnimatedOpacity(
-                          child: Navigator(
-                            key: navigatorKeys[i],
-                            initialRoute: "/",
-                            onGenerateRoute: (_) => routeContext(
-                              (context) => widgets[i],
-                            ),
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                for (int i = 0; i < widgets.length; i++)
+                  Positioned.fill(
+                    child: IgnorePointer(
+                      ignoring: i != selectedPage,
+                      child: AnimatedOpacity(
+                        child: Navigator(
+                          key: navigatorKeys[i],
+                          initialRoute: "/",
+                          onGenerateRoute: (_) => routeContext(
+                            (context) => widgets[i],
                           ),
-                          opacity: selectedPage == i ? 1 : 0,
-                          duration: kDefaultAnimationDuration,
                         ),
+                        opacity: selectedPage == i ? 1 : 0,
+                        duration: kDefaultAnimationDuration,
                       ),
                     ),
-                ],
-              ),
+                  ),
+              ],
             ),
             onWillPop: () async {
               var subNavigator = navigatorKeys[selectedPage].currentState as NavigatorState;
