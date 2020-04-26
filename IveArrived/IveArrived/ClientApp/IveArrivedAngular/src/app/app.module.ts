@@ -33,6 +33,7 @@ import { AccountService, CourierService, CourierServiceDeliveryService, API_BASE
 import { DeliveryStateToString } from './delivery-state.pipe';
 import { environment } from 'src/environments/environment';
 import { DeliveryDetailsComponent } from './components/delivery/delivery-details/delivery-details.component';
+import { AddCourierComponent } from './components/delivery/add-courier/add-courier.component';
 
 @NgModule({
     declarations: [
@@ -48,6 +49,7 @@ import { DeliveryDetailsComponent } from './components/delivery/delivery-details
         MyCouriersComponent,
         ProfileSettingsComponent,
         DeliveryStateToString,
+        AddCourierComponent,
         DeliveryDetailsComponent
     ],
     imports: [
