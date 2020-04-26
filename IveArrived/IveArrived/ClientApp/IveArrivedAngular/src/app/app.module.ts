@@ -49,7 +49,7 @@ import { AddCourierComponent } from './components/delivery/add-courier/add-couri
         MyCouriersComponent,
         ProfileSettingsComponent,
         DeliveryStateToString,
-        AddCourierComponent
+        AddCourierComponent,
         DeliveryDetailsComponent
     ],
     imports: [
