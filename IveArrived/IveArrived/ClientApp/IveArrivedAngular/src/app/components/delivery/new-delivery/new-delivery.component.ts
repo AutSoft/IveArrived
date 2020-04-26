@@ -42,6 +42,7 @@ export class NewDeliveryComponent implements OnInit {
   addNewDelivery() {
     this.delivery.estimatedDeliveryStart = this.date.value;
     this.delivery.estimatedDeliveryEnd = this.date.value;
-    this.deliveryService.addOrUpdateDelivery(this.delivery);
+    this.deliveryService.addOrUpdateDelivery(this.delivery)
+    .subscribe();
   }
 }

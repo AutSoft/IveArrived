@@ -67,6 +67,7 @@ namespace IveArrived.Controllers
                 .Include(d => d.CourierService)
                 .Include(d => d.Courier)
                 .Include(d => d.RecipientTokens)
+                    .ThenInclude(d => d.Token)
                 .FirstOrDefaultAsync(d => d.PackageId == dto.PackageId);
 
             if (delivery == null)
@@ -81,11 +82,14 @@ namespace IveArrived.Controllers
                             UserId = await currentUser.CurrentUserId()
                         };
 
-            delivery.RecipientTokens.Add(new FcmTokenToDelivery
+            if (delivery.RecipientTokens.All(rt => rt.Token.Id != token.Id))
             {
-                Token = token,
-                Delivery = delivery
-            });
+                delivery.RecipientTokens.Add(new FcmTokenToDelivery
+                {
+                    Token = token,
+                    Delivery = delivery
+                });
+            }
 
             await context.SaveChangesAsync();
 
