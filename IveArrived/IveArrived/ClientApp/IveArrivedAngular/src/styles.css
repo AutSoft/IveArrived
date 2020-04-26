@@ -7,3 +7,29 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   background-color:#0871b8;
   border-radius:40px !important
 }
+
+mat-card.mat-card {
+  border-radius: 25px;
+  padding: 30px;
+}
+.card-label {
+  -webkit-text-stroke: 1px rgba(0, 0, 0, 0);
+  font-size: 18px;
+  font-weight: 600;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  text-align: left;
+  color: #739ebb;
+}
+.card-content {
+  -webkit-text-stroke: 1px rgba(0, 0, 0, 0);
+  font-size: 16px;
+  font-weight: 600;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  text-align: left;
+}
