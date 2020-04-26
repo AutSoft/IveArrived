@@ -1,31 +1,26 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:i_ve_arrived/remote/models.dart';
+import 'package:path_provider/path_provider.dart';
 
 class Service {
   Dio _dio;
-  String _accessToken;
   CookieJar _cookieJar;
 
-  Service() {
+  Service(String tempPath) {
     _dio = Dio();
     _dio.options.baseUrl = "https://ivearrived.azurewebsites.net/api/";
-    _dio.interceptors.add(
-      InterceptorsWrapper(
-        onRequest: (options) {
-          if (_accessToken != null) {
-            options.headers["X-AUTH-TOKEN"] = _accessToken;
-          }
-          return options;
-        },
-      ),
-    );
-    _cookieJar = CookieJar();
+    _cookieJar = PersistCookieJar(dir: tempPath);
     _dio.interceptors.add(CookieManager(_cookieJar));
     _dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
+  }
+  
+  bool hasAccessToken(){
+    return _cookieJar.loadForRequest(Uri.parse(_dio.options.baseUrl)).firstWhere((test) => test.name.contains("Identity"), orElse: () => null) != null;
   }
 
   Future loginUser(String email, String password) async {
@@ -122,4 +117,4 @@ class Service {
   }
 }
 
-var service = Service();
+Service service;

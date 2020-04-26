@@ -45,11 +45,17 @@ class LoginPage extends StatelessWidget {
               return Stack(
                 fit: StackFit.expand,
                 children: <Widget>[
+                  Positioned(
+                    left: 0,
+                    top: 0,
+                    right: 0,
+                    height: 223,
+                    child: SvgPicture.asset("images/hullamos_hatter.svg", fit: BoxFit.fill,),
+                  ),
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Container(
-                        color: parseColor("#4bb04f"),
                         alignment: Alignment.center,
                         height: 223,
                         child: Column(

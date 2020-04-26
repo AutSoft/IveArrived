@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="375" height="228" viewBox="0 0 375 228">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_1020" data-name="Rectangle 1020" width="375" height="228" transform="translate(-102 -5.738)" fill="#fff"/>
+    </clipPath>
+    <linearGradient id="linear-gradient" x1="0.055" y1="0.798" x2="0.732" y2="0.968" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#72c86f"/>
+      <stop offset="1" stop-color="#6fc96d"/>
+    </linearGradient>
+    <filter id="Path_94" x="-37.5" y="-67.935" width="450" height="332.435" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="12.5" result="blur"/>
+      <feFlood flood-opacity="0.102"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <linearGradient id="linear-gradient-2" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#4bb04f"/>
+      <stop offset="1" stop-color="#5dbd61"/>
+    </linearGradient>
+  </defs>
+  <g id="hullamos_hatter" transform="translate(102 5.738)">
+    <g id="Mask_Group_4" data-name="Mask Group 4" clip-path="url(#clip-path)">
+      <g transform="matrix(1, 0, 0, 1, -102, -5.74)" filter="url(#Path_94)">
+        <path id="Path_94-2" data-name="Path 94" d="M273,408.084a197.2,197.2,0,0,1-30.654,11.929c-39.444,11.808-97.079,7.52-146.117-14.415-44.448-19.882-69.042-24.64-105.245-26.841-24.523-1.491-54.666,2.982-92.983,12.923V169H273Z" transform="translate(102 -202.44)" fill="url(#linear-gradient)"/>
+      </g>
+      <g id="Group_16017" data-name="Group 16017" transform="translate(-102 -18.42)">
+        <path id="Path_95" data-name="Path 95" d="M-102-18.42V150.426c33.406,2.021,62.382,9.115,81.071,19.851,4.12-.056,8,.129,11.837.359,26.423,1.588,46.745,4.9,73.031,14.007A290.1,290.1,0,0,1,96.916,182.8c54.236,0,100.153,14.49,115.67,34.477a155.919,155.919,0,0,0,29.761-5.5A198.6,198.6,0,0,0,273,199.988V-18.42Z" transform="translate(102 18.42)" fill="url(#linear-gradient-2)"/>
+      </g>
+    </g>
+  </g>
+</svg>

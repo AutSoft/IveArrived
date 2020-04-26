@@ -1,16 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i_ve_arrived/main.dart';
 import 'package:i_ve_arrived/remote/models.dart';
 import 'package:i_ve_arrived/remote/service.dart';
 import 'package:i_ve_arrived/ui/color.dart';
 import 'package:i_ve_arrived/ui/main/delivery/delivery_history_list.dart';
+import 'package:i_ve_arrived/ui/main/doorbell/doorbell.dart';
 import 'package:i_ve_arrived/ui/main/me_store.dart';
 import 'package:i_ve_arrived/ui/main/order_store.dart';
 import 'package:i_ve_arrived/ui/main/orderlist/orderlist.dart';
 import 'package:i_ve_arrived/ui/main/places/places.dart';
 import 'package:i_ve_arrived/ui/main/profile/profile.dart';
+import 'package:i_ve_arrived/ui/widget/fullscreen_dialog.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 
@@ -73,37 +76,24 @@ class _MainPageState extends State<MainPage> {
     }();
 
     pageStore = OrderStore();
-    reactionDisposer = reaction((_) => pageStore.currentlyRingingOrder?.packageId, (item) {
+    reactionDisposer = reaction((_) => pageStore.currentlyRingingOrder?.packageId, (item) async {
+    //reactionDisposer = reaction((_) => pageStore.currentList?.firstWhere((_) => true, orElse: null)?.packageId, (item) async {
+      var item = pageStore.currentList?.firstWhere((_) => true, orElse: null);
       if (item != null && !isDeliveryMode) {
-        showDialog(
-          context: context,
+        FlutterRingtonePlayer.playAlarm();
+        var result = await showDialog(
           barrierDismissible: false,
-          builder: (context) {
-            return AlertDialog(
-              title: Text("Order is ringing"),
-              content: Text("Can you accept the order?"),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text("No"),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    pageStore.reactToRingingOrder(false);
-                  },
-                ),
-                FlatButton(
-                  child: Text("Yes"),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    pageStore.reactToRingingOrder(true);
-                  },
-                )
-              ],
-            );
-          },
+          context: context,
+          builder: (_) => FullscreenDialog(
+            builder: (_) => DoorbellPage(item: item),
+          ),
         );
+        if (result != null){
+          pageStore.reactToRingingOrder(result);
+        }
+        FlutterRingtonePlayer.stop();
       }
     });
-
     super.initState();
   }
 
@@ -187,24 +177,39 @@ class _MainPageState extends State<MainPage> {
                 : [
                     BottomNavigationBarItem(
                       icon: SvgPicture.asset(
-                        "images/address.svg",
+                        "images/my_packages_icon_grey.svg",
                         color: selectedPage == 0 ? parseColor("#47ae4c") : null,
                       ),
-                      title: Text("MY PACKAGES", style: TextStyle(fontWeight: selectedPage == 0 ? FontWeight.w600 : null,),),
+                      title: Text(
+                        "MY PACKAGES",
+                        style: TextStyle(
+                          fontWeight: selectedPage == 0 ? FontWeight.w600 : null,
+                        ),
+                      ),
                     ),
                     BottomNavigationBarItem(
                       icon: SvgPicture.asset(
                         "images/user.svg",
                         color: selectedPage == 1 ? parseColor("#47ae4c") : null,
                       ),
-                      title: Text("MY PROFILE", style: TextStyle(fontWeight: selectedPage == 1 ? FontWeight.w600 : null,),),
+                      title: Text(
+                        "MY PROFILE",
+                        style: TextStyle(
+                          fontWeight: selectedPage == 1 ? FontWeight.w600 : null,
+                        ),
+                      ),
                     ),
                     BottomNavigationBarItem(
                       icon: SvgPicture.asset(
                         "images/address.svg",
                         color: selectedPage == 2 ? parseColor("#47ae4c") : null,
                       ),
-                      title: Text("LOCAL STORES", style: TextStyle(fontWeight: selectedPage == 2 ? FontWeight.w600 : null,),),
+                      title: Text(
+                        "LOCAL STORES",
+                        style: TextStyle(
+                          fontWeight: selectedPage == 2 ? FontWeight.w600 : null,
+                        ),
+                      ),
                     ),
                   ],
             currentIndex: selectedPage,

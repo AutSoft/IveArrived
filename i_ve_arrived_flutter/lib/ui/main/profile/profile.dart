@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:i_ve_arrived/main.dart';
 import 'package:i_ve_arrived/ui/main/me_store.dart';
 import 'package:i_ve_arrived/ui/widget/green_gradient_button.dart';
@@ -24,9 +25,9 @@ class ProfilePage extends StatelessWidget {
               top: 0,
               right: 0,
               height: 240,
-              child: Container(
-                color: parseColor("#4bb04f"),
-                alignment: Alignment.center,
+              child: SvgPicture.asset(
+                "images/hullamos_hatter.svg",
+                fit: BoxFit.fill,
               ),
             ),
             Positioned(
@@ -86,7 +87,7 @@ class ProfilePage extends StatelessWidget {
                       _buildField("ZIP code", meData?.zipCode ?? "1117"),
                       _buildField("Address", meData?.address ?? "Gábor Dénes utca 4."),
                       _buildField("Phone number", "+36 30 458 7631"),
-                      _buildField("Email", meData?.email),
+                      _buildField("Email", meData?.email ?? "test@example.com"),
                       SizedBox(height: 18,),
                       Center(
                         child: SizedBox(
