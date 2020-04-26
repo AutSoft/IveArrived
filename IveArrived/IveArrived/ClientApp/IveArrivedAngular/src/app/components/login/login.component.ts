@@ -25,15 +25,19 @@ export class LoginComponent implements OnInit {
     this.Password="";
   }
 
+  back(){
+    this.router.navigate(['']);
+  }
+
 
   onSubmit() {
 
 
 
-    var vody = new LoginModel;
-    vody.email = this.Email;
-    vody.password = this.Password;
-    this.accountService.login(vody).subscribe(
+    var body = new LoginModel;
+    body.email = this.Email;
+    body.password = this.Password;
+    this.accountService.login(body).subscribe(
       () => {
         this.router.navigate(["/delivery/daily-delivery"]);
         console.log("navigated to delivery");

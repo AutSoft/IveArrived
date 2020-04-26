@@ -51,6 +51,14 @@ namespace IveArrived.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await signInManager.SignOutAsync();
+
+            return Ok();
+        }
+
+        [HttpPost]
         public async Task<IActionResult> Register([FromForm] RegistrationModel model)
         {
             string logoUrl = null;
