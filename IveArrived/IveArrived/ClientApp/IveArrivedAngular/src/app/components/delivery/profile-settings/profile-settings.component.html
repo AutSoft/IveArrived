@@ -1,1 +1,36 @@
-<p>profile-settings works!</p>
+<div style="padding:0px 90px">
+    <div class="mt-3" style="color: #739ebb;">
+        <span class="mt-3">Change your logo</span>
+    </div>
+    <div class="text-center" style="width: 40%; height: 40%;">
+        <app-upload-file (filechanged)="fileChanged($event)" ></app-upload-file>
+    </div>
+    <div class="text-left mt-4">
+        <label class="mt-4 w-100" style="color: #739ebb;">Your SME's name</label>
+        <input name="DisplayName" [(ngModel)]="smeName" type="text" class="form-control" placeholder="John Smith's happy barkery">
+        <label class="mt-4 w-100" style="color: #739ebb;">Choose your companies profile</label>
+        <select name="profile" [(ngModel)]="profile" type="select" class="form-control">
+            <option value="bakery">bakery</option>
+            <option value="butchers">butchers</option>
+            <option value="universal">universal</option>
+        </select>
+        <label class="mt-4 w-100" style="color: #739ebb;">Contact name</label>
+        <input name="ContactName" [(ngModel)]="contactName" type="text" class="form-control">
+        <label class="mt-4 w-100" style="color: #739ebb;">Phone number</label>
+        <input name="PhoneNumber" [(ngModel)]="phoneNumber" type="text" class="form-control" placeholder="+36 30 123 4567">
+        <label class="mt-4 w-100" style="color: #739ebb;">Address</label>
+        <input name="Address" [(ngModel)]="address" type="text" class="form-control">
+        <div class="d-flex">
+            <label class="mt-4 col-7" style="color:#739ebb">City</label>
+            <label class="mt-4 ml-5 col-4" style="color:#739ebb">ZipCode</label>
+        </div>
+        <div class="d-flex">
+            <input name="City" [(ngModel)]="city" type="text" class="form-control col-7">
+            <input name="ZipCode" [(ngModel)]="zipcode" type="text" class="form-control ml-5 col-4">
+        </div>
+    </div>
+</div>
+<div class="text-center" style="padding-top: 20px;">
+    <button class="rounded-button p-1" style="color:white; font-size: 18px;" (click)="onSubmit()"
+    mat-raised-button>&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;</button>
+</div>
