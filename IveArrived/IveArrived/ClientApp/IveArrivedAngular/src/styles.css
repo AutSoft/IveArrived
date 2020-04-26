@@ -2,3 +2,8 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.rounded-button {
+  background-color:#0871b8;
+  border-radius:40px !important
+}

@@ -73,7 +73,7 @@ export class AccountService {
         return _observableOf<void>(<any>null);
     }
 
-    register(role: string | null | undefined, displayName: string | null | undefined, contactName: string | null | undefined, address: string | null | undefined, city: string | null | undefined, zipCode: string | null | undefined, country: string | null | undefined, email: string | null | undefined, password: string | null | undefined, logo: FileParameter | null | undefined, flier: FileParameter | null | undefined): Observable<FileResponse | null> {
+    register(role: string | null | undefined, displayName: string | null | undefined, contactName: string | null | undefined, address: string | null | undefined, city: string | null | undefined, zipCode: string | null | undefined, country: string | null | undefined, email: string | null | undefined, phoneNumber: string | null | undefined, password: string | null | undefined, logo: FileParameter | null | undefined, flier: FileParameter | null | undefined): Observable<FileResponse | null> {
         let url_ = this.baseUrl + "/api/Account/Register";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -94,6 +94,8 @@ export class AccountService {
             content_.append("Country", country.toString());
         if (email !== null && email !== undefined)
             content_.append("Email", email.toString());
+        if (phoneNumber !== null && phoneNumber !== undefined)
+            content_.append("PhoneNumber", phoneNumber.toString());
         if (password !== null && password !== undefined)
             content_.append("Password", password.toString());
         if (logo !== null && logo !== undefined)
@@ -142,6 +144,54 @@ export class AccountService {
             }));
         }
         return _observableOf<FileResponse | null>(<any>null);
+    }
+
+    me(): Observable<CourierServiceModel> {
+        let url_ = this.baseUrl + "/api/Account/Me";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",			
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processMe(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processMe(<any>response_);
+                } catch (e) {
+                    return <Observable<CourierServiceModel>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CourierServiceModel>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processMe(response: HttpResponseBase): Observable<CourierServiceModel> {
+        const status = response.status;
+        const responseBlob = 
+            response instanceof HttpResponse ? response.body : 
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }};
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CourierServiceModel.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CourierServiceModel>(<any>null);
     }
 }
 
@@ -938,7 +988,88 @@ export interface ILoginModel {
     password?: string | undefined;
 }
 
+export class CourierServiceModel implements ICourierServiceModel {
+    id!: number;
+    role?: string | undefined;
+    displayName?: string | undefined;
+    contactName?: string | undefined;
+    address?: string | undefined;
+    city?: string | undefined;
+    zipCode?: string | undefined;
+    country?: string | undefined;
+    email?: string | undefined;
+    phoneNumber?: string | undefined;
+    logoUrl?: string | undefined;
+    flierUrl?: string | undefined;
+
+    constructor(data?: ICourierServiceModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.role = _data["role"];
+            this.displayName = _data["displayName"];
+            this.contactName = _data["contactName"];
+            this.address = _data["address"];
+            this.city = _data["city"];
+            this.zipCode = _data["zipCode"];
+            this.country = _data["country"];
+            this.email = _data["email"];
+            this.phoneNumber = _data["phoneNumber"];
+            this.logoUrl = _data["logoUrl"];
+            this.flierUrl = _data["flierUrl"];
+        }
+    }
+
+    static fromJS(data: any): CourierServiceModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new CourierServiceModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["role"] = this.role;
+        data["displayName"] = this.displayName;
+        data["contactName"] = this.contactName;
+        data["address"] = this.address;
+        data["city"] = this.city;
+        data["zipCode"] = this.zipCode;
+        data["country"] = this.country;
+        data["email"] = this.email;
+        data["phoneNumber"] = this.phoneNumber;
+        data["logoUrl"] = this.logoUrl;
+        data["flierUrl"] = this.flierUrl;
+        return data; 
+    }
+}
+
+export interface ICourierServiceModel {
+    id: number;
+    role?: string | undefined;
+    displayName?: string | undefined;
+    contactName?: string | undefined;
+    address?: string | undefined;
+    city?: string | undefined;
+    zipCode?: string | undefined;
+    country?: string | undefined;
+    email?: string | undefined;
+    phoneNumber?: string | undefined;
+    logoUrl?: string | undefined;
+    flierUrl?: string | undefined;
+}
+
 export class CourierModel implements ICourierModel {
+    id!: number;
     role?: string | undefined;
     displayName?: string | undefined;
     phoneNumber?: string | undefined;
@@ -956,6 +1087,7 @@ export class CourierModel implements ICourierModel {
 
     init(_data?: any) {
         if (_data) {
+            this.id = _data["id"];
             this.role = _data["role"];
             this.displayName = _data["displayName"];
             this.phoneNumber = _data["phoneNumber"];
@@ -973,6 +1105,7 @@ export class CourierModel implements ICourierModel {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
         data["role"] = this.role;
         data["displayName"] = this.displayName;
         data["phoneNumber"] = this.phoneNumber;
@@ -983,6 +1116,7 @@ export class CourierModel implements ICourierModel {
 }
 
 export interface ICourierModel {
+    id: number;
     role?: string | undefined;
     displayName?: string | undefined;
     phoneNumber?: string | undefined;
@@ -1005,7 +1139,7 @@ export class DeliveryModel implements IDeliveryModel {
     recipientPhoneNumber?: string | undefined;
     recipientEmailAddress?: string | undefined;
     paymentInfo?: string | undefined;
-    courier?: CourierServiceModel | undefined;
+    courier?: CourierModel | undefined;
     courierService?: CourierServiceModel | undefined;
 
     constructor(data?: IDeliveryModel) {
@@ -1033,7 +1167,7 @@ export class DeliveryModel implements IDeliveryModel {
             this.recipientPhoneNumber = _data["recipientPhoneNumber"];
             this.recipientEmailAddress = _data["recipientEmailAddress"];
             this.paymentInfo = _data["paymentInfo"];
-            this.courier = _data["courier"] ? CourierServiceModel.fromJS(_data["courier"]) : <any>undefined;
+            this.courier = _data["courier"] ? CourierModel.fromJS(_data["courier"]) : <any>undefined;
             this.courierService = _data["courierService"] ? CourierServiceModel.fromJS(_data["courierService"]) : <any>undefined;
         }
     }
@@ -1082,7 +1216,7 @@ export interface IDeliveryModel {
     recipientPhoneNumber?: string | undefined;
     recipientEmailAddress?: string | undefined;
     paymentInfo?: string | undefined;
-    courier?: CourierServiceModel | undefined;
+    courier?: CourierModel | undefined;
     courierService?: CourierServiceModel | undefined;
 }
 
@@ -1092,78 +1226,6 @@ export enum DeliveryState {
     DeliveryInProgress = "DeliveryInProgress",
     DeliverySuccess = "DeliverySuccess",
     DeliveryFailed = "DeliveryFailed",
-}
-
-export class CourierServiceModel implements ICourierServiceModel {
-    role?: string | undefined;
-    displayName?: string | undefined;
-    contactName?: string | undefined;
-    address?: string | undefined;
-    city?: string | undefined;
-    zipCode?: string | undefined;
-    country?: string | undefined;
-    email?: string | undefined;
-    logoUrl?: string | undefined;
-    flierUrl?: string | undefined;
-
-    constructor(data?: ICourierServiceModel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.role = _data["role"];
-            this.displayName = _data["displayName"];
-            this.contactName = _data["contactName"];
-            this.address = _data["address"];
-            this.city = _data["city"];
-            this.zipCode = _data["zipCode"];
-            this.country = _data["country"];
-            this.email = _data["email"];
-            this.logoUrl = _data["logoUrl"];
-            this.flierUrl = _data["flierUrl"];
-        }
-    }
-
-    static fromJS(data: any): CourierServiceModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new CourierServiceModel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["role"] = this.role;
-        data["displayName"] = this.displayName;
-        data["contactName"] = this.contactName;
-        data["address"] = this.address;
-        data["city"] = this.city;
-        data["zipCode"] = this.zipCode;
-        data["country"] = this.country;
-        data["email"] = this.email;
-        data["logoUrl"] = this.logoUrl;
-        data["flierUrl"] = this.flierUrl;
-        return data; 
-    }
-}
-
-export interface ICourierServiceModel {
-    role?: string | undefined;
-    displayName?: string | undefined;
-    contactName?: string | undefined;
-    address?: string | undefined;
-    city?: string | undefined;
-    zipCode?: string | undefined;
-    country?: string | undefined;
-    email?: string | undefined;
-    logoUrl?: string | undefined;
-    flierUrl?: string | undefined;
 }
 
 export class DeliveryStateChangeModel implements IDeliveryStateChangeModel {
@@ -1250,12 +1312,12 @@ export class AddOrEditDeliveryModel implements IAddOrEditDeliveryModel {
     id!: number;
     description?: string | undefined;
     address?: string | undefined;
+    city?: string | undefined;
+    zipCode?: string | undefined;
+    country?: string | undefined;
     estimatedDeliveryStart?: Date | undefined;
     estimatedDeliveryEnd?: Date | undefined;
     state!: DeliveryState;
-    senderName?: string | undefined;
-    senderPhoneNumber?: string | undefined;
-    senderEmailAddress?: string | undefined;
     recipientName?: string | undefined;
     recipientPhoneNumber?: string | undefined;
     recipientEmailAddress?: string | undefined;
@@ -1276,12 +1338,12 @@ export class AddOrEditDeliveryModel implements IAddOrEditDeliveryModel {
             this.id = _data["id"];
             this.description = _data["description"];
             this.address = _data["address"];
+            this.city = _data["city"];
+            this.zipCode = _data["zipCode"];
+            this.country = _data["country"];
             this.estimatedDeliveryStart = _data["estimatedDeliveryStart"] ? new Date(_data["estimatedDeliveryStart"].toString()) : <any>undefined;
             this.estimatedDeliveryEnd = _data["estimatedDeliveryEnd"] ? new Date(_data["estimatedDeliveryEnd"].toString()) : <any>undefined;
             this.state = _data["state"];
-            this.senderName = _data["senderName"];
-            this.senderPhoneNumber = _data["senderPhoneNumber"];
-            this.senderEmailAddress = _data["senderEmailAddress"];
             this.recipientName = _data["recipientName"];
             this.recipientPhoneNumber = _data["recipientPhoneNumber"];
             this.recipientEmailAddress = _data["recipientEmailAddress"];
@@ -1302,12 +1364,12 @@ export class AddOrEditDeliveryModel implements IAddOrEditDeliveryModel {
         data["id"] = this.id;
         data["description"] = this.description;
         data["address"] = this.address;
+        data["city"] = this.city;
+        data["zipCode"] = this.zipCode;
+        data["country"] = this.country;
         data["estimatedDeliveryStart"] = this.estimatedDeliveryStart ? this.estimatedDeliveryStart.toISOString() : <any>undefined;
         data["estimatedDeliveryEnd"] = this.estimatedDeliveryEnd ? this.estimatedDeliveryEnd.toISOString() : <any>undefined;
         data["state"] = this.state;
-        data["senderName"] = this.senderName;
-        data["senderPhoneNumber"] = this.senderPhoneNumber;
-        data["senderEmailAddress"] = this.senderEmailAddress;
         data["recipientName"] = this.recipientName;
         data["recipientPhoneNumber"] = this.recipientPhoneNumber;
         data["recipientEmailAddress"] = this.recipientEmailAddress;
@@ -1321,12 +1383,12 @@ export interface IAddOrEditDeliveryModel {
     id: number;
     description?: string | undefined;
     address?: string | undefined;
+    city?: string | undefined;
+    zipCode?: string | undefined;
+    country?: string | undefined;
     estimatedDeliveryStart?: Date | undefined;
     estimatedDeliveryEnd?: Date | undefined;
     state: DeliveryState;
-    senderName?: string | undefined;
-    senderPhoneNumber?: string | undefined;
-    senderEmailAddress?: string | undefined;
     recipientName?: string | undefined;
     recipientPhoneNumber?: string | undefined;
     recipientEmailAddress?: string | undefined;

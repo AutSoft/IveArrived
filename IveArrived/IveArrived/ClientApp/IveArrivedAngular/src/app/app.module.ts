@@ -8,12 +8,29 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatStepperModule } from '@angular/material/stepper';
 import { HomeComponent } from './components/home/home.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import {MatButtonModule} from '@angular/material/button';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
+import { MatInputModule } from '@angular/material/input';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatCardModule } from '@angular/material/card';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatMomentDateModule } from "@angular/material-moment-adapter";
 import { DragDropDirective } from './directives/drag-drop.directive';
 import { LoginComponent } from './components/login/login.component';
 import { UploadFileComponent } from './components/upload-file/upload-file.component';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DeliveryComponent } from './components/delivery/delivery.component';
+import { DailyDeliveryComponent } from './components/delivery/daily-delivery/daily-delivery.component';
+import { NewDeliveryComponent } from './components/delivery/new-delivery/new-delivery.component';
+import { MyCouriersComponent } from './components/delivery/my-couriers/my-couriers.component';
+import { ProfileSettingsComponent } from './components/delivery/profile-settings/profile-settings.component';
+import { AccountService, CourierService, CourierServiceDeliveryService } from './api/app.generated';
+import { DeliveryStateToString } from './delivery-state.pipe';
 
 @NgModule({
     declarations: [
@@ -23,18 +40,39 @@ import { FormsModule } from '@angular/forms';
         DragDropDirective,
         LoginComponent,
         UploadFileComponent,
+        DeliveryComponent,
+        DailyDeliveryComponent,
+        NewDeliveryComponent,
+        MyCouriersComponent,
+        ProfileSettingsComponent,
+        DeliveryStateToString
     ],
     imports: [
         BrowserModule,
         AppRoutingModule,
         BrowserAnimationsModule,
         MatStepperModule,
+        MatSidenavModule,
+        MatToolbarModule,
+        MatGridListModule,
+        MatDatepickerModule,
+        MatMomentDateModule,
+        MatSelectModule,
+        MatListModule,
+        MatInputModule,
         NgbModule,
         MatButtonModule,
         HttpClientModule,
-        FormsModule
+        FormsModule,
+        ReactiveFormsModule,
+        MatCardModule,
+        MatFormFieldModule
     ],
-    providers: [],
+    providers: [
+      AccountService,
+      CourierService,
+      CourierServiceDeliveryService
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

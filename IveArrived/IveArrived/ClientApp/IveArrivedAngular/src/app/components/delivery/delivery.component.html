@@ -1,0 +1,47 @@
+<mat-toolbar class="toolbar">
+  <mat-toolbar-row>
+   <img height="84px" src="assets/im_sending_logo.svg" >
+    <span class="example-spacer"></span>
+    <span class="display-name" *ngIf="me">{{me.displayName}}</span>
+    <img class="user-logo" src="assets/logo-placeholder.png"
+     srcset="assets/logo-placeholder@2x.png 2x,
+     assets/logo-placeholder@3x.png 3x"  >
+  </mat-toolbar-row>
+</mat-toolbar>
+<mat-sidenav-container class="example-container" >
+  <mat-sidenav mode="side" opened>
+    <mat-nav-list>
+      <a class="nav-item" mat-list-item [routerLink]="['/delivery/daily-delivery']" routerLinkActive="router-link-active" >
+        <span matLine class="nav-text">
+          <span class="router-link-active-box"></span>
+          <span class="icon-container" ><img src="assets/shopping-bag.svg" class="nav-icon"></span>
+          DAILY ORDERS
+        </span>
+      </a>
+      <a class="nav-item" mat-list-item [routerLink]="['/delivery/new-delivery']" routerLinkActive="router-link-active" >
+        <span matLine class="nav-text">
+          <span class="router-link-active-box"></span>
+          <span class="icon-container" ><img src="assets/shopping-bag-new.svg" class="nav-icon"></span>
+          ADD NEW ORDER
+      </span>
+      </a>
+      <a class="nav-item" mat-list-item [routerLink]="['/delivery/my-couriers']" routerLinkActive="router-link-active" >
+        <span matLine class="nav-text">
+          <span class="router-link-active-box"></span>
+          <span class="icon-container" ><img src="assets/courier.svg" class="nav-icon"></span>
+          MY COURIERS
+        </span>
+      </a>
+      <a class="nav-item" mat-list-item [routerLink]="['/delivery/profile-settings']" routerLinkActive="router-link-active" >
+        <span matLine class="nav-text">
+          <span class="router-link-active-box"></span>
+          <span class="icon-container" ><img src="assets/adjust.svg" class="nav-icon"></span>
+          PROFILE SETTINGS
+        </span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

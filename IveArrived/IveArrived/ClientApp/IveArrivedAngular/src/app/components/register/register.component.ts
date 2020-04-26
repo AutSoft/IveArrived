@@ -41,12 +41,16 @@ export class RegisterComponent implements OnInit {
       this.zipcode,
       "",
       this.email,
+      null,
       this.password,
       null,
-      this.files).subscribe();
+      this.files).subscribe(
+        () => {
+          this.router.navigate(["/login"]);
+          console.log("navigated to login");
+        }
+      );
 
-      this.router.navigate(["/login"]);
-      console.log("navigated");
   }
 
 }

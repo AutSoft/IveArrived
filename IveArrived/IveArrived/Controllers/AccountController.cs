@@ -4,7 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using IveArrived.Entities.ApplicationUser;
+using IveArrived.Mapper;
 using IveArrived.Models;
+using IveArrived.Services.CurrentUser;
 using IveArrived.Services.File;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -19,14 +21,17 @@ namespace IveArrived.Controllers
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IFileService fileService;
+        private readonly ICurrentUserService currentUserService;
 
         public AccountController(SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
-            IFileService fileService)
+            IFileService fileService,
+            ICurrentUserService currentUserService)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
             this.fileService = fileService;
+            this.currentUserService = currentUserService;
         }
 
         [HttpPost]
@@ -85,6 +90,12 @@ namespace IveArrived.Controllers
             await userManager.AddToRoleAsync(reguser, model.Role);
 
             return Ok();
+        }
+
+        [HttpGet]
+        public async Task<CourierServiceModel> Me()
+        {
+            return (await currentUserService.CurrentUser()).ToDto();
         }
     }
 }

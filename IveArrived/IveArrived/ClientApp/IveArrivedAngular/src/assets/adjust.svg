@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="prefix__adjust" width="26" height="24.917" viewBox="0 0 26 24.917">
+    <defs>
+        <style>
+            .prefix__cls-1{fill:#0871b8}
+        </style>
+    </defs>
+    <g id="prefix__Group_49" data-name="Group 49" transform="translate(0 17.333)">
+        <g id="prefix__Group_48" data-name="Group 48">
+            <path id="prefix__Path_238" d="M24.917 354.708h-2.885a3.767 3.767 0 0 0-7.23 0H1.083a1.083 1.083 0 0 0 0 2.167H14.8a3.767 3.767 0 0 0 7.23 0h2.885a1.083 1.083 0 0 0 0-2.167zm-6.5 2.708a1.625 1.625 0 1 1 1.625-1.625 1.627 1.627 0 0 1-1.625 1.626z" class="prefix__cls-1" data-name="Path 238" transform="translate(0 -352)"/>
+        </g>
+    </g>
+    <g id="prefix__Group_51" data-name="Group 51">
+        <g id="prefix__Group_50" data-name="Group 50">
+            <path id="prefix__Path_239" d="M24.917 13.375h-2.885a3.767 3.767 0 0 0-7.23 0H1.083a1.083 1.083 0 1 0 0 2.167H14.8a3.767 3.767 0 0 0 7.23 0h2.885a1.083 1.083 0 0 0 0-2.167zm-6.5 2.708a1.625 1.625 0 1 1 1.625-1.625 1.627 1.627 0 0 1-1.625 1.626z" class="prefix__cls-1" data-name="Path 239" transform="translate(0 -10.667)"/>
+        </g>
+    </g>
+    <g id="prefix__Group_53" data-name="Group 53" transform="translate(0 8.667)">
+        <g id="prefix__Group_52" data-name="Group 52">
+            <path id="prefix__Path_240" d="M24.917 184.042H11.2a3.767 3.767 0 0 0-7.23 0H1.083a1.083 1.083 0 1 0 0 2.167h2.885a3.767 3.767 0 0 0 7.23 0h13.719a1.083 1.083 0 0 0 0-2.167zm-17.334 2.709a1.625 1.625 0 1 1 1.625-1.625 1.627 1.627 0 0 1-1.625 1.625z" class="prefix__cls-1" data-name="Path 240" transform="translate(0 -181.334)"/>
+        </g>
+    </g>
+</svg>

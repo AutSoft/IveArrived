@@ -28,6 +28,15 @@ namespace IveArrived.Services.CurrentUser
 
             return 0;
         }
+        public async Task<ApplicationUser> CurrentUser()
+        {
+            if (await IsSignedIn())
+            {
+                return (await userManager.GetUserAsync(httpContext.HttpContext.User));
+            }
+
+            return null;
+        }
 
         public Task<bool> IsSignedIn()
         {

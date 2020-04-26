@@ -1,0 +1,48 @@
+<h1>Daily orders {{today}}</h1>
+<div *ngIf="deliveries && deliveries.length > 0; else nodeliveries" class="container-fluid">
+<div class="row">
+
+  <mat-card class="col-12 col-xl-6 p-5" *ngFor="let delivery of deliveries">
+    <mat-grid-list cols="4" rowHeight="90px">
+      <mat-grid-tile>
+        <div class="card-label">Recipient</div>
+        <div class="card-content">{{delivery.recipientName}}</div>
+      </mat-grid-tile>
+      <mat-grid-tile colspan="2">
+        <div class="card-label">Planned delivery interval</div>
+        <div class="card-content">{{delivery.estimatedDeliveryStart | date}}</div>
+        <div class="card-content">{{delivery.estimatedDeliveryEnd | date}}</div>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <div class="card-label">Courier</div>
+        <mat-form-field>
+          <mat-select matNativeControl [(value)]="delivery.courier">
+            <mat-option *ngFor="let courier of couriers" [value]="courier">
+              {{courier.displayName}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button class="rounded-button" mat-raised-button (click)="setCourier(delivery)">Set Courier</button>
+      </mat-grid-tile>
+      <mat-grid-tile colspan="3">
+        <div class="card-label">Description</div>
+        <div class="card-content">{{delivery.description}}</div>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <div class="card-label">Status</div>
+        <mat-form-field>
+          <mat-select matNativeControl [(value)]="delivery.state">
+            <mat-option *ngFor="let state of deliveryStates" [value]="state">
+              {{state | deliveryState}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button class="rounded-button" mat-raised-button (click)="changeDeliveryState(delivery)">Change</button>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </mat-card>
+</div>
+</div>
+<ng-template #nodeliveries>
+  <h2>No deliveries for today</h2>
+</ng-template>

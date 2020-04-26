@@ -1,0 +1,44 @@
+<h1>New order details</h1>
+<div class="container-fluid">
+<div class="row">
+  <div class="col-12 col-lg6 text-left mt-4">
+      <label class="mt-4 w-100">Recipient</label>
+      <input name="recipientName" [(ngModel)]="delivery.recipientName" type="text" class="form-control" placeholder="John Doe">
+      <label class="mt-4 w-100">Customer's phone number</label>
+      <input name="recipientPhoneNumber" [(ngModel)]="delivery.recipientPhoneNumber" type="text" class="form-control" placeholder="+36 30 123 4567">
+      <label class="mt-4 w-100">Email address</label>
+      <input name="recipientEmailAddress" [(ngModel)]="delivery.recipientEmailAddress" type="text" class="form-control" placeholder="johndoe@gmail.com">
+      <label class="mt-4 w-100">Order description</label>
+      <input name="description" [(ngModel)]="delivery.description" type="textarea" height="100px" class="form-control" placeholder="2 pounds of bread, 5 pieces of croissant, 7 donuts, 4 breadrolls">
+      <label class="mt-4 w-100">Amount to be paid</label>
+      <input name="paymentInfo" [(ngModel)]="delivery.paymentInfo" type="text" class="form-control" placeholder="$$$">
+  </div>
+  <div class="col-12 col-lg6 text-left mt-4">
+      <label class="mt-4 w-100">Address</label>
+      <input name="address" [(ngModel)]="delivery.address" type="text" class="form-control" placeholder="John Doe">
+      <div class="d-flex">
+          <label class="mt-4 col-7">City</label>
+          <label class="mt-4 ml-5 col-4">ZipCode</label>
+      </div>
+      <div class="d-flex">
+        <input name="city" [(ngModel)]="delivery.address" type="text" class="form-control col-7">
+        <input name="zipCode" [(ngModel)]="delivery.address" type="text" class="form-control ml-5 col-4">
+      </div>
+      <mat-form-field>
+        <mat-label>Choose a date</mat-label>
+        <input matInput [matDatepicker]="picker" [formControl]="date">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+      <div class="card-label">Courier</div>
+      <mat-form-field>
+        <mat-select matNativeControl [(value)]="delivery.courierId">
+          <mat-option *ngFor="let courier of couriers" [value]="courier.id">
+            {{courier.displayName}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+  </div>
+</div>
+</div>
+<button class="rounded-button" mat-raised-button (click)="addNewDelivery()">Submit order</button>

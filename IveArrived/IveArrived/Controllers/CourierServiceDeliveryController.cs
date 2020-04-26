@@ -17,15 +17,15 @@ namespace IveArrived.Controllers
     [ApiController]
     public class CourierServiceDeliveryController : ControllerBase
     {
-        private readonly ICurrentUserService currentUser;
+        private readonly ICurrentUserService currentUserService;
         private readonly ApplicationDbContext context;
         private readonly IFirebaseService firebase;
 
-        public CourierServiceDeliveryController(ICurrentUserService currentUser,
+        public CourierServiceDeliveryController(ICurrentUserService currentUserService,
             ApplicationDbContext context,
             IFirebaseService firebase)
         {
-            this.currentUser = currentUser;
+            this.currentUserService = currentUserService;
             this.context = context;
             this.firebase = firebase;
         }
@@ -33,7 +33,7 @@ namespace IveArrived.Controllers
         [HttpGet]
         public async Task<List<DeliveryModel>> ListDeliveries()
         {
-            int currentUserId = await currentUser.CurrentUserId();
+            int currentUserId = await currentUserService.CurrentUserId();
             return await context.Delivery
                 .Include(d => d.CourierService)
                 .Include(d => d.Courier)
@@ -99,7 +99,7 @@ namespace IveArrived.Controllers
         [HttpPost]
         public async Task<DeliveryModel> AddOrUpdateDelivery([FromBody] AddOrEditDeliveryModel dm)
         {
-            var currentUserId = await currentUser.CurrentUserId();
+            var currentUser = await currentUserService.CurrentUser();
             var delivery = await context.Delivery
                 .FirstOrDefaultAsync(d => d.Id == dm.Id);
 
@@ -109,7 +109,7 @@ namespace IveArrived.Controllers
                 {
                     Address = dm.Address,
                     Courier = await context.Users.FirstOrDefaultAsync(u => u.Id == dm.CourierId),
-                    CourierService = await context.Users.FirstOrDefaultAsync(u => u.Id == currentUserId),
+                    CourierService = await context.Users.FirstOrDefaultAsync(u => u.Id == currentUser.Id),
                     Description = dm.Description,
                     EstimatedDeliveryEnd = dm.EstimatedDeliveryEnd,
                     EstimatedDeliveryStart = dm.EstimatedDeliveryStart,
@@ -118,9 +118,9 @@ namespace IveArrived.Controllers
                     RecipientEmailAddress = dm.RecipientEmailAddress,
                     RecipientName = dm.RecipientName,
                     RecipientPhoneNumber = dm.RecipientPhoneNumber,
-                    SenderEmailAddress = dm.SenderEmailAddress,
-                    SenderName = dm.SenderName,
-                    SenderPhoneNumber = dm.SenderPhoneNumber,
+                    SenderEmailAddress = currentUser.Email,
+                    SenderName = currentUser.DisplayName,
+                    SenderPhoneNumber = currentUser.PhoneNumber,
                     State = dm.State
                 };
                 context.Delivery.Add(delivery);
@@ -136,9 +136,6 @@ namespace IveArrived.Controllers
                 delivery.RecipientEmailAddress = dm.RecipientEmailAddress;
                 delivery.RecipientName = dm.RecipientName;
                 delivery.RecipientPhoneNumber = dm.RecipientPhoneNumber;
-                delivery.SenderEmailAddress = dm.SenderEmailAddress;
-                delivery.SenderName = dm.SenderName;
-                delivery.SenderPhoneNumber = dm.SenderPhoneNumber;
                 delivery.State = dm.State;
             }
 

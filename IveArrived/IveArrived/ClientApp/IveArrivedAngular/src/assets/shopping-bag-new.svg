@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="27.032" height="33.956" viewBox="0 0 27.032 33.956">
+    <defs>
+        <style>
+            .prefix__cls-3{stroke:#0871b8;fill:none;stroke-linecap:round;stroke-width:3px}
+        </style>
+    </defs>
+    <g id="prefix__shopping-bag" transform="translate(.253 .25)">
+        <g id="prefix__Group_45" data-name="Group 45">
+            <g id="prefix__Group_44" data-name="Group 44">
+                <path id="prefix__Path_236" d="M79.531 27.589L78.037 8.763A2.353 2.353 0 0 0 75.7 6.6h-2.949v-.133a6.467 6.467 0 1 0-12.934 0V6.6h-2.951a2.352 2.352 0 0 0-2.336 2.16l-1.494 18.832a5.448 5.448 0 0 0 5.432 5.864H74.1a5.448 5.448 0 0 0 5.431-5.867zM61.776 6.467a4.507 4.507 0 1 1 9.015 0V6.6h-9.015zm14.882 23.912A3.452 3.452 0 0 1 74.1 31.5H58.467a3.488 3.488 0 0 1-3.478-3.752l1.495-18.835a.384.384 0 0 1 .381-.353h2.951v2.413a.98.98 0 0 0 1.96 0V8.559h9.015v2.413a.98.98 0 1 0 1.96 0V8.559H75.7a.385.385 0 0 1 .382.356l1.494 18.826a3.452 3.452 0 0 1-.918 2.638z" data-name="Path 236" transform="translate(-53.02)" style="stroke-width:.5px;stroke:#0871b8;fill:#0871b8"/>
+            </g>
+        </g>
+        <g id="prefix__icon_default_glyph:plus_" data-name="icon [default][glyph:plus]" transform="translate(4.98 12.413)">
+            <path id="prefix__icon_area" d="M0 0H16.587V16.587H0z" data-name="icon area" style="opacity:0;fill:#0871b8"/>
+            <g id="prefix__icon" transform="translate(3.317 3.317)">
+                <path id="prefix__Line_11" d="M0 9.952L0 0" class="prefix__cls-3" data-name="Line 11" transform="translate(4.976)"/>
+                <path id="prefix__Line_38" d="M0 0L9.952 0" class="prefix__cls-3" data-name="Line 38" transform="translate(0 4.976)"/>
+            </g>
+        </g>
+    </g>
+</svg>

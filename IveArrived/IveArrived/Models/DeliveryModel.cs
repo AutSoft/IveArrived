@@ -20,7 +20,7 @@ namespace IveArrived.Models
         public string RecipientPhoneNumber { get; set; }
         public string RecipientEmailAddress { get; set; }
         public string PaymentInfo { get; set; }
-        public CourierServiceModel Courier { get; set; }
+        public CourierModel Courier { get; set; }
         public CourierServiceModel CourierService { get; set; }
     }
 }
