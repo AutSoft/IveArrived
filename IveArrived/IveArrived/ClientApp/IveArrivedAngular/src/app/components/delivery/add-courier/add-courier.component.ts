@@ -16,9 +16,9 @@ export class AddCourierComponent implements OnInit {
   email: string = "";
   phoneNumber: string = "";
   address: string = "";
-  password: string  = "";
+  password: string = "";
 
-  constructor(private courierService : CourierService, private router : Router) { }
+  constructor(private courierService: CourierService, private router: Router) { }
 
   fileChanged(file: FileParameter[]) {
     this.files = file[0];
@@ -27,9 +27,13 @@ export class AddCourierComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onSubmit(){
-    this.courierService.register(this.courierName,this.email,this.phoneNumber,this.password,this.files).subscribe( data=>{
+  onSubmit() {
+    this.courierService.register(this.courierName, this.email, this.phoneNumber, this.password, this.files).subscribe(data => {
       this.router.navigate(["/delivery/my-couriers"]);
     })
+  }
+
+  onBack() {
+    this.router.navigate(["/delivery/my-couriers"]);
   }
 }

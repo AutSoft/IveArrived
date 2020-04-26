@@ -35,7 +35,7 @@
 .mycard .text{
     width: 574px;
   height: 55px;
-  font-family: Heebo;
+  font-family: Roboto,"Helvetica Neue,sans-serif";
   font-size: 27px;
   font-weight: 500;
   font-stretch: normal;
@@ -48,7 +48,7 @@
 
 .footer-text {
     height: 85px;
-  font-family: OpenSans;
+  font-family: Roboto,"Helvetica Neue,sans-serif";
   font-size: 25px;
   font-weight: normal;
   font-stretch: normal;
@@ -63,7 +63,7 @@
     font-size: large;
     padding-right: 20px;
     color: #ff6363;
-    font-family: OpenSans;
+    font-family: Roboto,"Helvetica Neue,sans-serif";
 }
 
 .background{

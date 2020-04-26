@@ -3,7 +3,7 @@
         <span class="mt-3">Please fill in the following informations below</span>
     </div>
     <div class="mt-3" style="color: #739ebb;">
-        <span class="mt-3">Add courier profile picture</span>
+        <label class="mt-3">Add courier profile picture</label>
     </div>
     <div class="text-center" style="width: 40%; height: 40%;">
         <app-upload-file (filechanged)="fileChanged($event)" ></app-upload-file>
@@ -21,7 +21,10 @@
         <input type="password" name="Password" [(ngModel)]="password" class="form-control" placeholder="*****">
     </div>
 </div>
+
 <div class="text-center" style="padding-top: 20px;">
+    <button class="rounded-button p-1 mr-3" style="color:white; font-size: 18px;" (click)="onBack()"
+    mat-raised-button>&nbsp;&nbsp;&nbsp;Cancel&nbsp;&nbsp;&nbsp;</button>
     <button class="rounded-button p-1" style="color:white; font-size: 18px;" (click)="onSubmit()"
     mat-raised-button>&nbsp;&nbsp;&nbsp;Add&nbsp;&nbsp;&nbsp;</button>
 </div>

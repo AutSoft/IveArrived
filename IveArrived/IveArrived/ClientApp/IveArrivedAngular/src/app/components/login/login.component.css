@@ -2,7 +2,7 @@
     width: 352px;
     height: 53px;
     -webkit-text-stroke: 1px rgba(0, 0, 0, 0);
-    font-family: NotoSans;
+    font-family: Roboto,"Helvetica Neue,sans-serif";
     font-size: 25px;
     font-weight: 600;
     font-stretch: normal;
@@ -18,7 +18,7 @@
     width: 56px;
     height: 17px;
     -webkit-text-stroke: 1px rgba(0, 0, 0, 0);
-    font-family: NotoSans;
+    font-family: Roboto,"Helvetica Neue,sans-serif";
     font-size: 14px;
     font-weight: 600;
     font-stretch: normal;
