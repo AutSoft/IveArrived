@@ -13,23 +13,8 @@ mat-card.mat-card {
   padding: 30px;
 }
 .card-label {
-  -webkit-text-stroke: 1px rgba(0, 0, 0, 0);
-  font-size: 18px;
-  font-weight: 600;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: 1.5;
-  letter-spacing: normal;
-  text-align: left;
-  color: #739ebb;
+  font-family:Roboto,Helvetica Neue,sans-serif;color:#0871b8;font-size: 16px;
 }
 .card-content {
-  -webkit-text-stroke: 1px rgba(0, 0, 0, 0);
-  font-size: 16px;
-  font-weight: 600;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: 1.5;
-  letter-spacing: normal;
-  text-align: left;
+  font-family:Roboto,Helvetica Neue,sans-serif;color:#3e3e3e;font-size: 14px;
 }

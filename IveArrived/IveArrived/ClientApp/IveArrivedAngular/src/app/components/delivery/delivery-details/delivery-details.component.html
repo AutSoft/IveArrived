@@ -1,44 +1,52 @@
-<div class="container-fluid" >
-<mat-card class="mat-elevation-z1" *ngIf="delivery">
-  <mat-grid-list cols="4" rowHeight="45px">
-    <mat-grid-tile>
-      <div class="card-label">Recipient</div>
-    </mat-grid-tile>
-    <mat-grid-tile colspan="2">
-      <div class="card-label">Planned delivery interval</div>
-    </mat-grid-tile>
-    <mat-grid-tile>
-      <div class="card-label">Courier</div>
-    </mat-grid-tile>
-    <mat-grid-tile>
-      <div class="card-content">{{delivery.recipientName}}</div>
-    </mat-grid-tile>
-    <mat-grid-tile colspan="2">
-      <div class="card-content">{{delivery.estimatedDeliveryStart | date}}-</div>
-      <div class="card-content">{{delivery.estimatedDeliveryEnd | date}}</div>
-    </mat-grid-tile>
-    <mat-grid-tile>
-      <div class="card-content">
-        <ng-container *ngIf="delivery.courier; else nocourier">
-          {{delivery.courier?.displayName | deliveryState}}
-        </ng-container>
-        <ng-template #nocourier>
-          No courier is assigned to your delivery yet
-        </ng-template>
+<div class="container">
+  <mat-card class="col-12 p-5 mat-elevation-z1 mb-5" *ngIf="delivery">
+    <div class="col-12">
+      <div class="col-12 d-flex p-0">
+        <div class="col-4">
+          <div class="card-label">Recipient</div>
+        </div>
+        <div class="col-4">
+          <div class="card-label">Planned delivery interval</div>
+        </div>
+        <div class="col-4">
+          <div class="card-label">Courier</div>
+        </div>
       </div>
-    </mat-grid-tile>
-    <mat-grid-tile colspan="3">
-      <div class="card-label">Description</div>
-    </mat-grid-tile>
-    <mat-grid-tile>
-      <div class="card-label">Status</div>
-    </mat-grid-tile>
-    <mat-grid-tile colspan="3">
-      <div class="card-content">{{delivery.description}}</div>
-    </mat-grid-tile>
-    <mat-grid-tile>
-      <div class="card-content">{{delivery.state}}</div>
-    </mat-grid-tile>
-  </mat-grid-list>
-</mat-card>
+      <div class="col-12 d-flex p-0">
+        <div class="col-4">
+          <div class="card-content">{{delivery.recipientName}}</div>
+        </div>
+        <div class="col-4">
+          <div class="card-content">
+            {{delivery.estimatedDeliveryStart | date}}-{{delivery.estimatedDeliveryEnd | date}}</div>
+        </div>
+        <div class="col-4 d-flex">
+          <div class="card-content">
+            <ng-container *ngIf="delivery.courier; else nocourier">
+              {{delivery.courier?.displayName | deliveryState}}
+            </ng-container>
+            <ng-template #nocourier>
+              No courier is assigned to your delivery yet
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 d-flex">
+      <div class="col-4">
+        <div class="card-label">Description</div>
+      </div>
+      <div class="col-8">
+        <div class="card-label">Status</div>
+      </div>
+    </div>
+    <div class="col-12 d-flex">
+      <div class="col-4">
+        <div class="card-content">{{delivery.description}}</div>
+      </div>
+      <div class="col-4 d-flex">
+        <div class="card-content">{{delivery.state}}</div>
+      </div>
+    </div>
+  </mat-card>
 </div>
