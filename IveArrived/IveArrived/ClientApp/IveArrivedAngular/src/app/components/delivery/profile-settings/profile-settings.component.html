@@ -2,12 +2,18 @@
     <div class="mt-3" style="color: #739ebb;">
         <span class="mt-3">Change your logo</span>
     </div>
-    <div class="text-center" style="width: 40%; height: 40%;">
-        <app-upload-file (filechanged)="fileChanged($event)" ></app-upload-file>
+    <div class="d-flex">
+        <div name="image" class="mr-4 col-3 text-center d-flex" style="justify-content: start; align-items: center;">
+            <img src="{{flierUrl}}" style="height: 150px;width: 150px;border-radius: 40px;">
+        </div>
+        <div class="text-center col-4">
+            <app-upload-file (filechanged)="fileChanged($event)"></app-upload-file>
+        </div>
     </div>
     <div class="text-left mt-4">
         <label class="mt-4 w-100" style="color: #739ebb;">Your SME's name</label>
-        <input name="DisplayName" [(ngModel)]="smeName" type="text" class="form-control" placeholder="John Smith's happy barkery">
+        <input name="DisplayName" [(ngModel)]="smeName" type="text" class="form-control"
+            placeholder="John Smith's happy barkery">
         <label class="mt-4 w-100" style="color: #739ebb;">Choose your companies profile</label>
         <select name="profile" [(ngModel)]="profile" type="select" class="form-control">
             <option value="bakery">bakery</option>
@@ -17,7 +23,8 @@
         <label class="mt-4 w-100" style="color: #739ebb;">Contact name</label>
         <input name="ContactName" [(ngModel)]="contactName" type="text" class="form-control">
         <label class="mt-4 w-100" style="color: #739ebb;">Phone number</label>
-        <input name="PhoneNumber" [(ngModel)]="phoneNumber" type="text" class="form-control" placeholder="+36 30 123 4567">
+        <input name="PhoneNumber" [(ngModel)]="phoneNumber" type="text" class="form-control"
+            placeholder="+36 30 123 4567">
         <label class="mt-4 w-100" style="color: #739ebb;">Address</label>
         <input name="Address" [(ngModel)]="address" type="text" class="form-control">
         <div class="d-flex">
@@ -32,5 +39,5 @@
 </div>
 <div class="text-center" style="padding-top: 20px;">
     <button class="rounded-button p-1" style="color:white; font-size: 18px;" (click)="onSubmit()"
-    mat-raised-button>&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;</button>
+        mat-raised-button>&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;</button>
 </div>
