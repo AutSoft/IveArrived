@@ -91,5 +91,24 @@ namespace IveArrived.Controllers
                 .Select(c => c.Courier.ToCourierDto())
                 .ToListAsync();
         }
+
+        [HttpGet]
+        public async Task<GetProfileModel> GetSMEDataForModify()
+        {
+            var id = await currentUser.CurrentUserId();
+            var user = await context.Users.SingleOrDefaultAsync(u => u.Id == id);
+
+            return new GetProfileModel
+            {
+                Address = user.Address,
+                City = user.City,
+                ContactName = user.ContactName,
+                DisplayName = user.DisplayName,
+                PhoneNumber = user.PhoneNumber,
+                Flier = user.FlierUrl,
+                Logo = user.LogoUrl,
+                ZipCode = user.ZipCode
+            };
+        }
     }
 }
