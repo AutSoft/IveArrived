@@ -32,6 +32,7 @@ import { ProfileSettingsComponent } from './components/delivery/profile-settings
 import { AccountService, CourierService, CourierServiceDeliveryService, API_BASE_URL } from './api/app.generated';
 import { DeliveryStateToString } from './delivery-state.pipe';
 import { environment } from 'src/environments/environment';
+import { AddCourierComponent } from './components/delivery/add-courier/add-courier.component';
 
 @NgModule({
     declarations: [
@@ -46,7 +47,8 @@ import { environment } from 'src/environments/environment';
         NewDeliveryComponent,
         MyCouriersComponent,
         ProfileSettingsComponent,
-        DeliveryStateToString
+        DeliveryStateToString,
+        AddCourierComponent
     ],
     imports: [
         BrowserModule,

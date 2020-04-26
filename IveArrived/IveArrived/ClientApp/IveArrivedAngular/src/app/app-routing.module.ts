@@ -8,6 +8,7 @@ import { DailyDeliveryComponent } from './components/delivery/daily-delivery/dai
 import { MyCouriersComponent } from './components/delivery/my-couriers/my-couriers.component';
 import { NewDeliveryComponent } from './components/delivery/new-delivery/new-delivery.component';
 import { ProfileSettingsComponent } from './components/delivery/profile-settings/profile-settings.component';
+import { AddCourierComponent } from './components/delivery/add-courier/add-courier.component';
 
 
 const routes: Routes = [
@@ -19,6 +20,7 @@ const routes: Routes = [
         { path: 'new-delivery', component: NewDeliveryComponent},
         { path: 'my-couriers', component: MyCouriersComponent},
         { path: 'profile-settings', component: ProfileSettingsComponent},
+        { path: 'add-courier', component: AddCourierComponent}
       ]
     },
     { path: 'login', component: LoginComponent}
