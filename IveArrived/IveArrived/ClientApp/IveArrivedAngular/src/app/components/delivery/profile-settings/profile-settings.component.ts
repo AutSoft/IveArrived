@@ -30,7 +30,8 @@ export class ProfileSettingsComponent implements OnInit {
       this.smeName = data.displayName;
       this.zipcode = data.zipCode;
       this.flierUrl = data.flier;
-    })
+      this.address = data.address;
+    });
   }
 
   fileChanged(file: FileParameter[]) {
