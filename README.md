@@ -1,3 +1,9 @@
+**Portal:**
+https://ivearrived.azurewebsites.net/
+
+**APK:**
+https://github.com/AutSoft/IveArrived/blob/master/app-release.apk
+
 # I've arrived
 **I've arrived** is a new solution, tailored for various small to medium businesses, providing a complete solution for delivering different kind of packages.
 
