@@ -16,7 +16,7 @@ class MapSnapshot extends StatelessWidget {
             "zoom=17&"
             "markers=color:0x53b557|${Uri.encodeFull(address)}&"
             "size=600x600&"
-            "key=AIzaSyDrGXhVduV5TA3pr3WYjU8b8HAsTf5GZqQ&"
+            "key=XXX"
             "style=feature:poi|visibility:off&"
             "maptype=roadmap",
         fit: BoxFit.cover,
