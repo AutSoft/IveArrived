@@ -75,7 +75,7 @@ class ProfilePage extends StatelessWidget {
                     children: <Widget>[
                       SizedBox(height: 29,),
                       Text(
-                        "My profile informations",
+                        "My profile information",
                         style: TextStyle(
                           color: parseColor("#4ab04f"),
                           fontSize: 14,
